@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วิชาการ @High School</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?export=view&id=1nDCx9UovjRmI3riebTMPjYtHDPO-dIHL">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(217,43,119,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(91,33,182,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 10%, rgba(96,198,255,0.10) 0%, transparent 40%),
+                #f0f4ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .btn-pixar {
+            border-radius: 20px; position: relative;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer; overflow: hidden;
+        }
+        .btn-pixar::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+            border-radius: inherit; pointer-events: none;
+        }
+        .btn-pixar:hover  { transform: translateY(-5px) scale(1.02); }
+        .btn-pixar:active { transform: translateY(0px) scale(0.97); }
+
+        .btn-rose    { background: linear-gradient(145deg,#FF6B9D,#D92B77); box-shadow:0 6px 0 #9e1855,0 10px 24px rgba(217,43,119,0.35); }
+        .btn-rose:hover { box-shadow:0 10px 0 #9e1855,0 18px 36px rgba(217,43,119,0.45); }
+        .btn-violet  { background: linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 6px 0 #3b0d9e,0 10px 24px rgba(91,33,182,0.35); }
+        .btn-violet:hover { box-shadow:0 10px 0 #3b0d9e,0 18px 36px rgba(91,33,182,0.45); }
+        .btn-sky     { background: linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 6px 0 #0d5ea0,0 10px 24px rgba(25,118,210,0.35); }
+        .btn-crimson { background: linear-gradient(145deg,#FF5A5A,#8B0000); box-shadow:0 6px 0 #5a0000,0 10px 24px rgba(139,0,0,0.35); }
+        .btn-teal    { background: linear-gradient(145deg,#2DD4B0,#00796B); box-shadow:0 6px 0 #004d40,0 10px 24px rgba(0,121,107,0.35); }
+        .btn-amber   { background: linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 6px 0 #bf360c,0 10px 24px rgba(230,81,0,0.35); }
+
+        .main-card {
+            background: rgba(255,255,255,0.95); border: 1.5px solid rgba(255,255,255,0.9);
+            border-radius: 36px; box-shadow: 0 16px 48px rgba(0,0,0,0.10),0 3px 0 rgba(0,0,0,0.04);
+        }
+        .stat-card {
+            background: white; border-radius: 20px; position: relative; overflow: hidden;
+            transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.05),0 10px 24px rgba(0,0,0,0.07);
+        }
+        .stat-card:hover { transform: translateY(-4px) scale(1.02); }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:20px 20px 0 0; }
+        .stat-pink::before   { background:linear-gradient(90deg,#FF6B9D,#D92B77); }
+        .stat-blue::before   { background:linear-gradient(90deg,#60C6FF,#1976D2); }
+        .stat-orange::before { background:linear-gradient(90deg,#FFB547,#F57C00); }
+        .stat-teal::before   { background:linear-gradient(90deg,#2DD4B0,#00796B); }
+
+        .navbar { background:rgba(255,255,255,0.95); border-bottom:1.5px solid rgba(220,230,255,0.6); box-shadow:0 2px 16px rgba(0,0,0,0.06); }
+        .icon-bubble { border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+        .icon-bubble::after { content:''; position:absolute; top:18%; left:18%; width:35%; height:25%; background:rgba(255,255,255,0.45); border-radius:50%; transform:rotate(-30deg); }
+        .login-card { background:rgba(255,255,255,0.96); border-radius:32px; box-shadow:0 20px 56px rgba(0,0,0,0.13),0 4px 0 rgba(0,0,0,0.05); border:1.5px solid rgba(255,255,255,0.85); }
+
+        .input-3d {
+            background:#f0f4ff; border:2px solid #d4deff; border-radius:14px;
+            padding:13px 18px; font-family:'Prompt',sans-serif; font-size:1.1rem;
+            letter-spacing:0.15em; text-align:center; outline:none;
+            transition:all 0.2s; box-shadow:inset 0 2px 6px rgba(0,0,0,0.05); width:100%;
+        }
+        .input-3d:focus { border-color:#D92B77; box-shadow:inset 0 2px 6px rgba(0,0,0,0.05),0 0 0 3px rgba(217,43,119,0.12); }
+
+        .page-view { display:none; animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+        .page-view.active { display:block; }
+        @keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+        .skeleton { background:linear-gradient(90deg,#e8edf8 25%,#f5f7ff 50%,#e8edf8 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
+        @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+        .admin-section { background:rgba(255,255,255,0.95); border-radius:24px; border:1.5px solid rgba(220,230,255,0.6); box-shadow:0 8px 32px rgba(0,0,0,0.07),0 2px 0 rgba(0,0,0,0.03); }
+        .section-tag { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:100px; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; margin-bottom:16px; }
+        .admin-input { background:#f8faff; border:1.5px solid #e2e8f8; border-radius:12px; padding:10px 14px; font-family:'Prompt',sans-serif; outline:none; transition:all 0.2s; width:100%; color:#1e293b; }
+        .admin-input:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.1); }
+        .admin-btn { border-radius:14px; padding:11px 22px; font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; border:none; cursor:pointer; transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1); width:100%; }
+        .admin-btn:hover  { transform:translateY(-2px); }
+        .admin-btn:active { transform:translateY(0); }
+        .admin-btn-blue   { background:linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 5px 0 #0d5ea0,0 8px 20px rgba(25,118,210,0.3); color:white; }
+        .admin-btn-orange { background:linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 5px 0 #bf360c,0 8px 20px rgba(230,81,0,0.3); color:white; }
+        .admin-btn-violet { background:linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 5px 0 #3b0d9e,0 8px 20px rgba(91,33,182,0.3); color:white; }
+
+        @keyframes bounce-gentle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        .bounce { animation:bounce-gentle 2.5s ease-in-out infinite; }
+
+        .hero-image-wrap { position:absolute; inset:0; overflow:hidden; border-radius:36px; }
+        .hero-image-wrap img { width:100%; height:100%; object-fit:cover; object-position:90% top; display:block; }
+        .hero-img-mobile { display:none; }
+        .hero-badge { position:absolute; bottom:28px; right:24px; z-index:10; background:rgba(15,10,30,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:20px; padding:14px 20px; box-shadow:0 0 0 1px rgba(255,255,255,0.12),0 12px 32px rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.14); max-width:210px; }
+        .hero-badge p { color:#fff !important; text-shadow:0 1px 6px rgba(0,0,0,0.2); font-size:0.95rem; line-height:1.6; }
+        .hero-badge span.text-pink-600 { color:#FF6BAE !important; -webkit-text-fill-color:#FF6BAE !important; }
+
+        .hero-content-panel {
+            position: relative; z-index: 10;
+            background: linear-gradient(to right, rgba(255,255,255,0.97) 55%, rgba(255,255,255,0.7) 80%, transparent 100%);
+        }
+
+        .search-box { background:white; border:1.5px solid #e2e8f8; border-radius:16px; padding:12px 18px; font-family:'Prompt',sans-serif; font-size:1rem; outline:none; transition:all 0.2s; width:100%; }
+        .search-box:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.10); }
+
+        .filter-chip { padding:7px 18px; border-radius:100px; font-size:0.82rem; font-weight:700; cursor:pointer; border:2px solid transparent; transition:all 0.18s; font-family:'Kanit',sans-serif; background:white; color:#64748b; border-color:#e2e8f0; }
+        .filter-chip.active { background:linear-gradient(135deg,#D92B77,#9B6EFF); color:white; border-color:transparent; box-shadow:0 4px 12px rgba(217,43,119,0.28); }
+        .filter-chip:hover:not(.active) { border-color:#D92B77; color:#D92B77; }
+
+        .student-row { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:14px; background:white; border:1.5px solid #f1f5ff; transition:all 0.18s; }
+        .student-row:hover { border-color:#d4deff; transform:translateX(4px); box-shadow:0 4px 16px rgba(91,33,182,0.07); }
+
+        .avatar-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Kanit',sans-serif; font-weight:700; font-size:0.85rem; flex-shrink:0; }
+        .av-m4 { background:#dbeafe; color:#1d4ed8; }
+        .av-m5 { background:#fef3c7; color:#92400e; }
+        .av-m6 { background:#d1fae5; color:#065f46; }
+        .av-default { background:#ede9fe; color:#5b21b6; }
+
+        .class-badge { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:100px; font-family:'Kanit',sans-serif; }
+        .badge-m4  { background:#dbeafe; color:#1d4ed8; }
+        .badge-m5  { background:#fef3c7; color:#92400e; }
+        .badge-m6  { background:#d1fae5; color:#065f46; }
+        .badge-def { background:#ede9fe; color:#5b21b6; }
+
+        .modal-overlay { background:rgba(30,20,60,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+
+        /* ===== Card Manager Table ===== */
+        .card-row {
+            display:grid; grid-template-columns:auto 1fr auto;
+            align-items:center; gap:12px;
+            padding:10px 14px; border-radius:14px;
+            background:white; border:1.5px solid #f1f5ff;
+            transition:all 0.18s;
+        }
+        .card-row:hover { border-color:#d4deff; box-shadow:0 3px 12px rgba(91,33,182,0.07); }
+        .color-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .dot-purple { background:#7C3AED; }
+        .dot-blue   { background:#1976D2; }
+        .dot-pink   { background:#D92B77; }
+        .dot-orange { background:#E65100; }
+        .dot-teal   { background:#00796B; }
+        .card-action-btn {
+            width:30px; height:30px; border-radius:8px; border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; font-size:0.8rem;
+            transition:all 0.15s; flex-shrink:0;
+        }
+        .card-action-btn:hover { transform:scale(1.12); }
+        .btn-edit   { background:#ede9fe; color:#5b21b6; }
+        .btn-delete { background:#fee2e2; color:#dc2626; }
+
+        /* Edit modal */
+        .edit-modal-overlay { position:fixed; inset:0; z-index:60; background:rgba(30,20,60,0.6); backdrop-filter:blur(8px); display:none; justify-content:center; align-items:center; }
+        .edit-modal-overlay.open { display:flex; }
+        .edit-modal-box { background:white; border-radius:28px; padding:28px; width:min(460px,94vw); box-shadow:0 24px 60px rgba(0,0,0,0.2); }
+
+        @media (max-width:1024px) {
+            .main-card {
+                min-height: auto !important;
+                display: flex;
+                flex-direction: column;
+            }
+            .hero-image-wrap {
+                position: relative;
+                inset: auto;
+                width: 100%;
+                height: 240px;
+                border-radius: 36px 36px 0 0;
+                flex-shrink: 0;
+            }
+            .hero-image-wrap img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+            }
+            .hero-img-desktop { display: none; }
+            .hero-img-mobile { display: block; object-position: center top; }
+            .hero-image-wrap::after {
+                content: '';
+                position: absolute;
+                left: 0; right: 0; bottom: 0;
+                height: 90px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 70%, #ffffff 100%);
+                pointer-events: none;
+            }
+            .hero-content-panel {
+                position: relative;
+                z-index: 1;
+                width: 100% !important;
+                min-height: auto !important;
+                background: #ffffff;
+                border-radius: 0 0 36px 36px;
+            }
+            .hero-badge {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<!-- Navbar -->
+<nav class="navbar sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
+            <img src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="Logo" class="h-11 w-11 object-contain drop-shadow">
+            <div>
+                <h1 class="text-lg font-black text-gray-800 leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ @High School</h1>
+                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Thanakhan Oomsin School</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="hidden md:flex items-center gap-2 text-sm font-mono font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-full">
+                <i class="fa-regular fa-clock text-indigo-400"></i>
+                <span id="clock-span">00:00:00</span>
+            </div>
+            <button onclick="navigate('login-admin')" class="btn-pixar btn-rose text-white px-5 py-2.5 flex items-center gap-2 font-bold text-sm" style="font-family:'Kanit',sans-serif;border:none;">
+                <i class="fa-solid fa-lock"></i> ครูวิชาการ
+            </button>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col justify-center">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="view-dashboard" class="page-view active w-full">
+        <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5"></div>
+        <div class="main-card overflow-hidden relative" style="min-height:560px;">
+            <!-- รูป hero เต็มพื้นหลังของ main-card -->
+            <div class="hero-image-wrap">
+                <img class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="Students">
+                <img class="hero-img-mobile" src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="Students">
+            </div>
+
+            <!-- เนื้อหาฝั่งซ้ายลอยทับ -->
+            <div class="hero-content-panel w-full lg:w-1/2 p-8 md:p-10 flex flex-col justify-center" style="min-height:560px;">
+                <div class="mb-7">
+                    <p class="text-indigo-400 font-semibold text-xs tracking-widest uppercase mb-1">🏫 Welcome</p>
+                    <h2 class="leading-[1.1] mb-1" style="font-family:'Syne','Kanit',sans-serif; font-weight:800; font-size:clamp(2rem,4vw,3.2rem); color:#111827; letter-spacing:-0.02em;">
+                        ยินดีต้อนรับ<br>
+                        <span style="background:linear-gradient(125deg,#D92B77 10%,#7C3AED 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;">เข้าสู่ระบบ</span>
+                    </h2>
+                    <p class="text-gray-400 mt-3 text-sm tracking-wide" style="font-family:'Prompt',sans-serif;">กรุณาเลือกเมนูที่ต้องการด้านล่าง</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div onclick="navigate('students')" class="btn-pixar btn-crimson p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:140px;">
+                        <div class="icon-bubble bg-white/20" style="width:56px;height:56px;"><i class="fa-solid fa-user-graduate text-2xl bounce"></i></div>
+                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">นักเรียน</h3><p class="text-xs opacity-70 mt-0.5">รายชื่อนักเรียน</p></div>
+                    </div>
+                    <div onclick="navigate('login-admin')" class="btn-pixar btn-violet p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:140px;">
+                        <div class="icon-bubble bg-white/20" style="width:56px;height:56px;"><i class="fa-solid fa-shield-halved text-2xl bounce" style="animation-delay:0.4s"></i></div>
+                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ</h3><p class="text-xs opacity-70 mt-0.5">สำหรับครู</p></div>
+                    </div>
+                </div>
+                <div id="all-cards-container" class="flex flex-col gap-3 mb-4"></div>
+                <button onclick="showQRModal()" class="w-full border-2 border-dashed border-pink-300 text-pink-500 hover:bg-pink-50 font-bold rounded-xl p-3 transition-all flex items-center justify-center gap-2 text-sm" style="font-family:'Kanit',sans-serif;">
+                    <i class="fa-solid fa-qrcode text-base"></i> QR Code วิชาการม.ปลาย
+                </button>
+            </div>
+
+            <!-- hero badge ลอยมุมขวาล่างของ main-card -->
+            <div class="hero-badge">
+                <p class="font-black leading-snug" style="font-family:'Syne','Kanit',sans-serif;">
+                    เปิดโลกกว้าง 🌟<br>สร้างโอกาส<br><span class="text-pink-600">มุ่งสู่สากล</span>
+                </p>
+            </div>
+        </div>
+    </div><!-- ปิด #view-dashboard -->
+
+    <!-- ===== STUDENTS ===== -->
+    <div id="view-students" class="page-view w-full">
+        <div class="admin-section p-5 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-0.5">👨‍🎓 Student Directory</p>
+                <h2 class="text-2xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">รายชื่อนักเรียน</h2>
+            </div>
+            <button onclick="navigate('dashboard')" class="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-gray-600 text-sm hover:-translate-y-1 transition-all self-start sm:self-auto" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;">
+                <i class="fa-solid fa-house"></i> หน้าหลัก
+            </button>
+        </div>
+        <div class="admin-section p-5 mb-4">
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="search-input" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pl-11" oninput="filterStudents()">
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2" id="filter-chips">
+                <button class="filter-chip active" data-level="all" onclick="setFilter('all')">all</button>
+                <button class="filter-chip" data-level="ม.4" onclick="setFilter('ม.4')">ม.4</button>
+                <button class="filter-chip" data-level="ม.5" onclick="setFilter('ม.5')">ม.5</button>
+                <button class="filter-chip" data-level="ม.6" onclick="setFilter('ม.6')">ม.6</button>
+            </div>
+        </div>
+        <div class="flex items-center justify-between mb-3 px-1">
+            <p class="text-sm text-gray-400 font-medium">แสดง <span id="result-count" class="font-bold text-gray-700">0</span> คน</p>
+            <div id="student-loading" class="hidden text-xs text-indigo-400 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> loading รอแป๊ป...
+            </div>
+        </div>
+        <div id="student-list" class="flex flex-col gap-2 mb-4"></div>
+        <div id="student-empty" class="hidden text-center py-16">
+            <div class="text-5xl mb-4">🔍</div>
+            <p class="text-gray-400 font-medium">อ้าว ไม่เจอ</p>
+        </div>
+    </div><!-- ปิด #view-students -->
+
+    <!-- ===== ADMIN LOGIN ===== -->
+    <div id="view-login-admin" class="page-view max-w-sm mx-auto mt-12 w-full">
+        <div class="login-card p-8 text-center">
+            <div class="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style="background:linear-gradient(145deg,#9B6EFF,#5B21B6);box-shadow:0 6px 0 #3b0d9e,0 12px 32px rgba(91,33,182,0.32);">
+                <i class="fa-solid fa-shield-halved text-3xl text-white"></i>
+            </div>
+            <h2 class="text-3xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">ฝ่ายวิชาการ</h2>
+            <p class="text-gray-400 mb-7 text-sm">password</p>
+            <input type="password" id="admin-pass" placeholder="••••••••" class="input-3d mb-5" onkeydown="if(event.key==='Enter') loginAdmin()">
+            <button onclick="loginAdmin()" class="btn-pixar btn-violet w-full py-4 text-white text-lg font-black" style="font-family:'Kanit',sans-serif;border:none;">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i> เข้าสู่ระบบ
+            </button>
+            <button onclick="navigate('dashboard')" class="mt-4 text-sm text-gray-400 hover:text-gray-600 transition underline block w-full">main page</button>
+        </div>
+    </div><!-- ปิด #view-login-admin -->
+
+    <!-- ===== ADMIN PANEL ===== -->
+    <div id="view-admin-panel" class="page-view">
+        <div class="admin-section p-6 mb-5 flex justify-between items-center">
+            <div>
+                <p class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-1">⚙️ Control Center</p>
+                <h2 class="text-3xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">ศูนย์ควบคุมส่วนกลาง</h2>
+                <p class="text-gray-400 text-sm">จัดการระบบและปรับแต่งหน้าเว็บ</p>
+            </div>
+            <button onclick="navigate('dashboard')" class="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-gray-600 text-sm hover:-translate-y-1 transition-all" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;">
+                <i class="fa-solid fa-house"></i> หน้าหลัก
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <!-- ตั้งค่าทั่วไป -->
+            <div class="admin-section p-6">
+                <div class="section-tag" style="background:#dbeafe;color:#1d4ed8;"><i class="fa-solid fa-sliders"></i> ตั้งค่าทั่วไป</div>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส Admin</label>
+                            <input type="password" id="set-admin-pwd" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส ครู</label>
+                            <input type="password" id="set-teacher-pwd" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1.5">Folder ID (Google Drive)</label>
+                        <input type="text" id="set-folder-id" class="admin-input">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">ชื่อผู้อำนวยการ</label>
+                            <input type="text" id="set-director" class="admin-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">หัวหน้าฝ่ายวิชาการ</label>
+                            <input type="text" id="set-academic" class="admin-input">
+                        </div>
+                    </div>
+                    <button onclick="saveAdminSettingsFn()" class="admin-btn admin-btn-blue"><i class="fa-solid fa-floppy-disk mr-2"></i>save</button>
+                </div>
+            </div>
+
+            <div class="space-y-5">
+
+                <!-- ประกาศ -->
+                <div class="admin-section p-6">
+                    <div class="section-tag" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullhorn"></i> ประกาศ</div>
+                    <div class="space-y-3">
+                        <input type="text" id="ann-img" class="admin-input text-sm" placeholder="URL รูปภาพ (ถ้ามี)">
+                        <textarea id="ann-text" rows="3" class="admin-input text-sm resize-none" placeholder="ข้อความประกาศ..."></textarea>
+                        <button onclick="saveAnnouncementFn()" class="admin-btn admin-btn-orange"><i class="fa-solid fa-bullhorn mr-2"></i>อัปเดตประกาศ</button>
+                    </div>
+                </div>
+
+                <!-- ===== เมนูเสริม (ปรับปรุงใหม่) ===== -->
+                <div class="admin-section p-6">
+                    <div class="section-tag" style="background:#ede9fe;color:#5b21b6;"><i class="fa-solid fa-wand-magic-sparkles"></i> จัดการปุ่มเมนูเสริม</div>
+
+                    <!-- ฟอร์มเพิ่ม/แก้ไข -->
+                    <div class="space-y-3 mb-4" id="card-form-wrap">
+                        <input type="text" id="new-card-title" class="admin-input" placeholder="ชื่อเมนู เช่น ประกาศผลสอบ">
+                        <input type="text" id="new-card-desc"  class="admin-input text-sm" placeholder="คำอธิบาย (ถ้ามี)">
+                        <input type="text" id="new-card-url"   class="admin-input text-sm" placeholder="ลิงก์ URL ปลายทาง (ถ้ามี)">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">สีของปุ่ม</label>
+                                <select id="new-card-color" class="admin-input text-sm">
+                                    <option value="purple">🟣 สีม่วง</option>
+                                    <option value="blue">🔵 สีฟ้า</option>
+                                    <option value="pink">🩷 สีชมพู</option>
+                                    <option value="orange">🟠 สีส้ม</option>
+                                    <option value="teal">🟢 สีเขียว</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">ไอคอน</label>
+                                <select id="new-card-icon" class="admin-input text-sm">
+                                    <option value="fa-star">⭐ ดาว</option>
+                                    <option value="fa-link">🔗 ลิงก์</option>
+                                    <option value="fa-file-lines">📄 เอกสาร</option>
+                                    <option value="fa-bullhorn">📢 ประกาศ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- ปุ่ม: สลับระหว่าง "เพิ่ม" กับ "บันทึกการแก้ไข" -->
+                        <div class="flex gap-2">
+                            <button id="btn-add-card" onclick="addWebCardFn()" class="admin-btn admin-btn-violet flex-1">
+                                <i class="fa-solid fa-plus mr-2"></i>เพิ่มปุ่มขึ้นหน้าเว็บ
+                            </button>
+                            <button id="btn-save-edit" onclick="saveEditCardFn()" class="admin-btn admin-btn-blue flex-1 hidden">
+                                <i class="fa-solid fa-floppy-disk mr-2"></i>บันทึกการแก้ไข
+                            </button>
+                            <button id="btn-cancel-edit" onclick="cancelEditCardFn()" class="hidden px-4 rounded-2xl font-bold text-gray-500 text-sm" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;cursor:pointer;">
+                                ยกเลิก
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- รายการ card ที่มีอยู่ -->
+                    <div>
+                        <p class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">รายการที่มีอยู่</p>
+                        <div id="card-manager-list" class="flex flex-col gap-2"></div>
+                        <div id="card-manager-empty" class="hidden text-center py-6 text-gray-300 text-sm">
+                            <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>ยังไม่มีเมนูเสริม
+                        </div>
+                    </div>
+
+                    <div class="text-right mt-3">
+                        <button onclick="clearWebCardsFn()" class="text-xs text-red-400 hover:text-red-600 underline">ลบทั้งหมด</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div><!-- ปิด #view-admin-panel -->
+
+</main>
+
+<footer class="py-4 text-center mt-2">
+    <p class="text-xs text-gray-400 font-medium">Copyright &copy; 2026 Academic System@J.SUTTIPRAPA · All rights reserved.</p>
+</footer>
+
+<!-- QR Modal -->
+<div id="qr-modal" class="modal-overlay fixed inset-0 z-50 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+    <div class="login-card p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center" style="background:linear-gradient(145deg,#FF6B9D,#D92B77);box-shadow:0 5px 0 #9e1855,0 8px 20px rgba(217,43,119,0.28);">
+            <i class="fa-solid fa-qrcode text-2xl text-white"></i>
+        </div>
+        <h3 class="text-2xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">scan</h3>
+        <p class="text-gray-400 text-sm mb-5">ระบบวิชาการม.ปลาย</p>
+        <div id="qrcode-container" class="bg-white p-4 rounded-2xl inline-block border border-pink-100 mb-5 shadow-inner"></div>
+        <button onclick="closeQRModal()" class="btn-pixar btn-crimson w-full py-3 text-white font-black text-base" style="font-family:'Kanit',sans-serif;border:none;">ปิดหน้าต่าง</button>
+    </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// API CONFIG — GitHub Pages -> GAS Web App
+// ════════════════════════════════════════
+// ⚠️ URL นี้คือ Deployment URL (/exec) ของระบบ "วิชาการ @High School"
+const API_URL = 'https://script.google.com/macros/s/AKfycbx9majzXlQoNQV_BL2oxSa8y3glZDtkooUCRLxHG1Tlx-GeALdotkRx20Vp7NkxjSK32A/exec';
+
+async function callAPI(action, payload = {}) {
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, ...payload })
+    });
+    if (!res.ok) {
+        throw new Error('เครือข่ายผิดพลาด (HTTP ' + res.status + ')');
+    }
+    // ฟังก์ชันฝั่ง Code.gs ทุกตัว return JSON.stringify(...) เป็น string อยู่แล้ว
+    // ใช้ res.text() แล้วค่อย JSON.parse ให้เหมือนพฤติกรรมเดิมของ google.script.run
+    return res.text();
+}
+
+function handleScriptError(error) {
+    Swal.close();
+    Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text: (error && error.message) ? error.message : String(error), confirmButtonColor:'#5B21B6' });
+}
+
+// ===== Navigation =====
+function navigate(viewId) {
+    document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+    document.getElementById('view-' + viewId).classList.add('active');
+    if (viewId === 'dashboard')   { loadDashboardStats(); loadWebCards(); }
+    if (viewId === 'admin-panel') { loadAdminSettings(); loadCardManager(); }
+    if (viewId === 'students')    loadStudents();
+}
+
+// ===== Clock =====
+setInterval(() => {
+    document.getElementById('clock-span').textContent = new Date().toLocaleTimeString('th-TH');
+}, 1000);
+
+// ===== Stats =====
+function renderSkeletonStats() {
+    const c = document.getElementById('stats-container');
+    c.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+        c.innerHTML += `<div class="bg-white rounded-2xl p-5 flex flex-col gap-3" style="box-shadow:0 5px 0 rgba(0,0,0,0.04),0 8px 20px rgba(0,0,0,0.06);">
+            <div class="skeleton h-3 w-20 rounded-full"></div>
+            <div class="skeleton h-8 w-14 rounded-xl"></div>
+        </div>`;
+    }
+}
+function loadDashboardStats() {
+    renderSkeletonStats();
+    callAPI('getDashboardStats').then(response => {
+        const res = JSON.parse(response);
+        if (res.status !== 'success') return;
+        const d = res.data;
+        document.getElementById('stats-container').innerHTML = `
+            <div class="stat-card stat-pink p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
+            <div class="stat-card stat-blue p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 4</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">M.4</span></div>
+            <div class="stat-card stat-orange p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 5</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">M.5</span></div>
+            <div class="stat-card stat-teal p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 6</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">M.6</span></div>`;
+    }).catch(handleScriptError);
+}
+
+// ===== Students =====
+let allStudents = [], activeLevel = 'all';
+function loadStudents() {
+    document.getElementById('student-loading').classList.remove('hidden');
+    document.getElementById('student-list').innerHTML = '';
+    document.getElementById('student-empty').classList.add('hidden');
+    document.getElementById('search-input').value = '';
+    activeLevel = 'all';
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    document.querySelector('[data-level="all"]').classList.add('active');
+    callAPI('getStudentList').then(response => {
+        document.getElementById('student-loading').classList.add('hidden');
+        const res = JSON.parse(response);
+        if (res.status !== 'success') return;
+        allStudents = res.data;
+        renderStudents(allStudents);
+    }).catch(handleScriptError);
+}
+function renderStudents(list) {
+    const container = document.getElementById('student-list');
+    const empty = document.getElementById('student-empty');
+    container.innerHTML = '';
+    if (list.length === 0) { empty.classList.remove('hidden'); document.getElementById('result-count').textContent = '0'; return; }
+    empty.classList.add('hidden');
+    document.getElementById('result-count').textContent = list.length;
+    const avClass = {'ม.4':'av-m4','ม.5':'av-m5','ม.6':'av-m6'};
+    const badgeClass = {'ม.4':'badge-m4','ม.5':'badge-m5','ม.6':'badge-m6'};
+    list.forEach(row => {
+        const id=row[0]||'', name=row[1]||'', lvl=row[2]||'', room=row[3]||'';
+        const initials=name.trim().charAt(0)||'?';
+        container.insertAdjacentHTML('beforeend',`
+            <div class="student-row">
+                <div class="avatar-circle ${avClass[lvl]||'av-default'}">${initials}</div>
+                <div class="flex-1 min-w-0"><p class="font-semibold text-gray-800 text-sm truncate">${name}</p><p class="text-xs text-gray-400 mt-0.5">${id}</p></div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    ${room?`<span class="text-xs text-gray-400 font-medium">ห้อง ${room}</span>`:''}
+                    ${lvl?`<span class="class-badge ${badgeClass[lvl]||'badge-def'}">${lvl}</span>`:''}
+                </div>
+            </div>`);
+    });
+}
+function setFilter(level) {
+    activeLevel = level;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    document.querySelector(`[data-level="${level}"]`).classList.add('active');
+    filterStudents();
+}
+function filterStudents() {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    let list = allStudents;
+    if (activeLevel !== 'all') list = list.filter(r => r[2] === activeLevel);
+    if (q) list = list.filter(r => (r[0]+' '+r[1]).toLowerCase().includes(q));
+    renderStudents(list);
+}
+
+// ===== Admin Auth =====
+function loginAdmin() {
+    const pwd = document.getElementById('admin-pass').value;
+    if (!pwd) return;
+    Swal.fire({ title:'กำลังตรวจสอบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('authenticate', { role: 'admin', password: pwd }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.close();
+            document.getElementById('admin-pass').value = '';
+            navigate('admin-panel');
+        } else {
+            Swal.fire({ icon:'error', title:'รหัสผ่านไม่ถูกต้อง', text:r.message, confirmButtonColor:'#5B21B6' });
+        }
+    }).catch(handleScriptError);
+}
+
+// ===== Admin Settings =====
+function loadAdminSettings() {
+    callAPI('getAdminSettings').then(res => {
+        const d = JSON.parse(res).data;
+        document.getElementById('set-folder-id').value = d.folder_id;
+        document.getElementById('set-director').value  = d.director_name;
+        document.getElementById('set-academic').value  = d.academic_head;
+        document.getElementById('ann-text').value      = d.announcement_text;
+        document.getElementById('ann-img').value       = d.announcement_img;
+    }).catch(handleScriptError);
+}
+function saveAdminSettingsFn() {
+    const data = {
+        admin_pwd:     document.getElementById('set-admin-pwd').value,
+        teacher_pwd:   document.getElementById('set-teacher-pwd').value,
+        folder_id:     document.getElementById('set-folder-id').value,
+        director_name: document.getElementById('set-director').value,
+        academic_head: document.getElementById('set-academic').value
+    };
+    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('saveAdminSettings', { data }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:'บันทึกสำเร็จ ✅', confirmButtonColor:'#00897b' });
+            document.getElementById('set-admin-pwd').value   = '';
+            document.getElementById('set-teacher-pwd').value = '';
+        }
+    }).catch(handleScriptError);
+}
+function saveAnnouncementFn() {
+    const text = document.getElementById('ann-text').value;
+    const img  = document.getElementById('ann-img').value;
+    if (!text && !img) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือ URL รูปภาพ' });
+    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('saveAnnouncementOnly', { text, img }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ ✅', confirmButtonColor:'#00897b' });
+    }).catch(handleScriptError);
+}
+
+// ===== Dashboard: แสดง card บนหน้าหลัก =====
+function loadWebCards() {
+    callAPI('getWebCards').then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        const container = document.getElementById('all-cards-container');
+        container.innerHTML = '';
+        const btnMap = { purple:'btn-violet', blue:'btn-sky', pink:'btn-rose', orange:'btn-amber', teal:'btn-teal' };
+        r.data.forEach(card => {
+            const btnClass = btnMap[card.color] || 'btn-violet';
+            const icon = card.icon || 'fa-star';
+            const click = card.url
+                ? `window.open('${card.url}','_blank')`
+                : `Swal.fire({title:'${card.title}',text:'${card.desc||''}',icon:'info'})`;
+            container.insertAdjacentHTML('beforeend', `
+                <div onclick="${click}" class="btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white">
+                    <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
+                    <div class="flex-1">
+                        <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
+                        ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
+                    </div>
+                    <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>
+                </div>`);
+        });
+    }).catch(handleScriptError);
+}
+
+// ===== Admin: Card Manager (ตารางแก้ไข/ลบ) =====
+const colorDotMap = { purple:'dot-purple', blue:'dot-blue', pink:'dot-pink', orange:'dot-orange', teal:'dot-teal' };
+const colorLabelMap = { purple:'🟣 ม่วง', blue:'🔵 ฟ้า', pink:'🩷 ชมพู', orange:'🟠 ส้ม', teal:'🟢 เขียว' };
+
+function loadCardManager() {
+    callAPI('getWebCards').then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        renderCardManager(r.data);
+    }).catch(handleScriptError);
+}
+
+function renderCardManager(cards) {
+    const list  = document.getElementById('card-manager-list');
+    const empty = document.getElementById('card-manager-empty');
+    list.innerHTML = '';
+    if (cards.length === 0) { empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    cards.forEach((card, i) => {
+        const dotClass = colorDotMap[card.color] || 'dot-purple';
+        list.insertAdjacentHTML('beforeend', `
+            <div class="card-row" id="card-row-${i}">
+                <div class="color-dot ${dotClass}"></div>
+                <div class="min-w-0">
+                    <p class="font-semibold text-gray-800 text-sm truncate">${card.title}</p>
+                    <p class="text-xs text-gray-400 truncate">${card.desc || '—'}&nbsp;${card.url ? '<i class="fa-solid fa-link text-indigo-300"></i>' : ''}</p>
+                </div>
+                <div class="flex gap-1.5">
+                    <button class="card-action-btn btn-edit" onclick="startEditCard(${i})" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
+                    <button class="card-action-btn btn-delete" onclick="deleteCardFn(${i})" title="ลบ"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>`);
+    });
+}
+
+// state สำหรับ edit mode
+let editingIndex = -1;
+
+function startEditCard(index) {
+    callAPI('getWebCards').then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        const card = r.data[index];
+        if (!card) return;
+
+        // เติมฟอร์ม
+        document.getElementById('new-card-title').value = card.title || '';
+        document.getElementById('new-card-desc').value  = card.desc  || '';
+        document.getElementById('new-card-url').value   = card.url   || '';
+        document.getElementById('new-card-color').value = card.color || 'purple';
+        document.getElementById('new-card-icon').value  = card.icon  || 'fa-star';
+
+        // สลับปุ่ม
+        document.getElementById('btn-add-card').classList.add('hidden');
+        document.getElementById('btn-save-edit').classList.remove('hidden');
+        document.getElementById('btn-cancel-edit').classList.remove('hidden');
+
+        // highlight row
+        document.querySelectorAll('.card-row').forEach(r => r.style.background = '');
+        const row = document.getElementById(`card-row-${index}`);
+        if (row) row.style.background = '#ede9fe';
+
+        editingIndex = index;
+        // scroll ขึ้นไปหาฟอร์ม
+        document.getElementById('card-form-wrap').scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }).catch(handleScriptError);
+}
+
+function saveEditCardFn() {
+    if (editingIndex < 0) return;
+    const cardData = {
+        title: document.getElementById('new-card-title').value.trim(),
+        desc:  document.getElementById('new-card-desc').value.trim(),
+        url:   document.getElementById('new-card-url').value.trim(),
+        color: document.getElementById('new-card-color').value,
+        icon:  document.getElementById('new-card-icon').value
+    };
+    if (!cardData.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู' });
+    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('updateWebCard', { index: editingIndex, data: cardData }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
+            cancelEditCardFn();
+            loadCardManager();
+            loadWebCards();
+        }
+    }).catch(handleScriptError);
+}
+
+function cancelEditCardFn() {
+    editingIndex = -1;
+    ['new-card-title','new-card-desc','new-card-url'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('new-card-color').value = 'purple';
+    document.getElementById('new-card-icon').value  = 'fa-star';
+    document.getElementById('btn-add-card').classList.remove('hidden');
+    document.getElementById('btn-save-edit').classList.add('hidden');
+    document.getElementById('btn-cancel-edit').classList.add('hidden');
+    document.querySelectorAll('.card-row').forEach(r => r.style.background = '');
+}
+
+function addWebCardFn() {
+    const title = document.getElementById('new-card-title').value.trim();
+    const desc  = document.getElementById('new-card-desc').value.trim();
+    const url   = document.getElementById('new-card-url').value.trim();
+    const color = document.getElementById('new-card-color').value;
+    const icon  = document.getElementById('new-card-icon').value;
+    if (!title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู' });
+    Swal.fire({ title:'กำลังสร้างเมนู...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('addWebCard', { data: { title, desc, url, color, icon } }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
+            ['new-card-title','new-card-desc','new-card-url'].forEach(id => document.getElementById(id).value='');
+            loadCardManager();
+            loadWebCards();
+        }
+    }).catch(handleScriptError);
+}
+
+function deleteCardFn(index) {
+    Swal.fire({
+        title:'ยืนยันการลบ?', text:'ปุ่มนี้จะหายไปจากหน้าเว็บ',
+        icon:'warning', showCancelButton:true,
+        confirmButtonColor:'#D92B77', cancelButtonColor:'#9ca3af',
+        confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        Swal.fire({ title:'กำลังลบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+        callAPI('deleteWebCard', { index }).then(res => {
+            const r = JSON.parse(res);
+            if (r.status === 'success') {
+                Swal.fire({ icon:'success', title:r.message });
+                if (editingIndex === index) cancelEditCardFn();
+                loadCardManager();
+                loadWebCards();
+            }
+        }).catch(handleScriptError);
+    });
+}
+
+function clearWebCardsFn() {
+    Swal.fire({
+        title:'ยืนยันการลบ?', text:'ปุ่มเสริมทั้งหมดจะหายไป',
+        icon:'warning', showCancelButton:true,
+        confirmButtonColor:'#D92B77', cancelButtonColor:'#9ca3af',
+        confirmButtonText:'ลบทั้งหมด', cancelButtonText:'ยกเลิก'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        Swal.fire({ title:'กำลังล้างข้อมูล...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+        callAPI('clearWebCards').then(() => {
+            Swal.fire({ icon:'success', title:'ล้างข้อมูลสำเร็จ' });
+            cancelEditCardFn();
+            loadCardManager();
+            loadWebCards();
+        }).catch(handleScriptError);
+    });
+}
+
+// ===== QR =====
+let qrcodeInstance = null;
+function showQRModal() {
+    const modal = document.getElementById('qr-modal');
+    const content = document.getElementById('qr-modal-content');
+    modal.classList.remove('hidden');
+    setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+    if (!qrcodeInstance) {
+        qrcodeInstance = new QRCode(document.getElementById('qrcode-container'), {
+            // บน GitHub Pages ใช้ URL ของหน้าเว็บปัจจุบันแทน webAppUrl ของ GAS
+            text: window.location.href,
+            width:180, height:180, colorDark:'#5B21B6', colorLight:'#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
+}
+function closeQRModal() {
+    const modal = document.getElementById('qr-modal');
+    const content = document.getElementById('qr-modal-content');
+    modal.classList.add('opacity-0');
+    content.classList.remove('scale-100');
+    content.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+// ===== Init =====
+window.onload = function () {
+    loadDashboardStats();
+    loadWebCards();
+    callAPI('getAnnouncement').then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({
+                title:'📢 ประกาศ',
+                html:`<p class="text-gray-700 text-lg mb-4">${r.data.text}</p>${r.data.img?`<img src="${r.data.img}" class="w-full h-40 object-cover rounded-2xl shadow">` : ''}`,
+                confirmButtonText:'รับทราบ', confirmButtonColor:'#5B21B6',
+                customClass:{ popup:'rounded-3xl' }
+            });
+        }
+    }).catch(handleScriptError);
+};
+</script>
+</body>
+</html>
