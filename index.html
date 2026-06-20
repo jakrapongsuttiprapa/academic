@@ -18,13 +18,28 @@
 
         body {
             font-family: 'Prompt', sans-serif;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(217,43,119,0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(91,33,182,0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 60% 10%, rgba(96,198,255,0.10) 0%, transparent 40%),
-                #f0f4ff;
+            background:
+                radial-gradient(ellipse at 18% 12%, rgba(217,43,119,0.12) 0%, transparent 46%),
+                radial-gradient(ellipse at 82% 88%, rgba(91,33,182,0.12) 0%, transparent 48%),
+                radial-gradient(ellipse at 60% 8%, rgba(96,198,255,0.10) 0%, transparent 40%),
+                linear-gradient(135deg, #eef2ff 0%, #f5f0ff 48%, #fff0f7 100%);
             min-height: 100vh;
             overflow-x: hidden;
+        }
+        /* แสง aurora ลอยเบาๆ เป็นฉากหลังแบบมีชีวิต */
+        body::before {
+            content:''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(circle at 15% 18%, rgba(217,43,119,0.16) 0%, transparent 38%),
+                radial-gradient(circle at 85% 22%, rgba(96,198,255,0.15) 0%, transparent 38%),
+                radial-gradient(circle at 78% 82%, rgba(124,58,237,0.16) 0%, transparent 40%),
+                radial-gradient(circle at 18% 80%, rgba(45,212,176,0.12) 0%, transparent 38%);
+            filter: blur(36px);
+            animation: auroraFloat 22s ease-in-out infinite alternate;
+        }
+        @keyframes auroraFloat {
+            0%   { transform: translate(0,0) scale(1); }
+            100% { transform: translate(-3%,3%) scale(1.12); }
         }
 
         .btn-pixar {
@@ -34,9 +49,17 @@
         }
         .btn-pixar::before {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
-            border-radius: inherit; pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,0.30) 0%, transparent 55%);
+            border-radius: inherit; pointer-events: none; z-index: 1;
         }
+        /* แสงวิ่งกวาดตอนชี้/แตะ */
+        .btn-pixar::after {
+            content:''; position: absolute; top: 0; bottom: 0; left: -85%; width: 55%;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.40), transparent);
+            transform: skewX(-18deg); pointer-events: none; z-index: 2;
+            transition: left 0.7s cubic-bezier(0.4,0,0.2,1);
+        }
+        .btn-pixar:hover::after { left: 140%; }
         .btn-pixar:hover  { transform: translateY(-5px) scale(1.02); }
         .btn-pixar:active { transform: translateY(0px) scale(0.97); }
 
@@ -45,30 +68,47 @@
         .btn-violet  { background: linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 6px 0 #3b0d9e,0 10px 24px rgba(91,33,182,0.35); }
         .btn-violet:hover { box-shadow:0 10px 0 #3b0d9e,0 18px 36px rgba(91,33,182,0.45); }
         .btn-sky     { background: linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 6px 0 #0d5ea0,0 10px 24px rgba(25,118,210,0.35); }
+        .btn-sky:hover { box-shadow:0 10px 0 #0d5ea0,0 18px 36px rgba(25,118,210,0.45); }
         .btn-crimson { background: linear-gradient(145deg,#FF5A5A,#8B0000); box-shadow:0 6px 0 #5a0000,0 10px 24px rgba(139,0,0,0.35); }
+        .btn-crimson:hover { box-shadow:0 10px 0 #5a0000,0 18px 36px rgba(139,0,0,0.45); }
         .btn-teal    { background: linear-gradient(145deg,#2DD4B0,#00796B); box-shadow:0 6px 0 #004d40,0 10px 24px rgba(0,121,107,0.35); }
+        .btn-teal:hover { box-shadow:0 10px 0 #004d40,0 18px 36px rgba(0,121,107,0.45); }
         .btn-amber   { background: linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 6px 0 #bf360c,0 10px 24px rgba(230,81,0,0.35); }
+        .btn-amber:hover { box-shadow:0 10px 0 #bf360c,0 18px 36px rgba(230,81,0,0.45); }
 
         .main-card {
-            background: rgba(255,255,255,0.95); border: 1.5px solid rgba(255,255,255,0.9);
-            border-radius: 36px; box-shadow: 0 16px 48px rgba(0,0,0,0.10),0 3px 0 rgba(0,0,0,0.04);
+            background: rgba(255,255,255,0.96); border: 1.5px solid rgba(255,255,255,0.9);
+            border-radius: 36px; box-shadow: 0 24px 60px rgba(60,40,120,0.13),0 3px 0 rgba(0,0,0,0.04);
         }
+
+        /* ===== Stat cards (สดใส มีไล่สี + เรืองแสง) ===== */
         .stat-card {
-            background: white; border-radius: 20px; position: relative; overflow: hidden;
+            background: white; border-radius: 22px; position: relative; overflow: hidden;
             transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
             box-shadow: 0 6px 0 rgba(0,0,0,0.05),0 10px 24px rgba(0,0,0,0.07);
+            animation: fadeUp 0.5s both;
         }
-        .stat-card:hover { transform: translateY(-4px) scale(1.02); }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:20px 20px 0 0; }
+        .stat-card:hover { transform: translateY(-5px) scale(1.02); }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; border-radius:22px 22px 0 0; z-index:2; }
+        /* แสงวงกลมจางมุมขวาบน */
+        .stat-card::after { content:''; position:absolute; top:-30px; right:-30px; width:96px; height:96px; border-radius:50%; opacity:0.5; pointer-events:none; }
+        .stat-pink   { background:linear-gradient(160deg,#ffffff 58%,#ffeaf3); box-shadow:0 6px 0 rgba(217,43,119,0.10),0 12px 28px rgba(217,43,119,0.14); }
         .stat-pink::before   { background:linear-gradient(90deg,#FF6B9D,#D92B77); }
+        .stat-pink::after    { background:radial-gradient(circle,#FF6B9D,transparent 70%); }
+        .stat-blue   { background:linear-gradient(160deg,#ffffff 58%,#e8f3ff); box-shadow:0 6px 0 rgba(25,118,210,0.10),0 12px 28px rgba(25,118,210,0.14); }
         .stat-blue::before   { background:linear-gradient(90deg,#60C6FF,#1976D2); }
+        .stat-blue::after    { background:radial-gradient(circle,#60C6FF,transparent 70%); }
+        .stat-orange { background:linear-gradient(160deg,#ffffff 58%,#fff2e1); box-shadow:0 6px 0 rgba(230,81,0,0.10),0 12px 28px rgba(230,81,0,0.14); }
         .stat-orange::before { background:linear-gradient(90deg,#FFB547,#F57C00); }
+        .stat-orange::after  { background:radial-gradient(circle,#FFB547,transparent 70%); }
+        .stat-teal   { background:linear-gradient(160deg,#ffffff 58%,#e4fbf3); box-shadow:0 6px 0 rgba(0,121,107,0.10),0 12px 28px rgba(0,121,107,0.14); }
         .stat-teal::before   { background:linear-gradient(90deg,#2DD4B0,#00796B); }
+        .stat-teal::after    { background:radial-gradient(circle,#2DD4B0,transparent 70%); }
 
-        .navbar { background:rgba(255,255,255,0.95); border-bottom:1.5px solid rgba(220,230,255,0.6); box-shadow:0 2px 16px rgba(0,0,0,0.06); }
-        .icon-bubble { border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+        .navbar { background:rgba(255,255,255,0.82); backdrop-filter:blur(18px) saturate(180%); -webkit-backdrop-filter:blur(18px) saturate(180%); border-bottom:1.5px solid rgba(220,230,255,0.7); box-shadow:0 2px 20px rgba(60,40,120,0.07); }
+        .icon-bubble { border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; box-shadow:inset 0 -3px 8px rgba(0,0,0,0.12); }
         .icon-bubble::after { content:''; position:absolute; top:18%; left:18%; width:35%; height:25%; background:rgba(255,255,255,0.45); border-radius:50%; transform:rotate(-30deg); }
-        .login-card { background:rgba(255,255,255,0.96); border-radius:32px; box-shadow:0 20px 56px rgba(0,0,0,0.13),0 4px 0 rgba(0,0,0,0.05); border:1.5px solid rgba(255,255,255,0.85); }
+        .login-card { background:rgba(255,255,255,0.97); border-radius:32px; box-shadow:0 24px 60px rgba(60,40,120,0.16),0 4px 0 rgba(0,0,0,0.05); border:1.5px solid rgba(255,255,255,0.85); }
 
         .input-3d {
             background:#f0f4ff; border:2px solid #d4deff; border-radius:14px;
@@ -81,15 +121,19 @@
         .page-view { display:none; animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
         .page-view.active { display:block; }
         @keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+        /* การ์ดเมนูเสริมที่ JS สร้าง ให้ค่อยๆ โผล่ */
+        #all-cards-container .btn-pixar { animation: fadeUp 0.4s both; }
 
         .skeleton { background:linear-gradient(90deg,#e8edf8 25%,#f5f7ff 50%,#e8edf8 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
         @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-        .admin-section { background:rgba(255,255,255,0.95); border-radius:24px; border:1.5px solid rgba(220,230,255,0.6); box-shadow:0 8px 32px rgba(0,0,0,0.07),0 2px 0 rgba(0,0,0,0.03); }
-        .section-tag { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:100px; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; margin-bottom:16px; }
+        .admin-section { background:rgba(255,255,255,0.96); border-radius:24px; border:1.5px solid rgba(220,230,255,0.7); box-shadow:0 10px 36px rgba(60,40,120,0.09),0 2px 0 rgba(0,0,0,0.03); }
+        .section-tag { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:100px; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
         .admin-input { background:#f8faff; border:1.5px solid #e2e8f8; border-radius:12px; padding:10px 14px; font-family:'Prompt',sans-serif; outline:none; transition:all 0.2s; width:100%; color:#1e293b; }
         .admin-input:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.1); }
-        .admin-btn { border-radius:14px; padding:11px 22px; font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; border:none; cursor:pointer; transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1); width:100%; }
+        .admin-btn { border-radius:14px; padding:11px 22px; font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; border:none; cursor:pointer; transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1); width:100%; position:relative; overflow:hidden; }
         .admin-btn:hover  { transform:translateY(-2px); }
         .admin-btn:active { transform:translateY(0); }
         .admin-btn-blue   { background:linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 5px 0 #0d5ea0,0 8px 20px rgba(25,118,210,0.3); color:white; }
@@ -110,18 +154,23 @@
             position: relative; z-index: 10;
             background: linear-gradient(to right, rgba(255,255,255,0.97) 55%, rgba(255,255,255,0.7) 80%, transparent 100%);
         }
+        /* แสงสีลอยมุมซ้ายบนของแผงเนื้อหา hero */
+        .hero-content-panel::before {
+            content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; z-index:-1;
+            background:radial-gradient(circle, rgba(217,43,119,0.12), transparent 70%); pointer-events:none;
+        }
 
         .search-box { background:white; border:1.5px solid #e2e8f8; border-radius:16px; padding:12px 18px; font-family:'Prompt',sans-serif; font-size:1rem; outline:none; transition:all 0.2s; width:100%; }
         .search-box:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.10); }
 
         .filter-chip { padding:7px 18px; border-radius:100px; font-size:0.82rem; font-weight:700; cursor:pointer; border:2px solid transparent; transition:all 0.18s; font-family:'Kanit',sans-serif; background:white; color:#64748b; border-color:#e2e8f0; }
-        .filter-chip.active { background:linear-gradient(135deg,#D92B77,#9B6EFF); color:white; border-color:transparent; box-shadow:0 4px 12px rgba(217,43,119,0.28); }
-        .filter-chip:hover:not(.active) { border-color:#D92B77; color:#D92B77; }
+        .filter-chip.active { background:linear-gradient(135deg,#D92B77,#9B6EFF); color:white; border-color:transparent; box-shadow:0 4px 14px rgba(217,43,119,0.30); }
+        .filter-chip:hover:not(.active) { border-color:#D92B77; color:#D92B77; transform:translateY(-1px); }
 
         .student-row { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:14px; background:white; border:1.5px solid #f1f5ff; transition:all 0.18s; }
-        .student-row:hover { border-color:#d4deff; transform:translateX(4px); box-shadow:0 4px 16px rgba(91,33,182,0.07); }
+        .student-row:hover { border-color:#d4deff; transform:translateX(4px); box-shadow:0 6px 18px rgba(91,33,182,0.10); }
 
-        .avatar-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Kanit',sans-serif; font-weight:700; font-size:0.85rem; flex-shrink:0; }
+        .avatar-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Kanit',sans-serif; font-weight:700; font-size:0.85rem; flex-shrink:0; box-shadow:inset 0 -2px 5px rgba(0,0,0,0.08); }
         .av-m4 { background:#dbeafe; color:#1d4ed8; }
         .av-m5 { background:#fef3c7; color:#92400e; }
         .av-m6 { background:#d1fae5; color:#065f46; }
@@ -143,8 +192,8 @@
             background:white; border:1.5px solid #f1f5ff;
             transition:all 0.18s;
         }
-        .card-row:hover { border-color:#d4deff; box-shadow:0 3px 12px rgba(91,33,182,0.07); }
-        .color-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .card-row:hover { border-color:#d4deff; box-shadow:0 4px 14px rgba(91,33,182,0.09); }
+        .color-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 3px rgba(0,0,0,0.04); }
         .dot-purple { background:#7C3AED; }
         .dot-blue   { background:#1976D2; }
         .dot-pink   { background:#D92B77; }
@@ -163,6 +212,32 @@
         .edit-modal-overlay { position:fixed; inset:0; z-index:60; background:rgba(30,20,60,0.6); backdrop-filter:blur(8px); display:none; justify-content:center; align-items:center; }
         .edit-modal-overlay.open { display:flex; }
         .edit-modal-box { background:white; border-radius:28px; padding:28px; width:min(460px,94vw); box-shadow:0 24px 60px rgba(0,0,0,0.2); }
+
+        /* ===== อัปเกรดระดับเทพ ===== */
+        /* หัวข้อต้อนรับ: ไล่สีไหลเคลื่อนไหวนุ่มๆ */
+        .welcome-gradient {
+            background:linear-gradient(125deg,#D92B77,#7C3AED,#1976D2,#D92B77);
+            background-size:300% 100%;
+            -webkit-background-clip:text; background-clip:text;
+            -webkit-text-fill-color:transparent; color:transparent;
+            display:inline-block;
+            animation: gradientFlow 7s ease infinite;
+        }
+        @keyframes gradientFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+        /* ตัวเลขสถิติเป็นไล่สีตามธีมแต่ละการ์ด */
+        #stats-container .stat-card h3 { -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
+        #stats-container .stat-pink h3   { background:linear-gradient(135deg,#FF6B9D,#D92B77); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-blue h3   { background:linear-gradient(135deg,#60C6FF,#1976D2); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-orange h3 { background:linear-gradient(135deg,#FFB547,#F57C00); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-teal h3   { background:linear-gradient(135deg,#2DD4B0,#00796B); -webkit-background-clip:text; background-clip:text; }
+
+        /* การ์ดหลัก: เพิ่มแสงเรืองสีนุ่มรอบๆ ให้ดูพรีเมียม */
+        .main-card { box-shadow: 0 24px 60px rgba(60,40,120,0.14),0 3px 0 rgba(0,0,0,0.04),0 0 70px rgba(124,58,237,0.09); }
+
+        @media (prefers-reduced-motion: reduce) {
+            body::before, .stat-card, #all-cards-container .btn-pixar, .bounce, .welcome-gradient { animation: none !important; }
+        }
 
         @media (max-width:1024px) {
             .main-card {
@@ -251,9 +326,9 @@
                     <p class="text-indigo-400 font-semibold text-xs tracking-widest uppercase mb-1">🏫 Welcome</p>
                     <h2 class="leading-[1.1] mb-1" style="font-family:'Syne','Kanit',sans-serif; font-weight:800; font-size:clamp(2rem,4vw,3.2rem); color:#111827; letter-spacing:-0.02em;">
                         ยินดีต้อนรับ<br>
-                        <span style="background:linear-gradient(125deg,#D92B77 10%,#7C3AED 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;">เข้าสู่ระบบ</span>
+                        <span class="welcome-gradient">นักเรียนม.ปลาย</span>
                     </h2>
-                    <p class="text-gray-400 mt-3 text-sm tracking-wide" style="font-family:'Prompt',sans-serif;">กรุณาเลือกเมนูที่ต้องการด้านล่าง</p>
+                    <p class="text-gray-400 mt-3 text-sm tracking-wide" style="font-family:'Prompt',sans-serif;">1st Semester Academic Year 2026</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div onclick="navigate('students')" class="btn-pixar btn-crimson p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:140px;">
@@ -457,8 +532,16 @@
 
 </main>
 
-<footer class="py-4 text-center mt-2">
-    <p class="text-xs text-gray-400 font-medium">Copyright &copy; 2026 Academic System@J.SUTTIPRAPA · All rights reserved.</p>
+<footer class="py-8 px-4 mt-4">
+    <div class="max-w-md mx-auto flex flex-col items-center gap-3">
+        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur-md border border-white/80 px-5 py-2.5 rounded-full shadow-sm">
+            <span class="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:linear-gradient(145deg,#D92B77,#7C3AED);box-shadow:0 2px 8px rgba(124,58,237,0.35);">
+                <i class="fa-solid fa-graduation-cap text-xs"></i>
+            </span>
+            <span class="text-sm font-extrabold tracking-tight" style="font-family:'Kanit',sans-serif;background:linear-gradient(125deg,#D92B77,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Academic System</span>
+        </div>
+        <p class="text-xs text-gray-400 font-medium tracking-wide">Copyright &copy; 2026 Academic System@J.SUTTIPRAPA</p>
+    </div>
 </footer>
 
 <!-- QR Modal -->
