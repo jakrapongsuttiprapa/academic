@@ -305,7 +305,7 @@
         .lock-card-glow { box-shadow:0 24px 60px rgba(60,40,120,0.18),0 4px 0 rgba(0,0,0,0.05),0 0 90px rgba(217,43,119,0.12); }
 
         /* วงแสงเต้นเบาๆ รอบไอคอนกุญแจ */
-        .lock-icon-ring { position:relative; display:inline-block; cursor:default; }
+        .lock-icon-ring { position:relative; display:inline-block; }
         .lock-icon-ring::before {
             content:''; position:absolute; inset:-10px; border-radius:50%;
             background:linear-gradient(145deg,#FF6B9D,#D92B77);
@@ -313,18 +313,6 @@
             animation:lockPulse 2.6s ease-in-out infinite;
         }
         @keyframes lockPulse { 0%,100%{transform:scale(1);opacity:0.35;} 50%{transform:scale(1.2);opacity:0.12;} }
-
-        /* ป้ายลายนิ้วมือ โผล่มุมล่างขวาของโลโก้ เฉพาะเครื่องที่เคยตั้งค่า Face ID/ลายนิ้วมือไว้แล้ว */
-        .bio-badge {
-            display:none; position:absolute; bottom:-2px; right:-2px;
-            width:26px; height:26px; border-radius:50%;
-            background:linear-gradient(145deg,#9B6EFF,#5B21B6);
-            color:#fff; align-items:center; justify-content:center; font-size:0.7rem;
-            box-shadow:0 3px 8px rgba(91,33,182,0.4); border:2px solid #fff; z-index:2;
-            animation: bioBadgePulse 2s ease-in-out infinite;
-        }
-        @keyframes bioBadgePulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.14);} }
-        #lock-logo-wrap.bio-ready { cursor:pointer; }
 
         /* ช่องกรอกรหัสแบบแยกหลัก */
         .pin-boxes { display:flex; justify-content:center; gap:9px; }
@@ -358,21 +346,15 @@
     <div class="lock-orb lock-orb-3"></div>
 
     <div class="login-card lock-card lock-card-glow p-8 sm:p-10 max-w-sm w-full text-center" id="lock-card">
-        <div style="width:80px;margin:0 auto;position:relative;">
-            <div class="lock-icon-ring" id="lock-logo-wrap" onclick="loginWithBiometric()">
-                <div class="w-20 h-20 rounded-full flex items-center justify-center relative p-2" style="background:linear-gradient(145deg,#FF6B9D,#D92B77);box-shadow:0 6px 0 #9e1855,0 12px 32px rgba(217,43,119,0.32);z-index:1;">
-                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                        <img src="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png" alt="โลโก้โรงเรียน" class="w-11 h-11 object-contain">
-                    </div>
+        <div class="lock-icon-ring mb-1">
+            <div class="w-20 h-20 mx-auto rounded-full flex items-center justify-center relative p-2" style="background:linear-gradient(145deg,#FF6B9D,#D92B77);box-shadow:0 6px 0 #9e1855,0 12px 32px rgba(217,43,119,0.32);z-index:1;">
+                <div class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                    <img src="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png" alt="โลโก้โรงเรียน" class="w-11 h-11 object-contain">
                 </div>
             </div>
-            <div class="bio-badge" id="bio-badge"><i class="fa-solid fa-fingerprint"></i></div>
         </div>
         <h2 class="text-2xl font-black text-gray-800 mt-4 mb-1" style="font-family:'Kanit',sans-serif;">ยืนยันตัวตน</h2>
-        <p class="text-gray-400 mb-1 text-sm">กรอกรหัส 6 หลักเพื่อเข้าใช้งานเว็บไซต์</p>
-        <p class="text-xs mb-6 font-semibold" id="bio-hint" style="display:none;color:#9B6EFF;">
-            <i class="fa-solid fa-fingerprint mr-1"></i> หรือแตะโลโก้เพื่อใช้ Face ID / ลายนิ้วมือ
-        </p>
+        <p class="text-gray-400 mb-7 text-sm">กรอกรหัส 6 หลักเพื่อเข้าใช้งานเว็บไซต์</p>
 
         <div class="pin-boxes mb-7">
             <input type="password" class="pin-box" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off">
@@ -704,104 +686,8 @@ function handleScriptError(error) {
 // ════════════════════════════════════════
 const SITE_LOCK_PIN = '212224';
 
-// ════════════════════════════════════════
-// BIOMETRIC (Face ID / ลายนิ้วมือ) — ทางเลือกแทนการพิมพ์รหัส เฉพาะเครื่องที่ตั้งค่าไว้
-// ใช้ WebAuthn ของเบราว์เซอร์ ให้ระบบปฏิบัติการเป็นคนสแกนหน้า/นิ้วจริงๆ ทุกครั้งที่แตะโลโก้
-// (ไม่ใช่การจำสถานะปลดล็อกไว้เฉยๆ — ต้องสแกนผ่านจริงทุกครั้ง เหมือนพิมพ์รหัสแค่เปลี่ยนวิธี)
-// ข้อจำกัด: ต้องตั้งค่าทีละเครื่อง ไม่ซิงก์ข้ามเครื่อง และใช้ได้เฉพาะเบราว์เซอร์/อุปกรณ์ที่รองรับ
-// ════════════════════════════════════════
-const BIO_SUPPORTED = !!(window.PublicKeyCredential);
-const BIO_CRED_KEY = 'academicBioCredId_v1'; // เก็บแค่ "หมายเลขอ้างอิง" ของเครื่องนี้ ไม่ใช่รหัสลับ ปลอดภัยที่จะเก็บไว้
-
-function hasRegisteredBio() {
-    return BIO_SUPPORTED && !!localStorage.getItem(BIO_CRED_KEY);
-}
-function b64uToBuf(b64u) {
-    const b64 = b64u.replace(/-/g, '+').replace(/_/g, '/');
-    const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
-    const bin = atob(b64 + pad);
-    const buf = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-    return buf.buffer;
-}
-function bufToB64u(buf) {
-    const bytes = new Uint8Array(buf);
-    let bin = '';
-    bytes.forEach(b => bin += String.fromCharCode(b));
-    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-function updateBioUI() {
-    const show = hasRegisteredBio();
-    const badge = document.getElementById('bio-badge');
-    const hint  = document.getElementById('bio-hint');
-    const wrap  = document.getElementById('lock-logo-wrap');
-    if (badge) badge.style.display = show ? 'flex' : 'none';
-    if (hint)  hint.style.display  = show ? 'block' : 'none';
-    if (wrap)  wrap.classList.toggle('bio-ready', show);
-}
-// ลงทะเบียนเครื่องนี้ไว้ใช้ Face ID/ลายนิ้วมือ (เรียกหลังพิมพ์รหัสถูกครั้งแรกเท่านั้น)
-async function registerBiometric() {
-    if (!BIO_SUPPORTED) return false;
-    try {
-        const cred = await navigator.credentials.create({
-            publicKey: {
-                challenge: crypto.getRandomValues(new Uint8Array(32)),
-                rp: { name: 'วิชาการ @High School' },
-                user: { id: crypto.getRandomValues(new Uint8Array(16)), name: 'teacher', displayName: 'ครูวิชาการ' },
-                pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
-                authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
-                timeout: 60000
-            }
-        });
-        if (cred) {
-            localStorage.setItem(BIO_CRED_KEY, bufToB64u(cred.rawId));
-            Swal.fire({ icon:'success', title:'ตั้งค่าสำเร็จ ✅', text:'ครั้งหน้าแตะโลโก้เพื่อใช้ Face ID / ลายนิ้วมือได้เลย', confirmButtonColor:'#00897b' });
-            return true;
-        }
-    } catch (err) {
-        console.warn('ลงทะเบียน biometric ไม่สำเร็จ:', err);
-        Swal.fire({ icon:'info', title:'ตั้งค่าไม่สำเร็จ', text:'เครื่องนี้อาจไม่รองรับ Face ID/ลายนิ้วมือ ใช้พิมพ์รหัสแทนได้ตามปกติ', confirmButtonColor:'#5B21B6' });
-    }
-    return false;
-}
-// ถามหลังพิมพ์รหัสถูก ว่าจะตั้งค่า Face ID/ลายนิ้วมือสำหรับเครื่องนี้ไหม (ถามเฉพาะเครื่องที่ยังไม่เคยตั้งและรองรับ)
-function offerBiometricSetup() {
-    if (!BIO_SUPPORTED || hasRegisteredBio()) return;
-    setTimeout(() => {
-        Swal.fire({
-            icon: 'question',
-            title: 'ตั้งค่า Face ID / ลายนิ้วมือ?',
-            text: 'ครั้งหน้าจะได้แตะโลโก้แทนการพิมพ์รหัส 6 หลัก (ใช้ได้เฉพาะเครื่องนี้เครื่องเดียว)',
-            showCancelButton: true,
-            confirmButtonText: 'ตั้งค่าเลย',
-            cancelButtonText: 'ไว้ทีหลัง',
-            confirmButtonColor: '#D92B77',
-            cancelButtonColor: '#9ca3af'
-        }).then(res => { if (res.isConfirmed) registerBiometric(); });
-    }, 900);
-}
-// แตะโลโก้ -> ให้เครื่องสแกนหน้า/นิ้วจริง ผ่านแล้วค่อยปลดล็อก (เช็กทุกครั้ง ไม่ใช่แค่จำสถานะไว้)
-async function loginWithBiometric() {
-    if (!hasRegisteredBio()) return; // เครื่องนี้ยังไม่เคยตั้งค่าไว้ ให้พิมพ์รหัสตามปกติ
-    try {
-        const assertion = await navigator.credentials.get({
-            publicKey: {
-                challenge: crypto.getRandomValues(new Uint8Array(32)),
-                allowCredentials: [{ type: 'public-key', id: b64uToBuf(localStorage.getItem(BIO_CRED_KEY)) }],
-                userVerification: 'required',
-                timeout: 60000
-            }
-        });
-        if (assertion) unlockSite();
-    } catch (err) {
-        console.warn('ยืนยันตัวตนด้วย biometric ไม่สำเร็จ:', err);
-        Swal.fire({ icon:'info', title:'ยืนยันตัวตนไม่สำเร็จ', text:'ลองแตะโลโก้ใหม่ หรือกรอกรหัสแทนได้เลยครับ', confirmButtonColor:'#5B21B6', timer:2500, showConfirmButton:false });
-    }
-}
-
 function checkSiteLock() {
     setupPinBoxes();
-    updateBioUI();
     document.getElementById('lock-screen').style.display = 'flex';
     document.getElementById('app-content').style.display = 'none';
     setTimeout(() => { const b = document.querySelector('.pin-box'); if (b) b.focus(); }, 150);
@@ -849,7 +735,6 @@ function verifyLockPin() {
     if (val.length < 6) return; // ยังกรอกไม่ครบ 6 หลัก ไม่ต้องเช็ก
     if (val === SITE_LOCK_PIN) {
         unlockSite(); // ปลดล็อกแค่รอบนี้เท่านั้น ไม่บันทึกไว้ที่ไหน รีเฟรชครั้งหน้าต้องกรอกใหม่
-        offerBiometricSetup(); // ถามว่าจะตั้ง Face ID/ลายนิ้วมือสำหรับเครื่องนี้ไหม (ถ้ายังไม่เคยตั้งและเครื่องรองรับ)
     } else {
         const card = document.getElementById('lock-card');
         card.classList.remove('lock-shake');
