@@ -7,6 +7,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
+    <!-- preconnect: บอกเบราว์เซอร์ให้เริ่มต่อโดเมนพวกนี้ล่วงหน้า ทำให้หน้าล็อกอิน/เว็บโหลดติดขึ้นเร็วขึ้น โดยเฉพาะบน Chromebook/iPad ที่เน็ตโรงเรียนอาจหน่วง -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://script.google.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -15,6 +21,7 @@
 
     <style>
         * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Prompt', sans-serif;
@@ -36,6 +43,7 @@
                 radial-gradient(circle at 18% 80%, rgba(45,212,176,0.12) 0%, transparent 38%);
             filter: blur(36px);
             animation: auroraFloat 22s ease-in-out infinite alternate;
+            will-change: transform;
         }
         @keyframes auroraFloat {
             0%   { transform: translate(0,0) scale(1); }
@@ -118,7 +126,7 @@
         }
         .input-3d:focus { border-color:#D92B77; box-shadow:inset 0 2px 6px rgba(0,0,0,0.05),0 0 0 3px rgba(217,43,119,0.12); }
 
-        .page-view { display:none; animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+        .page-view { display:none; animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); will-change: transform, opacity; }
         .page-view.active { display:block; }
         @keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
         @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
@@ -281,10 +289,48 @@
                 display: none;
             }
         }
+
+        /* ===== Site Lock Screen (เข้า-ออกแบบ fade ให้ลื่น ไม่กระตุก) ===== */
+        #app-content { display: none; opacity: 0; transition: opacity 0.4s ease; will-change: opacity; }
+        #app-content.app-fade-in { opacity: 1; }
+        #lock-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; opacity: 1; transition: opacity 0.35s ease;
+            background:
+                radial-gradient(ellipse at 18% 12%, rgba(217,43,119,0.16) 0%, transparent 46%),
+                radial-gradient(ellipse at 82% 88%, rgba(91,33,182,0.16) 0%, transparent 48%),
+                linear-gradient(135deg, #eef2ff 0%, #f5f0ff 48%, #fff0f7 100%);
+        }
+        #lock-screen.lock-fade-out { opacity: 0; pointer-events: none; }
+        .lock-shake { animation: lockShake 0.45s; }
+        @keyframes lockShake {
+            10%,90% { transform: translateX(-2px); }
+            20%,80% { transform: translateX(4px); }
+            30%,50%,70% { transform: translateX(-8px); }
+            40%,60% { transform: translateX(8px); }
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col">
+
+<!-- ===== SITE LOCK SCREEN (ต้องใส่รหัสก่อนเข้าเว็บ) ===== -->
+<div id="lock-screen">
+    <div class="login-card p-8 max-w-sm w-full text-center" id="lock-card">
+        <div class="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style="background:linear-gradient(145deg,#FF6B9D,#D92B77);box-shadow:0 6px 0 #9e1855,0 12px 32px rgba(217,43,119,0.32);">
+            <i class="fa-solid fa-lock text-3xl text-white"></i>
+        </div>
+        <h2 class="text-2xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">ยืนยันตัวตน</h2>
+        <p class="text-gray-400 mb-7 text-sm">กรุณาใส่รหัสผ่านเพื่อเข้าใช้งานเว็บไซต์</p>
+        <input type="password" id="lock-pin-input" inputmode="numeric" placeholder="••••••" class="input-3d mb-5" onkeydown="if(event.key==='Enter') verifyLockPin()">
+        <button onclick="verifyLockPin()" class="btn-pixar btn-rose w-full py-4 text-white text-lg font-black" style="font-family:'Kanit',sans-serif;border:none;">
+            <i class="fa-solid fa-right-to-bracket mr-2"></i> เข้าสู่เว็บไซต์
+        </button>
+    </div>
+</div>
+
+<div id="app-content">
 
 <!-- Navbar -->
 <nav class="navbar sticky top-0 z-50 px-4 py-3">
@@ -303,6 +349,9 @@
             </div>
             <button onclick="navigate('login-admin')" class="btn-pixar btn-rose text-white px-5 py-2.5 flex items-center gap-2 font-bold text-sm" style="font-family:'Kanit',sans-serif;border:none;">
                 <i class="fa-solid fa-lock"></i> ครูวิชาการ
+            </button>
+            <button onclick="lockSiteManually()" title="ล็อกหน้าจอ (สำหรับเครื่องคอมพิวเตอร์ส่วนกลาง)" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-pink-600 hover:bg-pink-50 transition-all" style="border:1.5px solid #e2e8f0;">
+                <i class="fa-solid fa-lock text-sm"></i>
             </button>
         </div>
     </div>
@@ -370,7 +419,7 @@
             <div class="flex flex-col sm:flex-row gap-3 mb-4">
                 <div class="relative flex-1">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" id="search-input" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pl-11" oninput="filterStudents()">
+                    <input type="text" id="search-input" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pl-11" oninput="debouncedFilterStudents()">
                 </div>
             </div>
             <div class="flex flex-wrap gap-2" id="filter-chips">
@@ -557,6 +606,8 @@
     </div>
 </div>
 
+</div><!-- ปิด #app-content -->
+
 <script>
 // ════════════════════════════════════════
 // API CONFIG — GitHub Pages -> GAS Web App
@@ -583,6 +634,59 @@ function handleScriptError(error) {
     Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text: (error && error.message) ? error.message : String(error), confirmButtonColor:'#5B21B6' });
 }
 
+// ════════════════════════════════════════
+// SITE LOCK — ต้องใส่รหัสก่อนเข้าเว็บ (เช็กทุกครั้งที่โหลดหน้า)
+// รีเฟรชแล้วไม่ต้องใส่รหัสซ้ำ เพราะสถานะปลดล็อกถูกจำไว้ใน localStorage ของเบราว์เซอร์
+// ════════════════════════════════════════
+const SITE_LOCK_PIN = '212224';
+const SITE_LOCK_KEY = 'academicSiteUnlocked_v1';
+
+function checkSiteLock() {
+    if (localStorage.getItem(SITE_LOCK_KEY) === 'true') {
+        unlockSite(true); // true = ปลดล็อกทันทีไม่ต้อง fade เพราะยังไม่เคยเห็นหน้าจอเลย
+    } else {
+        setTimeout(() => document.getElementById('lock-pin-input').focus(), 150);
+    }
+}
+
+function verifyLockPin() {
+    const input = document.getElementById('lock-pin-input');
+    const val = input.value.trim();
+    if (val === SITE_LOCK_PIN) {
+        localStorage.setItem(SITE_LOCK_KEY, 'true');
+        unlockSite();
+    } else {
+        const card = document.getElementById('lock-card');
+        card.classList.remove('lock-shake');
+        void card.offsetWidth; // reflow เพื่อรันแอนิเมชันซ้ำได้
+        card.classList.add('lock-shake');
+        input.value = '';
+        input.focus();
+        Swal.fire({ icon:'error', title:'รหัสไม่ถูกต้อง', confirmButtonColor:'#D92B77' });
+    }
+}
+
+function unlockSite(instant) {
+    const lock = document.getElementById('lock-screen');
+    const app  = document.getElementById('app-content');
+    app.style.display = '';
+    if (instant) {
+        lock.style.display = 'none';
+        app.classList.add('app-fade-in');
+    } else {
+        lock.classList.add('lock-fade-out');
+        requestAnimationFrame(() => app.classList.add('app-fade-in'));
+        setTimeout(() => { lock.style.display = 'none'; }, 350);
+    }
+    initMainApp();
+}
+
+// ปุ่มล็อกหน้าจอด้วยมือ (เผื่อใช้เครื่องคอมพิวเตอร์ส่วนกลาง/ของโรงเรียน)
+function lockSiteManually() {
+    localStorage.removeItem(SITE_LOCK_KEY);
+    location.reload();
+}
+
 // ===== Navigation =====
 function navigate(viewId) {
     document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
@@ -597,62 +701,110 @@ setInterval(() => {
     document.getElementById('clock-span').textContent = new Date().toLocaleTimeString('th-TH');
 }, 1000);
 
+// ===== Cache ชั่วคราวในหน่วยความจำ =====
+// เก็บผลลัพธ์ API ไว้ใช้ซ้ำสั้นๆ กันยิง request ซ้ำๆ เวลาสลับแท็บไปมา ทำให้สลับหน้ารู้สึกไวขึ้นทันที
+const dataCache = { stats: null, statsTime: 0, cards: null, cardsTime: 0, students: null, studentsTime: 0 };
+const CACHE_TTL = 45000; // ข้อมูลอายุไม่เกิน 45 วิ ถือว่ายังสดอยู่ ไม่ต้องยิง API ซ้ำ
+
 // ===== Stats =====
 function renderSkeletonStats() {
     const c = document.getElementById('stats-container');
-    c.innerHTML = '';
+    let html = '';
     for (let i = 0; i < 4; i++) {
-        c.innerHTML += `<div class="bg-white rounded-2xl p-5 flex flex-col gap-3" style="box-shadow:0 5px 0 rgba(0,0,0,0.04),0 8px 20px rgba(0,0,0,0.06);">
+        html += `<div class="bg-white rounded-2xl p-5 flex flex-col gap-3" style="box-shadow:0 5px 0 rgba(0,0,0,0.04),0 8px 20px rgba(0,0,0,0.06);">
             <div class="skeleton h-3 w-20 rounded-full"></div>
             <div class="skeleton h-8 w-14 rounded-xl"></div>
         </div>`;
     }
+    c.innerHTML = html;
 }
-function loadDashboardStats() {
-    renderSkeletonStats();
+function renderStats(d) {
+    document.getElementById('stats-container').innerHTML = `
+        <div class="stat-card stat-pink p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
+        <div class="stat-card stat-blue p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 4</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">M.4</span></div>
+        <div class="stat-card stat-orange p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 5</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">M.5</span></div>
+        <div class="stat-card stat-teal p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 6</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">M.6</span></div>`;
+}
+function loadDashboardStats(force) {
+    const fresh = dataCache.stats && (Date.now() - dataCache.statsTime < CACHE_TTL);
+    if (fresh && !force) { renderStats(dataCache.stats); return; } // ใช้ของเดิมที่จำไว้ ไม่ต้องรอเน็ต
+    if (!dataCache.stats) renderSkeletonStats(); // โชว์ skeleton เฉพาะตอนยังไม่เคยมีข้อมูลเลย กันจอกระพริบตอนสลับแท็บ
     callAPI('getDashboardStats').then(response => {
         const res = JSON.parse(response);
         if (res.status !== 'success') return;
-        const d = res.data;
-        document.getElementById('stats-container').innerHTML = `
-            <div class="stat-card stat-pink p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
-            <div class="stat-card stat-blue p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 4</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">M.4</span></div>
-            <div class="stat-card stat-orange p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 5</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">M.5</span></div>
-            <div class="stat-card stat-teal p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 6</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">M.6</span></div>`;
+        dataCache.stats = res.data;
+        dataCache.statsTime = Date.now();
+        renderStats(res.data);
     }).catch(handleScriptError);
 }
 
 // ===== Students =====
 let allStudents = [], activeLevel = 'all';
-function loadStudents() {
-    document.getElementById('student-loading').classList.remove('hidden');
-    document.getElementById('student-list').innerHTML = '';
-    document.getElementById('student-empty').classList.add('hidden');
+
+// debounce: รอให้พิมพ์หยุดแป๊บนึงก่อนค่อยกรองรายชื่อ กันเรนเดอร์รัวๆ ทุกตัวอักษรตอนพิมพ์เร็วๆ บนแท็บเล็ต/Chromebook
+function debounce(fn, delay) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+}
+
+function loadStudents(force) {
     document.getElementById('search-input').value = '';
     activeLevel = 'all';
     document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
     document.querySelector('[data-level="all"]').classList.add('active');
+
+    const fresh = dataCache.students && (Date.now() - dataCache.studentsTime < CACHE_TTL);
+    if (fresh && !force) {
+        allStudents = dataCache.students; // มีของสดในแคช/prefetch อยู่แล้ว โชว์ได้ทันทีไม่ต้องรอเน็ต
+        renderStudents(allStudents);
+        return;
+    }
+    document.getElementById('student-loading').classList.remove('hidden');
+    document.getElementById('student-list').innerHTML = '';
+    document.getElementById('student-empty').classList.add('hidden');
     callAPI('getStudentList').then(response => {
         document.getElementById('student-loading').classList.add('hidden');
         const res = JSON.parse(response);
         if (res.status !== 'success') return;
         allStudents = res.data;
+        dataCache.students = res.data;
+        dataCache.studentsTime = Date.now();
         renderStudents(allStudents);
     }).catch(handleScriptError);
 }
+
+// เรียกเงียบๆ หลังปลดล็อกเว็บ เพื่อดึงรายชื่อนักเรียนมาเตรียมไว้ล่วงหน้า
+// พอกดแท็บ "นักเรียน" ครั้งแรกจะได้ขึ้นทันทีไม่ต้องรอโหลด
+function prefetchStudents() {
+    if (dataCache.students) return;
+    callAPI('getStudentList').then(response => {
+        const res = JSON.parse(response);
+        if (res.status === 'success') {
+            dataCache.students = res.data;
+            dataCache.studentsTime = Date.now();
+        }
+    }).catch(() => {}); // เงียบไว้ก่อน ถ้าพลาดค่อยลองใหม่ตอนกดเข้าแท็บจริง
+}
+
 function renderStudents(list) {
     const container = document.getElementById('student-list');
     const empty = document.getElementById('student-empty');
-    container.innerHTML = '';
-    if (list.length === 0) { empty.classList.remove('hidden'); document.getElementById('result-count').textContent = '0'; return; }
+    if (list.length === 0) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('result-count').textContent = '0';
+        return;
+    }
     empty.classList.add('hidden');
     document.getElementById('result-count').textContent = list.length;
     const avClass = {'ม.4':'av-m4','ม.5':'av-m5','ม.6':'av-m6'};
     const badgeClass = {'ม.4':'badge-m4','ม.5':'badge-m5','ม.6':'badge-m6'};
-    list.forEach(row => {
+    // สร้าง HTML ทั้งก้อนไว้ในตัวแปรก่อน แล้วค่อยเซ็ต innerHTML ครั้งเดียว
+    // (แทนที่จะ insertAdjacentHTML ทีละแถวในลูป) ลด reflow ทำให้รายชื่อยาวๆ เลื่อน/กรองลื่นขึ้นมาก
+    const html = list.map(row => {
         const id=row[0]||'', name=row[1]||'', lvl=row[2]||'', room=row[3]||'';
         const initials=name.trim().charAt(0)||'?';
-        container.insertAdjacentHTML('beforeend',`
+        return `
             <div class="student-row">
                 <div class="avatar-circle ${avClass[lvl]||'av-default'}">${initials}</div>
                 <div class="flex-1 min-w-0"><p class="font-semibold text-gray-800 text-sm truncate">${name}</p><p class="text-xs text-gray-400 mt-0.5">${id}</p></div>
@@ -660,8 +812,9 @@ function renderStudents(list) {
                     ${room?`<span class="text-xs text-gray-400 font-medium">ห้อง ${room}</span>`:''}
                     ${lvl?`<span class="class-badge ${badgeClass[lvl]||'badge-def'}">${lvl}</span>`:''}
                 </div>
-            </div>`);
-    });
+            </div>`;
+    }).join('');
+    container.innerHTML = html;
 }
 function setFilter(level) {
     activeLevel = level;
@@ -676,6 +829,7 @@ function filterStudents() {
     if (q) list = list.filter(r => (r[0]+' '+r[1]).toLowerCase().includes(q));
     renderStudents(list);
 }
+const debouncedFilterStudents = debounce(filterStudents, 160);
 
 // ===== Admin Auth =====
 function loginAdmin() {
@@ -735,29 +889,36 @@ function saveAnnouncementFn() {
 }
 
 // ===== Dashboard: แสดง card บนหน้าหลัก =====
-function loadWebCards() {
+function renderWebCards(cards) {
+    const container = document.getElementById('all-cards-container');
+    const btnMap = { purple:'btn-violet', blue:'btn-sky', pink:'btn-rose', orange:'btn-amber', teal:'btn-teal' };
+    // ต่อ HTML ทุกใบเป็นสตริงเดียวก่อน แล้วเซ็ตทีเดียว ลดการ reflow เมื่อมีหลายปุ่ม
+    container.innerHTML = cards.map(card => {
+        const btnClass = btnMap[card.color] || 'btn-violet';
+        const icon = card.icon || 'fa-star';
+        const click = card.url
+            ? `window.open('${card.url}','_blank')`
+            : `Swal.fire({title:'${card.title}',text:'${card.desc||''}',icon:'info'})`;
+        return `
+            <div onclick="${click}" class="btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white">
+                <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
+                <div class="flex-1">
+                    <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
+                    ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
+                </div>
+                <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>
+            </div>`;
+    }).join('');
+}
+function loadWebCards(force) {
+    const fresh = dataCache.cards && (Date.now() - dataCache.cardsTime < CACHE_TTL);
+    if (fresh && !force) { renderWebCards(dataCache.cards); return; }
     callAPI('getWebCards').then(res => {
         const r = JSON.parse(res);
         if (r.status !== 'success') return;
-        const container = document.getElementById('all-cards-container');
-        container.innerHTML = '';
-        const btnMap = { purple:'btn-violet', blue:'btn-sky', pink:'btn-rose', orange:'btn-amber', teal:'btn-teal' };
-        r.data.forEach(card => {
-            const btnClass = btnMap[card.color] || 'btn-violet';
-            const icon = card.icon || 'fa-star';
-            const click = card.url
-                ? `window.open('${card.url}','_blank')`
-                : `Swal.fire({title:'${card.title}',text:'${card.desc||''}',icon:'info'})`;
-            container.insertAdjacentHTML('beforeend', `
-                <div onclick="${click}" class="btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white">
-                    <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
-                    <div class="flex-1">
-                        <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
-                        ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
-                    </div>
-                    <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>
-                </div>`);
-        });
+        dataCache.cards = r.data;
+        dataCache.cardsTime = Date.now();
+        renderWebCards(r.data);
     }).catch(handleScriptError);
 }
 
@@ -776,12 +937,12 @@ function loadCardManager() {
 function renderCardManager(cards) {
     const list  = document.getElementById('card-manager-list');
     const empty = document.getElementById('card-manager-empty');
-    list.innerHTML = '';
-    if (cards.length === 0) { empty.classList.remove('hidden'); return; }
+    if (cards.length === 0) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
-    cards.forEach((card, i) => {
+    // ต่อ HTML ทั้งลิสต์เป็นสตริงเดียวก่อนแล้วเซ็ตทีเดียว แทนการแทรกทีละแถวในลูป
+    list.innerHTML = cards.map((card, i) => {
         const dotClass = colorDotMap[card.color] || 'dot-purple';
-        list.insertAdjacentHTML('beforeend', `
+        return `
             <div class="card-row" id="card-row-${i}">
                 <div class="color-dot ${dotClass}"></div>
                 <div class="min-w-0">
@@ -792,8 +953,8 @@ function renderCardManager(cards) {
                     <button class="card-action-btn btn-edit" onclick="startEditCard(${i})" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
                     <button class="card-action-btn btn-delete" onclick="deleteCardFn(${i})" title="ลบ"><i class="fa-solid fa-trash"></i></button>
                 </div>
-            </div>`);
-    });
+            </div>`;
+    }).join('');
 }
 
 // state สำหรับ edit mode
@@ -846,7 +1007,7 @@ function saveEditCardFn() {
             Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
             cancelEditCardFn();
             loadCardManager();
-            loadWebCards();
+            loadWebCards(true); // force ข้ามแคช เพราะเพิ่งแก้ไขข้อมูลไป ต้องได้ของล่าสุดชัวร์ๆ
         }
     }).catch(handleScriptError);
 }
@@ -876,7 +1037,7 @@ function addWebCardFn() {
             Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
             ['new-card-title','new-card-desc','new-card-url'].forEach(id => document.getElementById(id).value='');
             loadCardManager();
-            loadWebCards();
+            loadWebCards(true); // force ข้ามแคช เพราะเพิ่งแก้ไขข้อมูลไป ต้องได้ของล่าสุดชัวร์ๆ
         }
     }).catch(handleScriptError);
 }
@@ -896,7 +1057,7 @@ function deleteCardFn(index) {
                 Swal.fire({ icon:'success', title:r.message });
                 if (editingIndex === index) cancelEditCardFn();
                 loadCardManager();
-                loadWebCards();
+                loadWebCards(true); // force ข้ามแคช เพราะเพิ่งแก้ไขข้อมูลไป ต้องได้ของล่าสุดชัวร์ๆ
             }
         }).catch(handleScriptError);
     });
@@ -915,7 +1076,7 @@ function clearWebCardsFn() {
             Swal.fire({ icon:'success', title:'ล้างข้อมูลสำเร็จ' });
             cancelEditCardFn();
             loadCardManager();
-            loadWebCards();
+            loadWebCards(true); // force ข้ามแคช เพราะเพิ่งแก้ไขข้อมูลไป ต้องได้ของล่าสุดชัวร์ๆ
         }).catch(handleScriptError);
     });
 }
@@ -946,9 +1107,13 @@ function closeQRModal() {
 }
 
 // ===== Init =====
-window.onload = function () {
+let mainAppStarted = false;
+function initMainApp() {
+    if (mainAppStarted) return; // กันการรันซ้ำ
+    mainAppStarted = true;
     loadDashboardStats();
     loadWebCards();
+    setTimeout(prefetchStudents, 700); // ดึงรายชื่อนักเรียนมาเตรียมไว้เงียบๆ หลังโหลดหน้าหลักเสร็จ ไม่ให้แย่ง request กับของสำคัญตอนเปิดหน้าแรก
     callAPI('getAnnouncement').then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
@@ -960,6 +1125,10 @@ window.onload = function () {
             });
         }
     }).catch(handleScriptError);
+}
+
+window.onload = function () {
+    checkSiteLock();
 };
 </script>
 </body>
