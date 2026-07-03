@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>วิชาการ @High School</title>
     <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
@@ -139,6 +140,17 @@
         .admin-btn-blue   { background:linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 5px 0 #0d5ea0,0 8px 20px rgba(25,118,210,0.3); color:white; }
         .admin-btn-orange { background:linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 5px 0 #bf360c,0 8px 20px rgba(230,81,0,0.3); color:white; }
         .admin-btn-violet { background:linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 5px 0 #3b0d9e,0 8px 20px rgba(91,33,182,0.3); color:white; }
+
+        /* ===== Toggle Switch (เปิด/ปิด ประกาศ) ===== */
+        .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#f8faff; border:1.5px solid #e2e8f8; border-radius:14px; }
+        .toggle-switch { position:relative; display:inline-block; width:48px; height:28px; flex-shrink:0; }
+        .toggle-switch input { opacity:0; width:0; height:0; }
+        .toggle-slider { position:absolute; cursor:pointer; inset:0; background:#d1d9ec; border-radius:100px; transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow:inset 0 2px 4px rgba(0,0,0,0.08); }
+        .toggle-slider::before { content:''; position:absolute; height:22px; width:22px; left:3px; top:3px; background:white; border-radius:50%; transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 2px 6px rgba(0,0,0,0.18); }
+        .toggle-switch input:checked + .toggle-slider { background:linear-gradient(145deg,#FFB547,#E65100); }
+        .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+        .toggle-status { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:100px; font-family:'Kanit',sans-serif; background:#f1f5f9; color:#94a3b8; transition:all 0.2s; }
+        .toggle-status.is-on { background:#ffedd5; color:#c2410c; }
 
         @keyframes bounce-gentle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
         .bounce { animation:bounce-gentle 2.5s ease-in-out infinite; }
@@ -385,7 +397,7 @@
             <img src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="Logo" class="h-11 w-11 object-contain drop-shadow">
             <div>
                 <h1 class="text-lg font-black text-gray-800 leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ @High School</h1>
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Thanakhan Oomsin School</p>
+                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Academic Affairs System</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -557,6 +569,19 @@
                 <div class="admin-section p-6">
                     <div class="section-tag" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullhorn"></i> ประกาศ</div>
                     <div class="space-y-3">
+                        <div class="toggle-row">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-tower-broadcast text-orange-400 text-sm"></i>
+                                <span class="text-sm font-semibold text-gray-600">แสดงประกาศตอนเปิดเว็บ</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <span id="ann-status-label" class="toggle-status">ปิดอยู่</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="ann-enabled-toggle" onchange="updateAnnToggleLabel()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
                         <input type="text" id="ann-img" class="admin-input text-sm" placeholder="URL รูปภาพ (ถ้ามี)">
                         <textarea id="ann-text" rows="3" class="admin-input text-sm resize-none" placeholder="ข้อความประกาศ..."></textarea>
                         <button onclick="saveAnnouncementFn()" class="admin-btn admin-btn-orange"><i class="fa-solid fa-bullhorn mr-2"></i>อัปเดตประกาศ</button>
@@ -878,7 +903,16 @@ function loadAdminSettings() {
         document.getElementById('set-academic').value  = d.academic_head;
         document.getElementById('ann-text').value      = d.announcement_text;
         document.getElementById('ann-img').value       = d.announcement_img;
+        // ถ้ายังไม่เคยตั้งค่านี้ในฝั่ง backend (undefined) ให้ถือว่า "เปิด" ไว้ก่อน เพื่อไม่ให้พฤติกรรมเดิมเปลี่ยนไปเอง
+        document.getElementById('ann-enabled-toggle').checked = d.announcement_enabled !== false;
+        updateAnnToggleLabel();
     }).catch(handleScriptError);
+}
+function updateAnnToggleLabel() {
+    const on = document.getElementById('ann-enabled-toggle').checked;
+    const label = document.getElementById('ann-status-label');
+    label.textContent = on ? 'เปิดอยู่' : 'ปิดอยู่';
+    label.classList.toggle('is-on', on);
 }
 function saveAdminSettingsFn() {
     const data = {
@@ -901,9 +935,10 @@ function saveAdminSettingsFn() {
 function saveAnnouncementFn() {
     const text = document.getElementById('ann-text').value;
     const img  = document.getElementById('ann-img').value;
-    if (!text && !img) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือ URL รูปภาพ' });
+    const enabled = document.getElementById('ann-enabled-toggle').checked;
+    if (enabled && !text && !img) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือ URL รูปภาพ' });
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    callAPI('saveAnnouncementOnly', { text, img }).then(res => {
+    callAPI('saveAnnouncementOnly', { text, img, enabled }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ ✅', confirmButtonColor:'#00897b' });
     }).catch(handleScriptError);
@@ -1129,7 +1164,8 @@ function initMainApp() {
     loadWebCards();
     callAPI('getAnnouncement').then(res => {
         const r = JSON.parse(res);
-        if (r.status === 'success') {
+        // แสดงป๊อปอัปเฉพาะตอนที่ admin เปิดสวิตช์ไว้ (ถ้า backend ยังไม่มีฟิลด์นี้ ให้ถือว่าเปิดไว้ก่อนตามพฤติกรรมเดิม)
+        if (r.status === 'success' && r.data.enabled !== false && (r.data.text || r.data.img)) {
             Swal.fire({
                 title:'📢 ประกาศ',
                 html:`<p class="text-gray-700 text-lg mb-4">${r.data.text}</p>${r.data.img?`<img src="${r.data.img}" class="w-full h-40 object-cover rounded-2xl shadow">` : ''}`,
