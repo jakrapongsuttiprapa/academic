@@ -508,7 +508,7 @@
             </div>
             <h2 class="text-3xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">ฝ่ายวิชาการ</h2>
             <p class="text-gray-400 mb-7 text-sm">password</p>
-            <input type="password" id="admin-pass" placeholder="••••••••" class="input-3d mb-5" onkeydown="if(event.key==='Enter') loginAdmin()">
+            <input type="password" id="admin-pass" inputmode="numeric" pattern="[0-9]*" placeholder="••••••••" class="input-3d mb-5" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') loginAdmin()">
             <button onclick="loginAdmin()" class="btn-pixar btn-violet w-full py-4 text-white text-lg font-black" style="font-family:'Kanit',sans-serif;border:none;">
                 <i class="fa-solid fa-right-to-bracket mr-2"></i> เข้าสู่ระบบ
             </button>
@@ -538,11 +538,11 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส Admin</label>
-                            <input type="password" id="set-admin-pwd" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน">
+                            <input type="password" id="set-admin-pwd" inputmode="numeric" pattern="[0-9]*" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส ครู</label>
-                            <input type="password" id="set-teacher-pwd" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน">
+                            <input type="password" id="set-teacher-pwd" inputmode="numeric" pattern="[0-9]*" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         </div>
                     </div>
                     <div>
@@ -955,18 +955,22 @@ function loadWebCards() {
         r.data.forEach(card => {
             const btnClass = btnMap[card.color] || 'btn-violet';
             const icon = card.icon || 'fa-star';
-            const click = card.url
-                ? `window.open('${card.url}','_blank')`
-                : `Swal.fire({title:'${card.title}',text:'${card.desc||''}',icon:'info'})`;
-            container.insertAdjacentHTML('beforeend', `
-                <div onclick="${click}" class="btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white">
-                    <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
-                    <div class="flex-1">
-                        <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
-                        ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
-                    </div>
-                    <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>
-                </div>`);
+            const el = document.createElement('div');
+            el.className = `btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white`;
+            el.innerHTML = `
+                <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
+                <div class="flex-1">
+                    <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
+                    ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
+                </div>
+                <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>`;
+            // ผูก event ด้วย addEventListener แทนการฝัง onclick เป็น string
+            // กันปัญหาชื่อเมนู/คำอธิบาย/URL ที่มีเครื่องหมาย ' หรือ " ทำให้ปุ่มพัง
+            el.addEventListener('click', () => {
+                if (card.url) window.open(card.url, '_blank');
+                else Swal.fire({ title: card.title, text: card.desc || '', icon: 'info' });
+            });
+            container.appendChild(el);
         });
     }).catch(handleScriptError);
 }
