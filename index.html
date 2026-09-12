@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -17,69 +17,83 @@
     <style>
         * { box-sizing: border-box; }
 
+        :root {
+            /* ===== เวทีสีเข้ม (พื้นหลังของกล่องเมนูหลัก) ===== */
+            --ink-900: #0E0B2E;
+            --ink-800: #16123F;
+            --ink-700: #221A5E;
+            /* ===== สีอัญมณี: เข้มและสดกว่าเดิม เพื่อให้เด่นบนพื้นเข้ม ===== */
+            --rose:    #FF2D7E;
+            --violet:  #7C4DFF;
+            --sky:     #12A5FF;
+            --amber:   #FF9500;
+            --jade:    #00C896;
+            --crimson: #FF3B5C;
+            /* ===== พื้นหน้าเว็บ ===== */
+            --paper:   #F4F2FF;
+        }
+
         body {
             font-family: 'Prompt', sans-serif;
             background:
-                radial-gradient(ellipse at 18% 12%, rgba(217,43,119,0.12) 0%, transparent 46%),
-                radial-gradient(ellipse at 82% 88%, rgba(91,33,182,0.12) 0%, transparent 48%),
-                radial-gradient(ellipse at 60% 8%, rgba(96,198,255,0.10) 0%, transparent 40%),
-                linear-gradient(135deg, #eef2ff 0%, #f5f0ff 48%, #fff0f7 100%);
+                radial-gradient(ellipse 70% 50% at 12% 0%,   rgba(124,77,255,0.16) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 45% at 95% 10%,  rgba(255,45,126,0.13) 0%, transparent 58%),
+                radial-gradient(ellipse 75% 40% at 50% 100%, rgba(18,165,255,0.12) 0%, transparent 60%),
+                linear-gradient(175deg, #EFEBFF 0%, var(--paper) 40%, #FBF2FA 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             overflow-x: hidden;
+            color: #1A1735;
         }
-        /* แสง aurora ลอยเบาๆ เป็นฉากหลังแบบมีชีวิต */
-        body::before {
-            content:''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
-            background:
-                radial-gradient(circle at 15% 18%, rgba(217,43,119,0.16) 0%, transparent 38%),
-                radial-gradient(circle at 85% 22%, rgba(96,198,255,0.15) 0%, transparent 38%),
-                radial-gradient(circle at 78% 82%, rgba(124,58,237,0.16) 0%, transparent 40%),
-                radial-gradient(circle at 18% 80%, rgba(45,212,176,0.12) 0%, transparent 38%);
-            filter: blur(36px);
-            animation: auroraFloat 22s ease-in-out infinite alternate;
-        }
-        @keyframes auroraFloat {
-            0%   { transform: translate(0,0) scale(1); }
-            100% { transform: translate(-3%,3%) scale(1.12); }
-        }
-
         .btn-pixar {
-            border-radius: 20px; position: relative;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 22px; position: relative;
+            transition: transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s ease;
             cursor: pointer; overflow: hidden;
+            isolation: isolate;
         }
+        /* เดิมเป็นฟิล์มขาว 30% คลุมทั้งใบ ทำให้สีซีดจาง —
+           เปลี่ยนเป็นเส้นแสงบางๆ ที่ขอบบนอย่างเดียว สีจึงสดเต็มที่ */
         .btn-pixar::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.30) 0%, transparent 55%);
+            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 45%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, transparent 100%);
             border-radius: inherit; pointer-events: none; z-index: 1;
         }
         /* แสงวิ่งกวาดตอนชี้/แตะ */
         .btn-pixar::after {
-            content:''; position: absolute; top: 0; bottom: 0; left: -85%; width: 55%;
-            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.40), transparent);
+            content:''; position: absolute; top: 0; bottom: 0; left: -85%; width: 45%;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.28), transparent);
             transform: skewX(-18deg); pointer-events: none; z-index: 2;
-            transition: left 0.7s cubic-bezier(0.4,0,0.2,1);
+            transition: left 0.65s cubic-bezier(0.4,0,0.2,1);
         }
-        .btn-pixar:hover::after { left: 140%; }
-        .btn-pixar:hover  { transform: translateY(-5px) scale(1.02); }
-        .btn-pixar:active { transform: translateY(0px) scale(0.97); }
+        .btn-pixar:hover::after { left: 150%; }
+        .btn-pixar:hover  { transform: translateY(-4px); }
+        .btn-pixar:active { transform: translateY(1px) scale(0.985); }
 
-        .btn-rose    { background: linear-gradient(145deg,#FF6B9D,#D92B77); box-shadow:0 6px 0 #9e1855,0 10px 24px rgba(217,43,119,0.35); }
-        .btn-rose:hover { box-shadow:0 10px 0 #9e1855,0 18px 36px rgba(217,43,119,0.45); }
-        .btn-violet  { background: linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 6px 0 #3b0d9e,0 10px 24px rgba(91,33,182,0.35); }
-        .btn-violet:hover { box-shadow:0 10px 0 #3b0d9e,0 18px 36px rgba(91,33,182,0.45); }
-        .btn-sky     { background: linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 6px 0 #0d5ea0,0 10px 24px rgba(25,118,210,0.35); }
-        .btn-sky:hover { box-shadow:0 10px 0 #0d5ea0,0 18px 36px rgba(25,118,210,0.45); }
-        .btn-crimson { background: linear-gradient(145deg,#FF5A5A,#8B0000); box-shadow:0 6px 0 #5a0000,0 10px 24px rgba(139,0,0,0.35); }
-        .btn-crimson:hover { box-shadow:0 10px 0 #5a0000,0 18px 36px rgba(139,0,0,0.45); }
-        .btn-teal    { background: linear-gradient(145deg,#2DD4B0,#00796B); box-shadow:0 6px 0 #004d40,0 10px 24px rgba(0,121,107,0.35); }
-        .btn-teal:hover { box-shadow:0 10px 0 #004d40,0 18px 36px rgba(0,121,107,0.45); }
-        .btn-amber   { background: linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 6px 0 #bf360c,0 10px 24px rgba(230,81,0,0.35); }
-        .btn-amber:hover { box-shadow:0 10px 0 #bf360c,0 18px 36px rgba(230,81,0,0.45); }
+        /* เงา: เดิมเป็นรัศมีฟุ้งกว้างทำให้ขอบการ์ดละลายไปกับพื้นหลัง
+           ตอนนี้ใช้ขอบล่างทึบ + เงาแคบคมชัด การ์ดจึงดูตั้งอยู่จริง
+           จุดกลางไล่สีถูกทำให้เข้มพอที่ตัวหนังสือขาวจะอ่านชัด (โดยเฉพาะส้ม/เขียว/ฟ้า) */
+        .btn-rose    { background: linear-gradient(160deg,#FF5C9D 0%,#D91566 52%,#A80B4B 100%); box-shadow:0 5px 0 #82093A,0 8px 14px -4px rgba(168,11,75,0.55); }
+        .btn-violet  { background: linear-gradient(160deg,#A47BFF 0%,#6B35F5 52%,#4013AF 100%); box-shadow:0 5px 0 #310D86,0 8px 14px -4px rgba(64,19,175,0.55); }
+        .btn-sky     { background: linear-gradient(160deg,#4FC3FF 0%,#0072CE 52%,#004E9A 100%); box-shadow:0 5px 0 #003B77,0 8px 14px -4px rgba(0,78,154,0.55); }
+        .btn-crimson { background: linear-gradient(160deg,#FF6E7E 0%,#D91E3C 52%,#9E0E24 100%); box-shadow:0 5px 0 #7B0A1B,0 8px 14px -4px rgba(158,14,36,0.55); }
+        .btn-teal    { background: linear-gradient(160deg,#3FD9B4 0%,#00806A 52%,#00594A 100%); box-shadow:0 5px 0 #004237,0 8px 14px -4px rgba(0,89,74,0.55); }
+        .btn-amber   { background: linear-gradient(160deg,#FFB347 0%,#C2610A 52%,#8F4606 100%); box-shadow:0 5px 0 #6E3604,0 8px 14px -4px rgba(143,70,6,0.55); }
+
+        .btn-rose:hover    { box-shadow:0 9px 0 #82093A,0 16px 26px -8px rgba(168,11,75,0.6); }
+        .btn-violet:hover  { box-shadow:0 9px 0 #310D86,0 16px 26px -8px rgba(64,19,175,0.6); }
+        .btn-sky:hover     { box-shadow:0 9px 0 #003B77,0 16px 26px -8px rgba(0,78,154,0.6); }
+        .btn-crimson:hover { box-shadow:0 9px 0 #7B0A1B,0 16px 26px -8px rgba(158,14,36,0.6); }
+        .btn-teal:hover    { box-shadow:0 9px 0 #004237,0 16px 26px -8px rgba(0,89,74,0.6); }
+        .btn-amber:hover   { box-shadow:0 9px 0 #6E3604,0 16px 26px -8px rgba(143,70,6,0.6); }
 
         .main-card {
-            background: rgba(255,255,255,0.96); border: 1.5px solid rgba(255,255,255,0.9);
-            border-radius: 36px; box-shadow: 0 24px 60px rgba(60,40,120,0.13),0 3px 0 rgba(0,0,0,0.04);
+            background:
+                radial-gradient(ellipse 60% 50% at 8% 0%, rgba(124,77,255,0.38) 0%, transparent 62%),
+                radial-gradient(ellipse 50% 40% at 100% 95%, rgba(255,45,126,0.24) 0%, transparent 60%),
+                linear-gradient(165deg, var(--ink-700) 0%, var(--ink-800) 45%, var(--ink-900) 100%);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px -20px rgba(14,11,46,0.55), 0 2px 0 rgba(255,255,255,0.10) inset;
         }
 
         /* ===== Stat cards (สดใส มีไล่สี + เรืองแสง) ===== */
@@ -89,26 +103,26 @@
             box-shadow: 0 6px 0 rgba(0,0,0,0.05),0 10px 24px rgba(0,0,0,0.07);
             animation: fadeUp 0.5s both;
         }
-        .stat-card:hover { transform: translateY(-5px) scale(1.02); }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; border-radius:22px 22px 0 0; z-index:2; }
-        /* แสงวงกลมจางมุมขวาบน */
-        .stat-card::after { content:''; position:absolute; top:-30px; right:-30px; width:96px; height:96px; border-radius:50%; opacity:0.5; pointer-events:none; }
-        .stat-pink   { background:linear-gradient(160deg,#ffffff 58%,#ffeaf3); box-shadow:0 6px 0 rgba(217,43,119,0.10),0 12px 28px rgba(217,43,119,0.14); }
-        .stat-pink::before   { background:linear-gradient(90deg,#FF6B9D,#D92B77); }
-        .stat-pink::after    { background:radial-gradient(circle,#FF6B9D,transparent 70%); }
-        .stat-blue   { background:linear-gradient(160deg,#ffffff 58%,#e8f3ff); box-shadow:0 6px 0 rgba(25,118,210,0.10),0 12px 28px rgba(25,118,210,0.14); }
-        .stat-blue::before   { background:linear-gradient(90deg,#60C6FF,#1976D2); }
-        .stat-blue::after    { background:radial-gradient(circle,#60C6FF,transparent 70%); }
-        .stat-orange { background:linear-gradient(160deg,#ffffff 58%,#fff2e1); box-shadow:0 6px 0 rgba(230,81,0,0.10),0 12px 28px rgba(230,81,0,0.14); }
-        .stat-orange::before { background:linear-gradient(90deg,#FFB547,#F57C00); }
-        .stat-orange::after  { background:radial-gradient(circle,#FFB547,transparent 70%); }
-        .stat-teal   { background:linear-gradient(160deg,#ffffff 58%,#e4fbf3); box-shadow:0 6px 0 rgba(0,121,107,0.10),0 12px 28px rgba(0,121,107,0.14); }
-        .stat-teal::before   { background:linear-gradient(90deg,#2DD4B0,#00796B); }
-        .stat-teal::after    { background:radial-gradient(circle,#2DD4B0,transparent 70%); }
+        .stat-card:hover { transform: translateY(-4px); }
+        /* แถบสีด้านซ้ายหนา แยกแต่ละระดับชั้นได้ชัดกว่าเส้นบางๆ ด้านบนแบบเดิม */
+        .stat-card::before { content:''; position:absolute; top:0; bottom:0; left:0; width:5px; z-index:2; }
+        .stat-pink   { background:#fff; box-shadow:0 4px 0 rgba(201,16,90,0.10),0 10px 20px -8px rgba(201,16,90,0.30); }
+        .stat-pink::before   { background:linear-gradient(180deg,#FF5C9D,#C9105A); }
+        .stat-blue   { background:#fff; box-shadow:0 4px 0 rgba(0,98,196,0.10),0 10px 20px -8px rgba(0,98,196,0.30); }
+        .stat-blue::before   { background:linear-gradient(180deg,#5BC8FF,#0062C4); }
+        .stat-orange { background:#fff; box-shadow:0 4px 0 rgba(212,94,0,0.10),0 10px 20px -8px rgba(212,94,0,0.30); }
+        .stat-orange::before { background:linear-gradient(180deg,#FFC24D,#D45E00); }
+        .stat-teal   { background:#fff; box-shadow:0 4px 0 rgba(0,128,106,0.10),0 10px 20px -8px rgba(0,128,106,0.30); }
+        .stat-teal::before   { background:linear-gradient(180deg,#4BE3BE,#00806A); }
+        .stat-label { font-family:'Prompt',sans-serif; font-size:0.76rem; font-weight:500; color:#8A85A8; margin-bottom:6px; letter-spacing:0.01em; }
 
         .navbar { background:rgba(255,255,255,0.82); backdrop-filter:blur(18px) saturate(180%); -webkit-backdrop-filter:blur(18px) saturate(180%); border-bottom:1.5px solid rgba(220,230,255,0.7); box-shadow:0 2px 20px rgba(60,40,120,0.07); }
-        .icon-bubble { border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; box-shadow:inset 0 -3px 8px rgba(0,0,0,0.12); }
-        .icon-bubble::after { content:''; position:absolute; top:18%; left:18%; width:35%; height:25%; background:rgba(255,255,255,0.45); border-radius:50%; transform:rotate(-30deg); }
+        /* ที่ใส่ไอคอน: เปลี่ยนจากวงกลมเงาวาวมีจุดไฮไลต์ปลอม เป็นสี่เหลี่ยมมนขอบบาง ดูสะอาดกว่า */
+        .icon-bubble {
+            border-radius:16px; display:flex; align-items:center; justify-content:center;
+            position:relative; flex-shrink:0;
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22), 0 3px 8px rgba(0,0,0,0.14);
+        }
         .login-card { background:rgba(255,255,255,0.97); border-radius:32px; box-shadow:0 24px 60px rgba(60,40,120,0.16),0 4px 0 rgba(0,0,0,0.05); border:1.5px solid rgba(255,255,255,0.85); }
 
         .input-3d {
@@ -152,49 +166,71 @@
         .toggle-status { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:100px; font-family:'Kanit',sans-serif; background:#f1f5f9; color:#94a3b8; transition:all 0.2s; }
         .toggle-status.is-on { background:#ffedd5; color:#c2410c; }
 
-        /* ===== ปุ่ม QR Code (แทนปุ่มเส้นประเดิม ให้เข้าชุดกับปุ่มอื่น) ===== */
-        .qr-btn {
-            background:linear-gradient(135deg,#fff5f9,#f5f0ff);
-            border:1.5px solid #f7d3e4; border-radius:18px; cursor:pointer;
-            color:#b32566; position:relative; overflow:hidden;
-            transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
-            box-shadow:0 3px 0 rgba(217,43,119,0.10),0 6px 16px rgba(217,43,119,0.10);
+        /* ===== ปุ่มเมนูเสริมบนเวที ===== */
+        .menu-tile { display:flex; align-items:center; gap:14px; padding:15px 16px; }
+        .menu-tile-title {
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.02rem;
+            line-height:1.25; letter-spacing:-0.005em;
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
         }
-        .qr-btn:hover { transform:translateY(-3px); border-color:#f0a9c9; box-shadow:0 6px 0 rgba(217,43,119,0.12),0 12px 26px rgba(217,43,119,0.18); }
-        .qr-btn:active { transform:translateY(0); box-shadow:0 2px 0 rgba(217,43,119,0.10); }
+        .menu-tile-desc {
+            font-family:'Prompt',sans-serif; font-size:0.78rem; line-height:1.45;
+            color:rgba(255,255,255,0.82); margin-top:2px;
+        }
+        .menu-tile-chev { font-size:0.8rem; opacity:0.6; flex-shrink:0; }
+        /* ป้ายกุญแจ: ใส่กรอบให้อ่านออกว่าเป็นสถานะ ไม่ใช่ไอคอนลอยๆ */
+        .lock-pill {
+            display:flex; align-items:center; justify-content:center;
+            width:26px; height:26px; border-radius:9px; flex-shrink:0;
+            background:rgba(0,0,0,0.22); font-size:0.68rem;
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22);
+        }
+
+        /* ===== ปุ่ม QR Code (แบบกระจกบนเวทีสีเข้ม) ===== */
+        .qr-btn {
+            background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.16); border-radius:18px; cursor:pointer;
+            color:#E6E0FF; position:relative; overflow:hidden;
+            transition:background 0.2s ease, border-color 0.2s ease, transform 0.18s cubic-bezier(0.34,1.4,0.64,1);
+            backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+        }
+        .qr-btn:hover { background:rgba(255,255,255,0.13); border-color:rgba(255,111,174,0.5); transform:translateY(-2px); }
+        .qr-btn:active { transform:translateY(0); }
         .qr-btn-icon {
             width:30px; height:30px; border-radius:10px; flex-shrink:0;
             display:flex; align-items:center; justify-content:center;
-            background:linear-gradient(145deg,#FF6B9D,#D92B77); color:#fff; font-size:0.82rem;
-            box-shadow:0 3px 8px rgba(217,43,119,0.32);
+            background:linear-gradient(150deg,#FF5C9D,var(--rose)); color:#fff; font-size:0.82rem;
+            box-shadow:0 3px 10px rgba(255,45,126,0.45);
         }
 
-        /* ===== Skeleton ของปุ่มเมนูเสริม (ตอนกำลังโหลด) ===== */
+        /* ===== Skeleton ของปุ่มเมนูเสริม (โทนเข้มให้เข้ากับเวที) ===== */
         .card-skeleton {
             display:flex; align-items:center; gap:16px; padding:16px;
-            border-radius:20px; background:#fff;
-            border:1.5px solid #eef2ff;
-            box-shadow:0 3px 0 rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);
+            border-radius:22px; background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.08);
+        }
+        .card-skeleton .skeleton {
+            background:linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.06) 75%);
+            background-size:200% 100%;
         }
 
-        @keyframes bounce-gentle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-        .bounce { animation:bounce-gentle 2.5s ease-in-out infinite; }
 
-        .hero-image-wrap { position:absolute; inset:0; overflow:hidden; border-radius:36px; }
+        .hero-image-wrap { position:absolute; inset:0; overflow:hidden; border-radius:32px; }
         .hero-image-wrap img { width:100%; height:100%; object-fit:cover; object-position:90% top; display:block; }
         .hero-img-mobile { display:none; }
-        .hero-badge { position:absolute; bottom:28px; right:24px; z-index:10; background:rgba(15,10,30,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:20px; padding:14px 20px; box-shadow:0 0 0 1px rgba(255,255,255,0.12),0 12px 32px rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.14); max-width:210px; }
-        .hero-badge p { color:#fff !important; text-shadow:0 1px 6px rgba(0,0,0,0.2); font-size:0.95rem; line-height:1.6; }
+        .hero-badge { position:absolute; bottom:28px; right:24px; z-index:10; background:rgba(8,6,26,0.62); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:20px; padding:14px 20px; box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 12px 32px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.16); max-width:210px; }
+        .hero-badge p { color:#fff !important; text-shadow:0 1px 6px rgba(0,0,0,0.3); font-size:0.95rem; line-height:1.6; }
         .hero-badge span.text-pink-600 { color:#FF6BAE !important; -webkit-text-fill-color:#FF6BAE !important; }
 
+        /* แผงเนื้อหาไล่จากสีหมึกเข้มไปโปร่งใส เพื่อให้รูปนักเรียนค่อยๆ โผล่ทางขวา */
         .hero-content-panel {
             position: relative; z-index: 10;
-            background: linear-gradient(to right, rgba(255,255,255,0.97) 55%, rgba(255,255,255,0.7) 80%, transparent 100%);
-        }
-        /* แสงสีลอยมุมซ้ายบนของแผงเนื้อหา hero */
-        .hero-content-panel::before {
-            content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; z-index:-1;
-            background:radial-gradient(circle, rgba(217,43,119,0.12), transparent 70%); pointer-events:none;
+            background: linear-gradient(to right,
+                var(--ink-800) 0%,
+                rgba(22,18,63,0.96) 52%,
+                rgba(22,18,63,0.72) 76%,
+                rgba(22,18,63,0) 100%);
+            border-radius: 32px 0 0 32px;
         }
 
         .search-box { background:white; border:1.5px solid #e2e8f8; border-radius:16px; padding:12px 18px; font-family:'Prompt',sans-serif; font-size:1rem; outline:none; transition:all 0.2s; width:100%; }
@@ -220,6 +256,9 @@
             background:#eef2ff; color:#94a3b8; font-size:0.75rem; transition:all 0.15s;
         }
         .search-clear-btn:hover { background:#ffe4ef; color:#D92B77; transform:translateY(-50%) scale(1.12); }
+        /* ต้องระบุชัดเจน ไม่งั้น display:flex ด้านบนจะไปทับคลาส .hidden ของ Tailwind
+           (specificity เท่ากัน ใครโหลดทีหลังชนะ) ทำให้ปุ่มกากบาทโผล่ทั้งที่ช่องค้นหาว่าง */
+        .search-clear-btn.hidden { display:none; }
 
         .student-row { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:14px; background:white; border:1.5px solid #f1f5ff; transition:all 0.18s; }
         .student-row:hover { border-color:#d4deff; transform:translateX(4px); box-shadow:0 6px 18px rgba(91,33,182,0.10); }
@@ -262,35 +301,48 @@
         .btn-edit   { background:#ede9fe; color:#5b21b6; }
         .btn-delete { background:#fee2e2; color:#dc2626; }
 
-        /* Edit modal */
-        .edit-modal-overlay { position:fixed; inset:0; z-index:60; background:rgba(30,20,60,0.6); backdrop-filter:blur(8px); display:none; justify-content:center; align-items:center; }
-        .edit-modal-overlay.open { display:flex; }
-        .edit-modal-box { background:white; border-radius:28px; padding:28px; width:min(460px,94vw); box-shadow:0 24px 60px rgba(0,0,0,0.2); }
+        /* ===== หัวเรื่องบนเวทีสีเข้ม ===== */
+        /* ป้ายบอกภาคเรียน: ให้ข้อมูลจริง ไม่ใช่ป้าย "WELCOME" ประดับ */
+        .term-chip {
+            display:inline-block; margin-bottom:14px;
+            padding:6px 14px; border-radius:100px;
+            font-family:'Kanit',sans-serif; font-size:0.75rem; font-weight:600;
+            color:#C9BEFF; background:rgba(124,77,255,0.20);
+            border:1px solid rgba(163,138,255,0.32);
+        }
+        .hero-title {
+            font-family:'Kanit',sans-serif; font-weight:800;
+            font-size:clamp(2.1rem, 5.5vw, 3.3rem);
+            line-height:1.08; letter-spacing:-0.015em;
+            color:#FFFFFF; margin-bottom:14px;
+        }
+        .hero-sub {
+            font-family:'Prompt',sans-serif; font-size:0.92rem;
+            color:rgba(214,208,255,0.72); line-height:1.6; max-width:34ch;
+        }
 
-        /* ===== อัปเกรดระดับเทพ ===== */
-        /* หัวข้อต้อนรับ: ไล่สีไหลเคลื่อนไหวนุ่มๆ */
+        /* หัวข้อต้อนรับ: ไล่สีไหลเคลื่อนไหวนุ่มๆ (สีสว่างขึ้นเพื่อให้อ่านออกบนพื้นเข้ม) */
         .welcome-gradient {
-            background:linear-gradient(125deg,#D92B77,#7C3AED,#1976D2,#D92B77);
+            background:linear-gradient(125deg,#FF6FAE,#B08CFF,#5BC8FF,#FF6FAE);
             background-size:300% 100%;
             -webkit-background-clip:text; background-clip:text;
             -webkit-text-fill-color:transparent; color:transparent;
             display:inline-block;
-            animation: gradientFlow 7s ease infinite;
+            animation: gradientFlow 9s ease infinite;
         }
         @keyframes gradientFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
         /* ตัวเลขสถิติเป็นไล่สีตามธีมแต่ละการ์ด */
         #stats-container .stat-card h3 { -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
-        #stats-container .stat-pink h3   { background:linear-gradient(135deg,#FF6B9D,#D92B77); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-blue h3   { background:linear-gradient(135deg,#60C6FF,#1976D2); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-orange h3 { background:linear-gradient(135deg,#FFB547,#F57C00); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-teal h3   { background:linear-gradient(135deg,#2DD4B0,#00796B); -webkit-background-clip:text; background-clip:text; }
-
-        /* การ์ดหลัก: เพิ่มแสงเรืองสีนุ่มรอบๆ ให้ดูพรีเมียม */
-        .main-card { box-shadow: 0 24px 60px rgba(60,40,120,0.14),0 3px 0 rgba(0,0,0,0.04),0 0 70px rgba(124,58,237,0.09); }
+        #stats-container .stat-pink h3   { background:linear-gradient(135deg,#FF5C9D,#C9105A); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-blue h3   { background:linear-gradient(135deg,#5BC8FF,#0062C4); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-orange h3 { background:linear-gradient(135deg,#FFC24D,#D45E00); -webkit-background-clip:text; background-clip:text; }
+        #stats-container .stat-teal h3   { background:linear-gradient(135deg,#4BE3BE,#00806A); -webkit-background-clip:text; background-clip:text; }
 
         @media (prefers-reduced-motion: reduce) {
-            body::before, .stat-card, #all-cards-container .btn-pixar, .bounce, .welcome-gradient { animation: none !important; }
+            .stat-card, #all-cards-container .btn-pixar, .welcome-gradient, .skeleton { animation: none !important; }
+            .btn-pixar, .stat-card, .qr-btn { transition: none !important; }
+            .btn-pixar:hover, .stat-card:hover, .qr-btn:hover { transform: none !important; }
         }
 
         @media (max-width:1024px) {
@@ -303,8 +355,8 @@
                 position: relative;
                 inset: auto;
                 width: 100%;
-                height: 240px;
-                border-radius: 36px 36px 0 0;
+                height: 230px;
+                border-radius: 32px 32px 0 0;
                 flex-shrink: 0;
             }
             .hero-image-wrap img {
@@ -315,12 +367,13 @@
             }
             .hero-img-desktop { display: none; }
             .hero-img-mobile { display: block; object-position: center top; }
+            /* ไล่รูปให้จมหายเข้าไปในพื้นหมึกเข้ม (เดิมไล่เข้าสีขาว) */
             .hero-image-wrap::after {
                 content: '';
                 position: absolute;
                 left: 0; right: 0; bottom: 0;
-                height: 90px;
-                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 70%, #ffffff 100%);
+                height: 120px;
+                background: linear-gradient(to bottom, rgba(22,18,63,0) 0%, rgba(22,18,63,0.85) 62%, var(--ink-800) 100%);
                 pointer-events: none;
             }
             .hero-content-panel {
@@ -328,8 +381,9 @@
                 z-index: 1;
                 width: 100% !important;
                 min-height: auto !important;
-                background: #ffffff;
-                border-radius: 0 0 36px 36px;
+                background: transparent;
+                border-radius: 0 0 32px 32px;
+                margin-top: -1px;
             }
             .hero-badge {
                 display: none;
@@ -378,21 +432,21 @@
             <!-- เนื้อหาฝั่งซ้ายลอยทับ -->
             <div class="hero-content-panel w-full lg:w-1/2 p-8 md:p-10 flex flex-col justify-center" style="min-height:560px;">
                 <div class="mb-7">
-                    <p class="text-indigo-400 font-semibold text-xs tracking-widest uppercase mb-1">🏫 Welcome</p>
-                    <h2 class="leading-[1.1] mb-1" style="font-family:'Syne','Kanit',sans-serif; font-weight:800; font-size:clamp(2rem,4vw,3.2rem); color:#111827; letter-spacing:-0.02em;">
+                    <span class="term-chip">ภาคเรียนที่ 1 · ปีการศึกษา 2569</span>
+                    <h2 class="hero-title">
                         ยินดีต้อนรับ<br>
                         <span class="welcome-gradient">นักเรียนม.ปลาย</span>
                     </h2>
-                    <p class="text-gray-400 mt-3 text-sm tracking-wide" style="font-family:'Prompt',sans-serif;">1st Semester Academic Year 2026</p>
+                    <p class="hero-sub">เลือกเมนูด้านล่างเพื่อเข้าใช้งานระบบวิชาการ</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div onclick="navigate('students')" class="btn-pixar btn-crimson p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:140px;">
-                        <div class="icon-bubble bg-white/20" style="width:56px;height:56px;"><i class="fa-solid fa-user-graduate text-2xl bounce"></i></div>
-                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">นักเรียน</h3><p class="text-xs opacity-70 mt-0.5">รายชื่อนักเรียน</p></div>
+                    <div onclick="navigate('students')" class="btn-pixar btn-crimson p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:148px;">
+                        <div class="icon-bubble bg-white/20" style="width:54px;height:54px;"><i class="fa-solid fa-user-graduate text-2xl"></i></div>
+                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">นักเรียน</h3><p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.78);">รายชื่อนักเรียน</p></div>
                     </div>
-                    <div onclick="navigate('login-admin')" class="btn-pixar btn-violet p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:140px;">
-                        <div class="icon-bubble bg-white/20" style="width:56px;height:56px;"><i class="fa-solid fa-shield-halved text-2xl bounce" style="animation-delay:0.4s"></i></div>
-                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ</h3><p class="text-xs opacity-70 mt-0.5">สำหรับครู</p></div>
+                    <div onclick="navigate('login-admin')" class="btn-pixar btn-violet p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:148px;">
+                        <div class="icon-bubble bg-white/20" style="width:54px;height:54px;"><i class="fa-solid fa-shield-halved text-2xl"></i></div>
+                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ</h3><p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.78);">สำหรับครู</p></div>
                     </div>
                 </div>
                 <div id="all-cards-container" class="flex flex-col gap-3 mb-4"></div>
@@ -404,7 +458,7 @@
 
             <!-- hero badge ลอยมุมขวาล่างของ main-card -->
             <div class="hero-badge">
-                <p class="font-black leading-snug" style="font-family:'Syne','Kanit',sans-serif;">
+                <p class="font-black leading-snug" style="font-family:'Kanit',sans-serif;">
                     เปิดโลกกว้าง 🌟<br>สร้างโอกาส<br><span class="text-pink-600">มุ่งสู่สากล</span>
                 </p>
             </div>
@@ -680,7 +734,7 @@ function renderSkeletonStats() {
     const c = document.getElementById('stats-container');
     c.innerHTML = '';
     for (let i = 0; i < 4; i++) {
-        c.innerHTML += `<div class="bg-white rounded-2xl p-5 flex flex-col gap-3" style="box-shadow:0 5px 0 rgba(0,0,0,0.04),0 8px 20px rgba(0,0,0,0.06);">
+        c.innerHTML += `<div class="stat-card py-5 pl-7 pr-5 flex flex-col gap-3" style="box-shadow:0 4px 0 rgba(0,0,0,0.04),0 10px 20px -8px rgba(60,40,120,0.22);">
             <div class="skeleton h-3 w-20 rounded-full"></div>
             <div class="skeleton h-8 w-14 rounded-xl"></div>
         </div>`;
@@ -693,10 +747,10 @@ function loadDashboardStats() {
         if (res.status !== 'success') return;
         const d = res.data;
         document.getElementById('stats-container').innerHTML = `
-            <div class="stat-card stat-pink p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
-            <div class="stat-card stat-blue p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 4</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">M.4</span></div>
-            <div class="stat-card stat-orange p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 5</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">M.5</span></div>
-            <div class="stat-card stat-teal p-5"><p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">มัธยม 6</p><h3 class="text-4xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">M.6</span></div>`;
+            <div class="stat-card stat-pink py-5 pl-7 pr-5"><p class="stat-label">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
+            <div class="stat-card stat-blue py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 4</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
+            <div class="stat-card stat-orange py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 5</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
+            <div class="stat-card stat-teal py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 6</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>`;
     }).catch(handleScriptError);
 }
 
@@ -871,15 +925,15 @@ function loadWebCards() {
             const btnClass = btnMap[card.color] || 'btn-violet';
             const icon = card.icon || 'fa-star';
             const el = document.createElement('div');
-            el.className = `btn-pixar ${btnClass} p-4 flex items-center gap-4 text-white`;
+            el.className = `btn-pixar ${btnClass} menu-tile text-white`;
             el.innerHTML = `
-                <div class="icon-bubble bg-white/20" style="width:44px;height:44px;flex-shrink:0;"><i class="fa-solid ${icon} text-lg"></i></div>
-                <div class="flex-1">
-                    <h3 class="font-extrabold text-base leading-tight" style="font-family:'Kanit',sans-serif;">${card.title}</h3>
-                    ${card.desc ? `<p class="text-xs opacity-70 mt-0.5">${card.desc}</p>` : ''}
+                <div class="icon-bubble bg-white/20" style="width:46px;height:46px;"><i class="fa-solid ${icon} text-lg"></i></div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="menu-tile-title">${card.title}</h3>
+                    ${card.desc ? `<p class="menu-tile-desc">${card.desc}</p>` : ''}
                 </div>
-                ${card.pwd ? '<i class="fa-solid fa-lock opacity-70 text-sm" title="ต้องใส่รหัสผ่าน"></i>' : ''}
-                <i class="fa-solid fa-chevron-right opacity-50 text-sm"></i>`;
+                ${card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : ''}
+                <i class="fa-solid fa-chevron-right menu-tile-chev"></i>`;
             // ผูก event ด้วย addEventListener แทนการฝัง onclick เป็น string
             // กันปัญหาชื่อเมนู/คำอธิบาย/URL ที่มีเครื่องหมาย ' หรือ " ทำให้ปุ่มพัง
             el.addEventListener('click', () => {
@@ -927,7 +981,6 @@ function askCardPassword(card) {
 
 // ===== Admin: Card Manager (ตารางแก้ไข/ลบ) =====
 const colorDotMap = { purple:'dot-purple', blue:'dot-blue', pink:'dot-pink', orange:'dot-orange', teal:'dot-teal' };
-const colorLabelMap = { purple:'🟣 ม่วง', blue:'🔵 ฟ้า', pink:'🩷 ชมพู', orange:'🟠 ส้ม', teal:'🟢 เขียว' };
 
 function loadCardManager() {
     callAPI('getWebCards').then(res => {
