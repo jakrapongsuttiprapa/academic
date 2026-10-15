@@ -5,581 +5,588 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive">
     <title>วิชาการ @High School</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
+    <link id="favicon" rel="icon" type="image/png" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
+    <link id="apple-icon" rel="apple-touch-icon" href="https://i.postimg.cc/9F7CF68y/favicon-fullbleed.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; }
-
+        /* ══════════════════════════════════════════════
+           ธีมผสม: โครงหน้าสว่างแบบทางการ (เขียว-ทอง)
+                   + การ์ดเมนูสีสดนูนเด่น
+           ══════════════════════════════════════════════ */
         :root {
-            /* ===== เวทีสีเข้ม (พื้นหลังของกล่องเมนูหลัก) ===== */
-            --ink-900: #0E0B2E;
-            --ink-800: #16123F;
-            --ink-700: #221A5E;
-            /* ===== สีอัญมณี: เข้มและสดกว่าเดิม เพื่อให้เด่นบนพื้นเข้ม ===== */
-            --rose:    #FF2D7E;
-            --violet:  #7C4DFF;
-            --sky:     #12A5FF;
-            --amber:   #FF9500;
-            --jade:    #00C896;
-            --crimson: #FF3B5C;
-            /* ===== พื้นหน้าเว็บ ===== */
-            --paper:   #F4F2FF;
+            --green:    #0F3D2E;
+            --green-2:  #17513D;
+            --green-3:  #EDF3F0;
+            --gold:     #C9A227;
+            --gold-sub: #E8D9A6;
+            --paper:    #FAF8F3;
+            --ink:      #15211C;
+            --muted:    #6B7C74;
+            --line:     #E5E0D4;
+
+            /* สีการ์ดเมนู — จุดกลางเข้มพอให้ตัวหนังสือขาวอ่านชัด */
+            --rose:   #D91566;
+            --violet: #6B35F5;
+            --sky:    #0072CE;
+            --amber:  #C2610A;
+            --jade:   #00806A;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Prompt', sans-serif;
-            background:
-                radial-gradient(ellipse 70% 50% at 12% 0%,   rgba(124,77,255,0.16) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 45% at 95% 10%,  rgba(255,45,126,0.13) 0%, transparent 58%),
-                radial-gradient(ellipse 75% 40% at 50% 100%, rgba(18,165,255,0.12) 0%, transparent 60%),
-                linear-gradient(175deg, #EFEBFF 0%, var(--paper) 40%, #FBF2FA 100%);
-            background-attachment: fixed;
+            background: var(--paper);
+            color: var(--ink);
             min-height: 100vh;
             overflow-x: hidden;
-            color: #1A1735;
-        }
-        .btn-pixar {
-            border-radius: 22px; position: relative;
-            transition: transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s ease;
-            cursor: pointer; overflow: hidden;
-            isolation: isolate;
-        }
-        /* เดิมเป็นฟิล์มขาว 30% คลุมทั้งใบ ทำให้สีซีดจาง —
-           เปลี่ยนเป็นเส้นแสงบางๆ ที่ขอบบนอย่างเดียว สีจึงสดเต็มที่ */
-        .btn-pixar::before {
-            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 45%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, transparent 100%);
-            border-radius: inherit; pointer-events: none; z-index: 1;
-        }
-        /* แสงวิ่งกวาดตอนชี้/แตะ */
-        .btn-pixar::after {
-            content:''; position: absolute; top: 0; bottom: 0; left: -85%; width: 45%;
-            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.28), transparent);
-            transform: skewX(-18deg); pointer-events: none; z-index: 2;
-            transition: left 0.65s cubic-bezier(0.4,0,0.2,1);
-        }
-        .btn-pixar:hover::after { left: 150%; }
-        .btn-pixar:hover  { transform: translateY(-4px); }
-        .btn-pixar:active { transform: translateY(1px) scale(0.985); }
-
-        /* เงา: เดิมเป็นรัศมีฟุ้งกว้างทำให้ขอบการ์ดละลายไปกับพื้นหลัง
-           ตอนนี้ใช้ขอบล่างทึบ + เงาแคบคมชัด การ์ดจึงดูตั้งอยู่จริง
-           จุดกลางไล่สีถูกทำให้เข้มพอที่ตัวหนังสือขาวจะอ่านชัด (โดยเฉพาะส้ม/เขียว/ฟ้า) */
-        .btn-rose    { background: linear-gradient(160deg,#FF5C9D 0%,#D91566 52%,#A80B4B 100%); box-shadow:0 5px 0 #82093A,0 8px 14px -4px rgba(168,11,75,0.55); }
-        .btn-violet  { background: linear-gradient(160deg,#A47BFF 0%,#6B35F5 52%,#4013AF 100%); box-shadow:0 5px 0 #310D86,0 8px 14px -4px rgba(64,19,175,0.55); }
-        .btn-sky     { background: linear-gradient(160deg,#4FC3FF 0%,#0072CE 52%,#004E9A 100%); box-shadow:0 5px 0 #003B77,0 8px 14px -4px rgba(0,78,154,0.55); }
-        .btn-crimson { background: linear-gradient(160deg,#FF6E7E 0%,#D91E3C 52%,#9E0E24 100%); box-shadow:0 5px 0 #7B0A1B,0 8px 14px -4px rgba(158,14,36,0.55); }
-        .btn-teal    { background: linear-gradient(160deg,#3FD9B4 0%,#00806A 52%,#00594A 100%); box-shadow:0 5px 0 #004237,0 8px 14px -4px rgba(0,89,74,0.55); }
-        .btn-amber   { background: linear-gradient(160deg,#FFB347 0%,#C2610A 52%,#8F4606 100%); box-shadow:0 5px 0 #6E3604,0 8px 14px -4px rgba(143,70,6,0.55); }
-
-        .btn-rose:hover    { box-shadow:0 9px 0 #82093A,0 16px 26px -8px rgba(168,11,75,0.6); }
-        .btn-violet:hover  { box-shadow:0 9px 0 #310D86,0 16px 26px -8px rgba(64,19,175,0.6); }
-        .btn-sky:hover     { box-shadow:0 9px 0 #003B77,0 16px 26px -8px rgba(0,78,154,0.6); }
-        .btn-crimson:hover { box-shadow:0 9px 0 #7B0A1B,0 16px 26px -8px rgba(158,14,36,0.6); }
-        .btn-teal:hover    { box-shadow:0 9px 0 #004237,0 16px 26px -8px rgba(0,89,74,0.6); }
-        .btn-amber:hover   { box-shadow:0 9px 0 #6E3604,0 16px 26px -8px rgba(143,70,6,0.6); }
-
-        .main-card {
-            background:
-                radial-gradient(ellipse 60% 50% at 8% 0%, rgba(124,77,255,0.38) 0%, transparent 62%),
-                radial-gradient(ellipse 50% 40% at 100% 95%, rgba(255,45,126,0.24) 0%, transparent 60%),
-                linear-gradient(165deg, var(--ink-700) 0%, var(--ink-800) 45%, var(--ink-900) 100%);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 32px;
-            box-shadow: 0 30px 60px -20px rgba(14,11,46,0.55), 0 2px 0 rgba(255,255,255,0.10) inset;
         }
 
-        /* ===== Stat cards (สดใส มีไล่สี + เรืองแสง) ===== */
-        .stat-card {
-            background: white; border-radius: 22px; position: relative; overflow: hidden;
-            transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-            box-shadow: 0 6px 0 rgba(0,0,0,0.05),0 10px 24px rgba(0,0,0,0.07);
-            animation: fadeUp 0.5s both;
+        /* ───────── Header ───────── */
+        .navbar {
+            background: var(--green);
+            border-bottom: 3px solid var(--gold);
         }
-        .stat-card:hover { transform: translateY(-4px); }
-        /* แถบสีด้านซ้ายหนา แยกแต่ละระดับชั้นได้ชัดกว่าเส้นบางๆ ด้านบนแบบเดิม */
-        .stat-card::before { content:''; position:absolute; top:0; bottom:0; left:0; width:5px; z-index:2; }
-        .stat-pink   { background:#fff; box-shadow:0 4px 0 rgba(201,16,90,0.10),0 10px 20px -8px rgba(201,16,90,0.30); }
-        .stat-pink::before   { background:linear-gradient(180deg,#FF5C9D,#C9105A); }
-        .stat-blue   { background:#fff; box-shadow:0 4px 0 rgba(0,98,196,0.10),0 10px 20px -8px rgba(0,98,196,0.30); }
-        .stat-blue::before   { background:linear-gradient(180deg,#5BC8FF,#0062C4); }
-        .stat-orange { background:#fff; box-shadow:0 4px 0 rgba(212,94,0,0.10),0 10px 20px -8px rgba(212,94,0,0.30); }
-        .stat-orange::before { background:linear-gradient(180deg,#FFC24D,#D45E00); }
-        .stat-teal   { background:#fff; box-shadow:0 4px 0 rgba(0,128,106,0.10),0 10px 20px -8px rgba(0,128,106,0.30); }
-        .stat-teal::before   { background:linear-gradient(180deg,#4BE3BE,#00806A); }
-        .stat-label { font-family:'Prompt',sans-serif; font-size:0.76rem; font-weight:500; color:#8A85A8; margin-bottom:6px; letter-spacing:0.01em; }
-
-        .navbar { background:rgba(255,255,255,0.82); backdrop-filter:blur(18px) saturate(180%); -webkit-backdrop-filter:blur(18px) saturate(180%); border-bottom:1.5px solid rgba(220,230,255,0.7); box-shadow:0 2px 20px rgba(60,40,120,0.07); }
-        /* ที่ใส่ไอคอน: เปลี่ยนจากวงกลมเงาวาวมีจุดไฮไลต์ปลอม เป็นสี่เหลี่ยมมนขอบบาง ดูสะอาดกว่า */
-        .icon-bubble {
-            border-radius:16px; display:flex; align-items:center; justify-content:center;
-            position:relative; flex-shrink:0;
-            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22), 0 3px 8px rgba(0,0,0,0.14);
+        .crest {
+            width: 44px; height: 44px; border-radius: 50%;
+            object-fit: cover; flex-shrink: 0; background: #fff;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.18);
         }
-        .login-card { background:rgba(255,255,255,0.97); border-radius:32px; box-shadow:0 24px 60px rgba(60,40,120,0.16),0 4px 0 rgba(0,0,0,0.05); border:1.5px solid rgba(255,255,255,0.85); }
-
-        .input-3d {
-            background:#f0f4ff; border:2px solid #d4deff; border-radius:14px;
-            padding:13px 18px; font-family:'Prompt',sans-serif; font-size:1.1rem;
-            letter-spacing:0.15em; text-align:center; outline:none;
-            transition:all 0.2s; box-shadow:inset 0 2px 6px rgba(0,0,0,0.05); width:100%;
+        .nav-title { font-family:'Kanit',sans-serif; font-weight:700; font-size:1.05rem; color:#fff; line-height:1.2; letter-spacing:-0.01em; }
+        .nav-sub   { font-size:0.6rem; letter-spacing:0.22em; color:var(--gold-sub); margin-top:2px; }
+        .btn-staff {
+            background: var(--gold); color: var(--green);
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:0.82rem;
+            padding: 9px 15px; border-radius: 10px; border: none; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+            box-shadow: 0 3px 0 #9C7D18;
         }
-        .input-3d:focus { border-color:#D92B77; box-shadow:inset 0 2px 6px rgba(0,0,0,0.05),0 0 0 3px rgba(217,43,119,0.12); }
-
-        .page-view { display:none; animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-        .page-view.active { display:block; }
-        @keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-
-        /* การ์ดเมนูเสริมที่ JS สร้าง ให้ค่อยๆ โผล่ */
-        #all-cards-container .btn-pixar { animation: fadeUp 0.4s both; }
-
-        .skeleton { background:linear-gradient(90deg,#e8edf8 25%,#f5f7ff 50%,#e8edf8 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
-        @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-        .admin-section { background:rgba(255,255,255,0.96); border-radius:24px; border:1.5px solid rgba(220,230,255,0.7); box-shadow:0 10px 36px rgba(60,40,120,0.09),0 2px 0 rgba(0,0,0,0.03); }
-        .section-tag { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:100px; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-        .admin-input { background:#f8faff; border:1.5px solid #e2e8f8; border-radius:12px; padding:10px 14px; font-family:'Prompt',sans-serif; outline:none; transition:all 0.2s; width:100%; color:#1e293b; }
-        .admin-input:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.1); }
-        .admin-btn { border-radius:14px; padding:11px 22px; font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; border:none; cursor:pointer; transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1); width:100%; position:relative; overflow:hidden; }
-        .admin-btn:hover  { transform:translateY(-2px); }
-        .admin-btn:active { transform:translateY(0); }
-        .admin-btn-blue   { background:linear-gradient(145deg,#60C6FF,#1976D2); box-shadow:0 5px 0 #0d5ea0,0 8px 20px rgba(25,118,210,0.3); color:white; }
-        .admin-btn-orange { background:linear-gradient(145deg,#FFB547,#E65100); box-shadow:0 5px 0 #bf360c,0 8px 20px rgba(230,81,0,0.3); color:white; }
-        .admin-btn-violet { background:linear-gradient(145deg,#9B6EFF,#5B21B6); box-shadow:0 5px 0 #3b0d9e,0 8px 20px rgba(91,33,182,0.3); color:white; }
-
-        /* ===== Toggle Switch (เปิด/ปิด ประกาศ) ===== */
-        .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#f8faff; border:1.5px solid #e2e8f8; border-radius:14px; }
-        .toggle-switch { position:relative; display:inline-block; width:48px; height:28px; flex-shrink:0; }
-        .toggle-switch input { opacity:0; width:0; height:0; }
-        .toggle-slider { position:absolute; cursor:pointer; inset:0; background:#d1d9ec; border-radius:100px; transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow:inset 0 2px 4px rgba(0,0,0,0.08); }
-        .toggle-slider::before { content:''; position:absolute; height:22px; width:22px; left:3px; top:3px; background:white; border-radius:50%; transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 2px 6px rgba(0,0,0,0.18); }
-        .toggle-switch input:checked + .toggle-slider { background:linear-gradient(145deg,#FFB547,#E65100); }
-        .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
-        .toggle-status { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:100px; font-family:'Kanit',sans-serif; background:#f1f5f9; color:#94a3b8; transition:all 0.2s; }
-        .toggle-status.is-on { background:#ffedd5; color:#c2410c; }
-
-        /* ===== ปุ่มเมนูเสริมบนเวที ===== */
-        .menu-tile { display:flex; align-items:center; gap:14px; padding:15px 16px; }
-        .menu-tile-title {
-            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.02rem;
-            line-height:1.25; letter-spacing:-0.005em;
-            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-        }
-        .menu-tile-desc {
-            font-family:'Prompt',sans-serif; font-size:0.78rem; line-height:1.45;
-            color:rgba(255,255,255,0.82); margin-top:2px;
-        }
-        .menu-tile-chev { font-size:0.8rem; opacity:0.6; flex-shrink:0; }
-        /* ป้ายกุญแจ: ใส่กรอบให้อ่านออกว่าเป็นสถานะ ไม่ใช่ไอคอนลอยๆ */
-        .lock-pill {
-            display:flex; align-items:center; justify-content:center;
-            width:26px; height:26px; border-radius:9px; flex-shrink:0;
-            background:rgba(0,0,0,0.22); font-size:0.68rem;
-            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22);
+        .btn-staff:hover  { transform: translateY(-2px); box-shadow: 0 5px 0 #9C7D18; }
+        .btn-staff:active { transform: translateY(1px); box-shadow: 0 2px 0 #9C7D18; }
+        .nav-clock {
+            font-family: ui-monospace, monospace; font-size: 0.82rem; font-weight: 600;
+            color: var(--gold-sub); background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            padding: 7px 14px; border-radius: 100px;
         }
 
-        /* ===== ปุ่ม QR Code (แบบกระจกบนเวทีสีเข้ม) ===== */
-        .qr-btn {
-            background:rgba(255,255,255,0.07);
-            border:1px solid rgba(255,255,255,0.16); border-radius:18px; cursor:pointer;
-            color:#E6E0FF; position:relative; overflow:hidden;
-            transition:background 0.2s ease, border-color 0.2s ease, transform 0.18s cubic-bezier(0.34,1.4,0.64,1);
-            backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+        /* ───────── Surfaces ───────── */
+        .panel {
+            background: #fff; border: 1px solid var(--line); border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(21,33,28,0.04);
         }
-        .qr-btn:hover { background:rgba(255,255,255,0.13); border-color:rgba(255,111,174,0.5); transform:translateY(-2px); }
-        .qr-btn:active { transform:translateY(0); }
-        .qr-btn-icon {
-            width:30px; height:30px; border-radius:10px; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center;
-            background:linear-gradient(150deg,#FF5C9D,var(--rose)); color:#fff; font-size:0.82rem;
-            box-shadow:0 3px 10px rgba(255,45,126,0.45);
-        }
+        .hero-panel { background:#fff; border:1px solid var(--line); border-radius:20px; overflow:hidden; position:relative; }
 
-        /* ===== Skeleton ของปุ่มเมนูเสริม (โทนเข้มให้เข้ากับเวที) ===== */
-        .card-skeleton {
-            display:flex; align-items:center; gap:16px; padding:16px;
-            border-radius:22px; background:rgba(255,255,255,0.05);
-            border:1px solid rgba(255,255,255,0.08);
-        }
-        .card-skeleton .skeleton {
-            background:linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.06) 75%);
-            background-size:200% 100%;
-        }
-
-
-        .hero-image-wrap { position:absolute; inset:0; overflow:hidden; border-radius:32px; }
-        .hero-image-wrap img { width:100%; height:100%; object-fit:cover; object-position:90% top; display:block; }
-        .hero-img-mobile { display:none; }
-        .hero-badge { position:absolute; bottom:28px; right:24px; z-index:10; background:rgba(8,6,26,0.62); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:20px; padding:14px 20px; box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 12px 32px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.16); max-width:210px; }
-        .hero-badge p { color:#fff !important; text-shadow:0 1px 6px rgba(0,0,0,0.3); font-size:0.95rem; line-height:1.6; }
-        .hero-badge span.text-pink-600 { color:#FF6BAE !important; -webkit-text-fill-color:#FF6BAE !important; }
-
-        /* แผงเนื้อหาไล่จากสีหมึกเข้มไปโปร่งใส เพื่อให้รูปนักเรียนค่อยๆ โผล่ทางขวา */
-        .hero-content-panel {
-            position: relative; z-index: 10;
-            background: linear-gradient(to right,
-                var(--ink-800) 0%,
-                rgba(22,18,63,0.96) 52%,
-                rgba(22,18,63,0.72) 76%,
-                rgba(22,18,63,0) 100%);
-            border-radius: 32px 0 0 32px;
-        }
-
-        .search-box { background:white; border:1.5px solid #e2e8f8; border-radius:16px; padding:12px 18px; font-family:'Prompt',sans-serif; font-size:1rem; outline:none; transition:all 0.2s; width:100%; }
-        .search-box:focus { border-color:#D92B77; box-shadow:0 0 0 3px rgba(217,43,119,0.10); }
-
-        .filter-chip { padding:7px 18px; border-radius:100px; font-size:0.82rem; font-weight:700; cursor:pointer; border:2px solid transparent; transition:all 0.18s; font-family:'Kanit',sans-serif; background:white; color:#64748b; border-color:#e2e8f0; }
-        .filter-chip.active { background:linear-gradient(135deg,#D92B77,#9B6EFF); color:white; border-color:transparent; box-shadow:0 4px 14px rgba(217,43,119,0.30); }
-        .filter-chip:hover:not(.active) { border-color:#D92B77; color:#D92B77; transform:translateY(-1px); }
-
-        /* ตัวเลขจำนวนนักเรียนบนชิปกรอง */
-        .chip-count {
-            display:inline-block; min-width:20px; padding:1px 6px; margin-left:3px;
-            border-radius:100px; font-size:0.7rem; font-weight:700;
-            background:#eef2ff; color:#6366f1; transition:all 0.18s;
-        }
-        .filter-chip.active .chip-count { background:rgba(255,255,255,0.28); color:#fff; }
-
-        /* ปุ่มล้างคำค้นหาในช่องค้นหา */
-        .search-clear-btn {
-            position:absolute; right:12px; top:50%; transform:translateY(-50%);
-            width:26px; height:26px; border-radius:50%; border:none; cursor:pointer;
-            display:flex; align-items:center; justify-content:center;
-            background:#eef2ff; color:#94a3b8; font-size:0.75rem; transition:all 0.15s;
-        }
-        .search-clear-btn:hover { background:#ffe4ef; color:#D92B77; transform:translateY(-50%) scale(1.12); }
-        /* ต้องระบุชัดเจน ไม่งั้น display:flex ด้านบนจะไปทับคลาส .hidden ของ Tailwind
-           (specificity เท่ากัน ใครโหลดทีหลังชนะ) ทำให้ปุ่มกากบาทโผล่ทั้งที่ช่องค้นหาว่าง */
-        .search-clear-btn.hidden { display:none; }
-
-        .student-row { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:14px; background:white; border:1.5px solid #f1f5ff; transition:all 0.18s; }
-        .student-row:hover { border-color:#d4deff; transform:translateX(4px); box-shadow:0 6px 18px rgba(91,33,182,0.10); }
-
-        .avatar-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Kanit',sans-serif; font-weight:700; font-size:0.85rem; flex-shrink:0; box-shadow:inset 0 -2px 5px rgba(0,0,0,0.08); }
-        .av-m4 { background:#dbeafe; color:#1d4ed8; }
-        .av-m5 { background:#fef3c7; color:#92400e; }
-        .av-m6 { background:#d1fae5; color:#065f46; }
-        .av-default { background:#ede9fe; color:#5b21b6; }
-
-        .class-badge { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:100px; font-family:'Kanit',sans-serif; }
-        .badge-m4  { background:#dbeafe; color:#1d4ed8; }
-        .badge-m5  { background:#fef3c7; color:#92400e; }
-        .badge-m6  { background:#d1fae5; color:#065f46; }
-        .badge-def { background:#ede9fe; color:#5b21b6; }
-
-        .modal-overlay { background:rgba(30,20,60,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
-
-        /* ===== Card Manager Table ===== */
-        .card-row {
-            display:grid; grid-template-columns:auto 1fr auto;
-            align-items:center; gap:12px;
-            padding:10px 14px; border-radius:14px;
-            background:white; border:1.5px solid #f1f5ff;
-            transition:all 0.18s;
-        }
-        .card-row:hover { border-color:#d4deff; box-shadow:0 4px 14px rgba(91,33,182,0.09); }
-        .color-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 3px rgba(0,0,0,0.04); }
-        .dot-purple { background:#7C3AED; }
-        .dot-blue   { background:#1976D2; }
-        .dot-pink   { background:#D92B77; }
-        .dot-orange { background:#E65100; }
-        .dot-teal   { background:#00796B; }
-        .card-action-btn {
-            width:30px; height:30px; border-radius:8px; border:none; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; font-size:0.8rem;
-            transition:all 0.15s; flex-shrink:0;
-        }
-        .card-action-btn:hover { transform:scale(1.12); }
-        .btn-edit   { background:#ede9fe; color:#5b21b6; }
-        .btn-delete { background:#fee2e2; color:#dc2626; }
-
-        /* ===== หัวเรื่องบนเวทีสีเข้ม ===== */
-        /* ป้ายบอกภาคเรียน: ให้ข้อมูลจริง ไม่ใช่ป้าย "WELCOME" ประดับ */
         .term-chip {
-            display:inline-block; margin-bottom:14px;
-            padding:6px 14px; border-radius:100px;
-            font-family:'Kanit',sans-serif; font-size:0.75rem; font-weight:600;
-            color:#C9BEFF; background:rgba(124,77,255,0.20);
-            border:1px solid rgba(163,138,255,0.32);
+            display:inline-block; font-size:0.74rem; color:var(--green);
+            background:var(--green-3); border:1px solid #D3E3DC;
+            padding:5px 12px; border-radius:6px; letter-spacing:0.02em;
         }
         .hero-title {
-            font-family:'Kanit',sans-serif; font-weight:800;
-            font-size:clamp(2.1rem, 5.5vw, 3.3rem);
-            line-height:1.08; letter-spacing:-0.015em;
-            color:#FFFFFF; margin-bottom:14px;
+            font-family:'Kanit',sans-serif; font-weight:700;
+            font-size: clamp(1.9rem, 5.6vw, 3rem); line-height:1.14;
+            letter-spacing:-0.02em; margin-top:14px; color:var(--ink);
         }
-        .hero-sub {
-            font-family:'Prompt',sans-serif; font-size:0.92rem;
-            color:rgba(214,208,255,0.72); line-height:1.6; max-width:34ch;
+        .hero-title .hl { color: var(--green); }
+        .gold-rule { width:54px; height:3px; background:var(--gold); border-radius:2px; margin:16px 0 13px; }
+        .hero-sub { font-size:0.88rem; color:var(--muted); line-height:1.65; }
+
+        /* ───────── Section label ───────── */
+        .sec-label { display:flex; align-items:center; gap:12px; margin:22px 2px 11px; }
+        .sec-label span { font-family:'Kanit',sans-serif; font-size:0.74rem; font-weight:600; letter-spacing:0.16em; color:var(--muted); white-space:nowrap; }
+        .sec-label i { flex:1; height:1px; background:var(--line); }
+
+        /* ───────── Stat cards ───────── */
+        .stat-card {
+            background:#fff; border:1px solid var(--line); border-radius:13px;
+            padding:14px 16px; position:relative; overflow:hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gold); }
+        .stat-card:hover { transform:translateY(-3px); box-shadow:0 8px 18px -10px rgba(21,33,28,0.35); }
+        .stat-k { font-size:0.7rem; color:var(--muted); letter-spacing:0.01em; }
+        .stat-v { font-family:'Kanit',sans-serif; font-weight:700; font-size:1.95rem; color:var(--green); line-height:1.1; margin-top:3px; }
+        .stat-u { font-size:0.65rem; color:#9AA8A1; }
+
+        /* ───────── การ์ดเมนูสีสด ───────── */
+        .tile {
+            border-radius:20px; position:relative; overflow:hidden; cursor:pointer;
+            color:#fff; isolation:isolate;
+            transition: transform 0.18s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.18s ease;
+        }
+        /* เส้นแสงบางที่ขอบบนเท่านั้น ไม่ใช่ฟิล์มขาวคลุมทั้งใบ สีจึงสดเต็มที่ */
+        .tile::before {
+            content:''; position:absolute; left:0; right:0; top:0; height:46%;
+            background:linear-gradient(180deg, rgba(255,255,255,0.20), transparent);
+            pointer-events:none; z-index:1;
+        }
+        .tile:hover  { transform:translateY(-4px); }
+        .tile:active { transform:translateY(1px) scale(0.99); }
+        .tile > * { position:relative; z-index:2; }
+
+        .t-rose   { background:linear-gradient(160deg,#FF5C9D,var(--rose) 52%,#A80B4B); box-shadow:0 5px 0 #82093A,0 9px 16px -5px rgba(168,11,75,0.5); }
+        .t-violet { background:linear-gradient(160deg,#A47BFF,var(--violet) 52%,#4013AF); box-shadow:0 5px 0 #310D86,0 9px 16px -5px rgba(64,19,175,0.5); }
+        .t-sky    { background:linear-gradient(160deg,#4FC3FF,var(--sky) 52%,#004E9A); box-shadow:0 5px 0 #003B77,0 9px 16px -5px rgba(0,78,154,0.5); }
+        .t-amber  { background:linear-gradient(160deg,#FFB347,var(--amber) 52%,#8F4606); box-shadow:0 5px 0 #6E3604,0 9px 16px -5px rgba(143,70,6,0.5); }
+        .t-jade   { background:linear-gradient(160deg,#3FD9B4,var(--jade) 52%,#00594A); box-shadow:0 5px 0 #004237,0 9px 16px -5px rgba(0,89,74,0.5); }
+        .t-crimson{ background:linear-gradient(160deg,#FF6E7E,#D91E3C 52%,#9E0E24); box-shadow:0 5px 0 #7B0A1B,0 9px 16px -5px rgba(158,14,36,0.5); }
+
+        .t-rose:hover   { box-shadow:0 9px 0 #82093A,0 16px 24px -8px rgba(168,11,75,0.55); }
+        .t-violet:hover { box-shadow:0 9px 0 #310D86,0 16px 24px -8px rgba(64,19,175,0.55); }
+        .t-sky:hover    { box-shadow:0 9px 0 #003B77,0 16px 24px -8px rgba(0,78,154,0.55); }
+        .t-amber:hover  { box-shadow:0 9px 0 #6E3604,0 16px 24px -8px rgba(143,70,6,0.55); }
+        .t-jade:hover   { box-shadow:0 9px 0 #004237,0 16px 24px -8px rgba(0,89,74,0.55); }
+        .t-crimson:hover{ box-shadow:0 9px 0 #7B0A1B,0 16px 24px -8px rgba(158,14,36,0.55); }
+
+        .tile-icon {
+            border-radius:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+            background:rgba(255,255,255,0.20);
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.26);
+        }
+        .tile-cover { border-radius:15px; flex-shrink:0; object-fit:cover; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.26), 0 2px 6px rgba(0,0,0,0.18); }
+
+        .menu-row { display:flex; align-items:center; gap:13px; padding:14px 15px; }
+        .menu-title { font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .menu-desc  { font-size:0.76rem; color:rgba(255,255,255,0.84); margin-top:2px; line-height:1.45; }
+        .lock-pill {
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+            width:26px; height:26px; border-radius:9px; font-size:0.66rem;
+            background:rgba(0,0,0,0.24); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.24);
+        }
+        .menu-chev { font-size:0.78rem; opacity:0.6; flex-shrink:0; }
+
+        /* ───────── ปุ่ม QR ───────── */
+        .qr-btn {
+            width:100%; background:#fff; border:1.5px dashed #CFC7B2; border-radius:14px;
+            padding:13px; cursor:pointer; color:var(--green);
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:0.86rem;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            transition: all 0.18s ease;
+        }
+        .qr-btn:hover { border-color:var(--gold); background:#FFFDF7; transform:translateY(-2px); }
+        .qr-icon {
+            width:30px; height:30px; border-radius:9px; flex-shrink:0;
+            background:var(--green); color:var(--gold);
+            display:flex; align-items:center; justify-content:center; font-size:0.78rem;
         }
 
-        /* หัวข้อต้อนรับ: ไล่สีไหลเคลื่อนไหวนุ่มๆ (สีสว่างขึ้นเพื่อให้อ่านออกบนพื้นเข้ม) */
-        .welcome-gradient {
-            background:linear-gradient(125deg,#FF6FAE,#B08CFF,#5BC8FF,#FF6FAE);
-            background-size:300% 100%;
-            -webkit-background-clip:text; background-clip:text;
-            -webkit-text-fill-color:transparent; color:transparent;
-            display:inline-block;
-            animation: gradientFlow 9s ease infinite;
+        /* ───────── Hero image ───────── */
+        .hero-img-wrap { position:absolute; top:0; right:0; bottom:0; width:48%; overflow:hidden; }
+        .hero-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+        .hero-img-wrap::after {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(to right, #fff 0%, rgba(255,255,255,0.75) 28%, rgba(255,255,255,0) 72%);
         }
-        @keyframes gradientFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .hero-body { position:relative; z-index:2; }
+        .hero-img-mobile { display:none; }
 
-        /* ตัวเลขสถิติเป็นไล่สีตามธีมแต่ละการ์ด */
-        #stats-container .stat-card h3 { -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
-        #stats-container .stat-pink h3   { background:linear-gradient(135deg,#FF5C9D,#C9105A); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-blue h3   { background:linear-gradient(135deg,#5BC8FF,#0062C4); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-orange h3 { background:linear-gradient(135deg,#FFC24D,#D45E00); -webkit-background-clip:text; background-clip:text; }
-        #stats-container .stat-teal h3   { background:linear-gradient(135deg,#4BE3BE,#00806A); -webkit-background-clip:text; background-clip:text; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .stat-card, #all-cards-container .btn-pixar, .welcome-gradient, .skeleton { animation: none !important; }
-            .btn-pixar, .stat-card, .qr-btn { transition: none !important; }
-            .btn-pixar:hover, .stat-card:hover, .qr-btn:hover { transform: none !important; }
+        /* ───────── Buttons / inputs (admin) ───────── */
+        .btn-ghost {
+            display:inline-flex; align-items:center; gap:8px;
+            background:#fff; border:1px solid var(--line); border-radius:11px;
+            padding:9px 16px; font-family:'Kanit',sans-serif; font-weight:600; font-size:0.84rem;
+            color:var(--muted); cursor:pointer; transition:all 0.16s ease;
         }
+        .btn-ghost:hover { border-color:var(--green); color:var(--green); transform:translateY(-2px); }
+
+        .field-label { display:block; font-size:0.72rem; font-weight:600; color:var(--muted); margin-bottom:6px; }
+        .input {
+            width:100%; background:#fff; border:1px solid var(--line); border-radius:10px;
+            padding:10px 13px; font-family:'Prompt',sans-serif; font-size:0.88rem;
+            color:var(--ink); outline:none; transition:all 0.16s ease;
+        }
+        .input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(15,61,46,0.10); }
+        .input::placeholder { color:#A9B4AE; }
+
+        .btn-solid {
+            width:100%; border:none; border-radius:12px; cursor:pointer;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:0.94rem;
+            padding:12px 20px; color:#fff;
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+        .btn-solid:hover  { transform:translateY(-2px); }
+        .btn-solid:active { transform:translateY(1px); }
+        .btn-green  { background:var(--green);  box-shadow:0 4px 0 #082219; }
+        .btn-green:hover  { box-shadow:0 6px 0 #082219; }
+        .btn-gold   { background:var(--gold); color:var(--green); box-shadow:0 4px 0 #9C7D18; }
+        .btn-gold:hover   { box-shadow:0 6px 0 #9C7D18; }
+        .btn-amberS { background:#C2610A; box-shadow:0 4px 0 #8F4606; }
+        .btn-amberS:hover { box-shadow:0 6px 0 #8F4606; }
+
+        .tag {
+            display:inline-flex; align-items:center; gap:7px; padding:5px 13px;
+            border-radius:100px; font-family:'Kanit',sans-serif;
+            font-size:0.74rem; font-weight:600; margin-bottom:15px;
+        }
+
+        /* ───────── ตัวอัปโหลดรูป ───────── */
+        .uploader { border:1.5px dashed #CFC7B2; border-radius:13px; background:#FDFCF8; padding:12px; }
+        .uploader.has-img { border-style:solid; border-color:var(--line); background:#fff; }
+        .up-row { display:flex; align-items:center; gap:12px; }
+        .up-preview {
+            width:62px; height:62px; border-radius:11px; flex-shrink:0; overflow:hidden;
+            background:var(--green-3); border:1px solid var(--line);
+            display:flex; align-items:center; justify-content:center; color:#A9B4AE; font-size:1.05rem;
+        }
+        .up-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+        .up-preview.logo-fit img { object-fit:contain; padding:4px; background:#fff; }
+        .up-info { flex:1; min-width:0; }
+        .up-info p { font-size:0.74rem; color:var(--muted); line-height:1.45; }
+        .up-actions { display:flex; gap:7px; margin-top:7px; flex-wrap:wrap; }
+        .up-btn {
+            border:none; border-radius:8px; cursor:pointer; padding:6px 12px;
+            font-family:'Kanit',sans-serif; font-weight:600; font-size:0.74rem;
+            display:inline-flex; align-items:center; gap:6px; transition:all 0.15s ease;
+        }
+        .up-pick { background:var(--green-3); color:var(--green); }
+        .up-pick:hover { background:#DCE9E3; }
+        .up-del  { background:#FDE8E8; color:#C0392B; }
+        .up-del:hover { background:#FAD4D4; }
+        .up-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .up-bar { height:4px; border-radius:99px; background:var(--line); overflow:hidden; margin-top:8px; display:none; }
+        .up-bar.on { display:block; }
+        .up-bar i { display:block; height:100%; width:40%; border-radius:99px; background:var(--green);
+                    animation:upSlide 1.1s ease-in-out infinite; }
+        @keyframes upSlide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+
+        /* ───────── Toggle ───────── */
+        .toggle-row {
+            display:flex; align-items:center; justify-content:space-between; gap:12px;
+            padding:11px 14px; background:#FDFCF8; border:1px solid var(--line); border-radius:12px;
+        }
+        .toggle-switch { position:relative; display:inline-block; width:46px; height:27px; flex-shrink:0; }
+        .toggle-switch input { opacity:0; width:0; height:0; }
+        .toggle-slider {
+            position:absolute; cursor:pointer; inset:0; background:#D3D8D5; border-radius:100px;
+            transition:0.22s cubic-bezier(0.34,1.4,0.64,1); box-shadow:inset 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .toggle-slider::before {
+            content:''; position:absolute; height:21px; width:21px; left:3px; top:3px;
+            background:#fff; border-radius:50%; transition:0.22s cubic-bezier(0.34,1.4,0.64,1);
+            box-shadow:0 1px 4px rgba(0,0,0,0.25);
+        }
+        .toggle-switch input:checked + .toggle-slider { background:var(--green); }
+        .toggle-switch input:checked + .toggle-slider::before { transform:translateX(19px); }
+        .toggle-status { font-family:'Kanit',sans-serif; font-size:0.7rem; font-weight:600; padding:3px 10px; border-radius:100px; background:#F0EDE4; color:#9AA8A1; }
+        .toggle-status.is-on { background:var(--green-3); color:var(--green); }
+
+        /* ───────── Card manager ───────── */
+        .card-row {
+            display:flex; align-items:center; gap:11px; padding:10px 12px;
+            background:#fff; border:1px solid var(--line); border-radius:12px; transition:all 0.16s ease;
+        }
+        .card-row:hover { border-color:#CFC7B2; box-shadow:0 4px 12px -6px rgba(21,33,28,0.3); }
+        .card-thumb { width:36px; height:36px; border-radius:9px; flex-shrink:0; object-fit:cover; border:1px solid var(--line); }
+        .color-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 3px rgba(0,0,0,0.04); }
+        .dot-purple{background:var(--violet)} .dot-blue{background:var(--sky)} .dot-pink{background:var(--rose)}
+        .dot-orange{background:var(--amber)} .dot-teal{background:var(--jade)}
+        .mini-btn {
+            width:29px; height:29px; border-radius:8px; border:none; cursor:pointer; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:0.72rem; transition:all 0.15s ease;
+        }
+        .mini-btn:hover:not(:disabled) { transform:scale(1.1); }
+        .mini-btn:disabled { opacity:0.35; cursor:not-allowed; }
+        .mb-move { background:#F0EDE4; color:#7A8A83; }
+        .mb-edit { background:var(--green-3); color:var(--green); }
+        .mb-del  { background:#FDE8E8; color:#C0392B; }
+
+        /* ───────── Student list ───────── */
+        .search-box {
+            width:100%; background:#fff; border:1px solid var(--line); border-radius:12px;
+            padding:12px 17px; font-family:'Prompt',sans-serif; font-size:0.92rem; outline:none; transition:all 0.16s ease;
+        }
+        .search-box:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(15,61,46,0.10); }
+        .search-clear-btn {
+            position:absolute; right:12px; top:50%; transform:translateY(-50%);
+            width:25px; height:25px; border-radius:50%; border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            background:#F0EDE4; color:#9AA8A1; font-size:0.72rem; transition:all 0.15s ease;
+        }
+        .search-clear-btn:hover { background:#FDE8E8; color:#C0392B; }
+        /* คลาสของเราที่ตั้ง display เอง มี specificity เท่ากับ .hidden ของ Tailwind
+           และถูกโหลดทีหลัง จึงไปทับ .hidden ทำให้ปุ่มที่ควรซ่อนกลับโผล่ขึ้นมา
+           (ปุ่มกากบาทล้างค้นหา, ปุ่มยกเลิกแก้ไข, ปุ่มลบรูป)
+           จึงต้องประกาศคู่กันให้ specificity สูงกว่า — ห้ามใช้ .hidden{...!important}
+           เพราะจะไปทับ utility แบบ responsive เช่น "hidden md:block" ของนาฬิกาด้วย */
+        .search-clear-btn.hidden,
+        .btn-ghost.hidden,
+        .up-btn.hidden { display:none; }
+
+        .filter-chip {
+            padding:7px 16px; border-radius:100px; font-family:'Kanit',sans-serif;
+            font-size:0.78rem; font-weight:600; cursor:pointer;
+            background:#fff; color:var(--muted); border:1px solid var(--line); transition:all 0.16s ease;
+        }
+        .filter-chip.active { background:var(--green); color:#fff; border-color:var(--green); }
+        .filter-chip:hover:not(.active) { border-color:var(--green); color:var(--green); transform:translateY(-1px); }
+        .chip-count {
+            display:inline-block; min-width:19px; padding:1px 6px; margin-left:4px;
+            border-radius:100px; font-size:0.66rem; font-weight:700;
+            background:var(--green-3); color:var(--green);
+        }
+        .filter-chip.active .chip-count { background:rgba(255,255,255,0.22); color:#fff; }
+
+        .student-row {
+            display:flex; align-items:center; gap:13px; padding:12px 15px;
+            background:#fff; border:1px solid var(--line); border-radius:12px; transition:all 0.16s ease;
+        }
+        .student-row:hover { border-color:#CFC7B2; transform:translateX(3px); }
+        .avatar {
+            width:38px; height:38px; border-radius:10px; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:0.84rem;
+        }
+        .av-m4{background:#E6F0F7;color:#1C5E8C} .av-m5{background:#FBF1E0;color:#B5741A}
+        .av-m6{background:#E4F2ED;color:#1E7A5E} .av-default{background:#F0EDE4;color:#7A8A83}
+        .class-badge { font-family:'Kanit',sans-serif; font-size:0.68rem; font-weight:600; padding:3px 10px; border-radius:100px; }
+        .badge-m4{background:#E6F0F7;color:#1C5E8C} .badge-m5{background:#FBF1E0;color:#B5741A}
+        .badge-m6{background:#E4F2ED;color:#1E7A5E} .badge-def{background:#F0EDE4;color:#7A8A83}
+
+        /* ───────── misc ───────── */
+        .page-view { display:none; animation:fadeUp 0.3s ease both; }
+        .page-view.active { display:block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+        .skeleton { background:linear-gradient(90deg,#EFEBE1 25%,#F8F6EF 50%,#EFEBE1 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
+        @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .card-skeleton { display:flex; align-items:center; gap:14px; padding:15px; border-radius:20px; background:#fff; border:1px solid var(--line); }
+
+        .modal-overlay { background:rgba(15,33,28,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+        .login-card { background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 20px 50px -20px rgba(15,33,28,0.4); }
 
         @media (max-width:1024px) {
-            .main-card {
-                min-height: auto !important;
-                display: flex;
-                flex-direction: column;
+            .hero-img-wrap {
+                position:relative; inset:auto; width:100%; height:200px;
             }
-            .hero-image-wrap {
-                position: relative;
-                inset: auto;
-                width: 100%;
-                height: 230px;
-                border-radius: 32px 32px 0 0;
-                flex-shrink: 0;
+            .hero-img-wrap::after {
+                background:linear-gradient(to bottom, rgba(255,255,255,0) 40%, rgba(255,255,255,0.9) 82%, #fff 100%);
             }
-            .hero-image-wrap img {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-            }
-            .hero-img-desktop { display: none; }
-            .hero-img-mobile { display: block; object-position: center top; }
-            /* ไล่รูปให้จมหายเข้าไปในพื้นหมึกเข้ม (เดิมไล่เข้าสีขาว) */
-            .hero-image-wrap::after {
-                content: '';
-                position: absolute;
-                left: 0; right: 0; bottom: 0;
-                height: 120px;
-                background: linear-gradient(to bottom, rgba(22,18,63,0) 0%, rgba(22,18,63,0.85) 62%, var(--ink-800) 100%);
-                pointer-events: none;
-            }
-            .hero-content-panel {
-                position: relative;
-                z-index: 1;
-                width: 100% !important;
-                min-height: auto !important;
-                background: transparent;
-                border-radius: 0 0 32px 32px;
-                margin-top: -1px;
-            }
-            .hero-badge {
-                display: none;
-            }
+            .hero-img-desktop { display:none; }
+            .hero-img-mobile  { display:block; }
+            .hero-body { margin-top:-26px; }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            .tile, .stat-card, .qr-btn, .btn-solid, .btn-staff, .btn-ghost, .student-row { transition:none !important; }
+            .tile:hover, .stat-card:hover, .qr-btn:hover, .btn-solid:hover, .btn-staff:hover,
+            .btn-ghost:hover, .student-row:hover, .mini-btn:hover { transform:none !important; }
+            .skeleton, .up-bar i, .page-view { animation:none !important; }
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col">
 
-<!-- Navbar -->
+<!-- ═══════════ NAVBAR ═══════════ -->
 <nav class="navbar sticky top-0 z-50 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
-            <img src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="Logo" class="h-11 w-11 object-contain drop-shadow">
-            <div>
-                <h1 class="text-lg font-black text-gray-800 leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ @High School</h1>
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Academic Affairs System</p>
+    <div class="max-w-6xl mx-auto flex justify-between items-center gap-3">
+        <div class="flex items-center gap-3 cursor-pointer min-w-0" onclick="navigate('dashboard')">
+            <img id="site-logo" class="crest" src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="ตราโรงเรียน">
+            <div class="min-w-0">
+                <h1 class="nav-title truncate">วิชาการ @High School</h1>
+                <p class="nav-sub">ACADEMIC AFFAIRS</p>
             </div>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="hidden md:flex items-center gap-2 text-sm font-mono font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-full">
-                <i class="fa-regular fa-clock text-indigo-400"></i>
-                <span id="clock-span">00:00:00</span>
-            </div>
-            <button onclick="navigate('login-admin')" class="btn-pixar btn-rose text-white px-5 py-2.5 flex items-center gap-2 font-bold text-sm" style="font-family:'Kanit',sans-serif;border:none;">
+        <div class="flex items-center gap-3 flex-shrink-0">
+            <div class="nav-clock hidden md:block"><span id="clock-span">00:00:00</span></div>
+            <button onclick="navigate('login-admin')" class="btn-staff">
                 <i class="fa-solid fa-lock"></i> ครูวิชาการ
             </button>
         </div>
     </div>
 </nav>
 
-<main class="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col justify-center">
+<main class="flex-grow w-full max-w-6xl mx-auto px-4 py-5">
 
-    <!-- ===== DASHBOARD ===== -->
-    <div id="view-dashboard" class="page-view active w-full">
-        <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5"></div>
-        <div class="main-card overflow-hidden relative" style="min-height:560px;">
-            <!-- รูป hero เต็มพื้นหลังของ main-card -->
-            <div class="hero-image-wrap">
-                <img class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="Students">
-                <img class="hero-img-mobile" src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="Students">
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <div id="view-dashboard" class="page-view active">
+
+        <div class="hero-panel mb-5">
+            <div class="hero-img-wrap">
+                <img id="hero-desktop" class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="">
+                <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
             </div>
-
-            <!-- เนื้อหาฝั่งซ้ายลอยทับ -->
-            <div class="hero-content-panel w-full lg:w-1/2 p-8 md:p-10 flex flex-col justify-center" style="min-height:560px;">
-                <div class="mb-7">
-                    <span class="term-chip">ภาคเรียนที่ 1 · ปีการศึกษา 2569</span>
-                    <h2 class="hero-title">
-                        ยินดีต้อนรับ<br>
-                        <span class="welcome-gradient">นักเรียนม.ปลาย</span>
-                    </h2>
-                    <p class="hero-sub">เลือกเมนูด้านล่างเพื่อเข้าใช้งานระบบวิชาการ</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div onclick="navigate('students')" class="btn-pixar btn-crimson p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:148px;">
-                        <div class="icon-bubble bg-white/20" style="width:54px;height:54px;"><i class="fa-solid fa-user-graduate text-2xl"></i></div>
-                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">นักเรียน</h3><p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.78);">รายชื่อนักเรียน</p></div>
-                    </div>
-                    <div onclick="navigate('login-admin')" class="btn-pixar btn-violet p-5 flex flex-col items-center justify-center gap-3 text-white text-center" style="min-height:148px;">
-                        <div class="icon-bubble bg-white/20" style="width:54px;height:54px;"><i class="fa-solid fa-shield-halved text-2xl"></i></div>
-                        <div><h3 class="text-lg font-extrabold leading-tight" style="font-family:'Kanit',sans-serif;">วิชาการ</h3><p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.78);">สำหรับครู</p></div>
-                    </div>
-                </div>
-                <div id="all-cards-container" class="flex flex-col gap-3 mb-4"></div>
-                <button onclick="showQRModal()" class="qr-btn w-full flex items-center justify-center gap-2.5 p-3.5 text-sm font-bold" style="font-family:'Kanit',sans-serif;">
-                    <span class="qr-btn-icon"><i class="fa-solid fa-qrcode"></i></span>
-                    <span>QR Code วิชาการม.ปลาย</span>
-                </button>
-            </div>
-
-            <!-- hero badge ลอยมุมขวาล่างของ main-card -->
-            <div class="hero-badge">
-                <p class="font-black leading-snug" style="font-family:'Kanit',sans-serif;">
-                    เปิดโลกกว้าง 🌟<br>สร้างโอกาส<br><span class="text-pink-600">มุ่งสู่สากล</span>
-                </p>
+            <div class="hero-body p-7 md:p-9 lg:w-1/2">
+                <span class="term-chip">ภาคเรียนที่ 1 · ปีการศึกษา 2569</span>
+                <h2 class="hero-title">ยินดีต้อนรับ<br><span class="hl">นักเรียนมัธยมปลาย</span></h2>
+                <div class="gold-rule"></div>
+                <p class="hero-sub">เลือกรายการด้านล่างเพื่อเข้าใช้งานระบบงานวิชาการ</p>
             </div>
         </div>
-    </div><!-- ปิด #view-dashboard -->
 
-    <!-- ===== STUDENTS ===== -->
-    <div id="view-students" class="page-view w-full">
-        <div class="admin-section p-5 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <p class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-0.5">👨‍🎓 Student Directory</p>
-                <h2 class="text-2xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">รายชื่อนักเรียน</h2>
+        <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+        <div class="sec-label"><span>บริการหลัก</span><i></i></div>
+        <div class="grid grid-cols-2 gap-3">
+            <div onclick="navigate('students')" class="tile t-crimson p-5 flex flex-col items-center justify-center gap-3 text-center" style="min-height:142px;">
+                <div class="tile-icon" style="width:52px;height:52px;"><i class="fa-solid fa-user-graduate text-xl"></i></div>
+                <div>
+                    <h3 class="menu-title">นักเรียน</h3>
+                    <p class="menu-desc">รายชื่อนักเรียน</p>
+                </div>
             </div>
-            <button onclick="navigate('dashboard')" class="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-gray-600 text-sm hover:-translate-y-1 transition-all self-start sm:self-auto" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;">
+            <div onclick="navigate('login-admin')" class="tile t-violet p-5 flex flex-col items-center justify-center gap-3 text-center" style="min-height:142px;">
+                <div class="tile-icon" style="width:52px;height:52px;"><i class="fa-solid fa-shield-halved text-xl"></i></div>
+                <div>
+                    <h3 class="menu-title">วิชาการ</h3>
+                    <p class="menu-desc">สำหรับครู</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="menu-section" class="hidden">
+            <div class="sec-label"><span>รายการประกาศ</span><i></i></div>
+            <div id="all-cards-container" class="flex flex-col gap-3"></div>
+        </div>
+
+        <button onclick="showQRModal()" class="qr-btn mt-5">
+            <span class="qr-icon"><i class="fa-solid fa-qrcode"></i></span>
+            QR Code วิชาการ ม.ปลาย
+        </button>
+    </div>
+
+    <!-- ═══════════ STUDENTS ═══════════ -->
+    <div id="view-students" class="page-view">
+        <div class="panel p-5 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:var(--gold);">Student Directory</p>
+                <h2 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.5rem;color:var(--green);">รายชื่อนักเรียน</h2>
+            </div>
+            <button onclick="navigate('dashboard')" class="btn-ghost self-start sm:self-auto">
                 <i class="fa-solid fa-house"></i> หน้าหลัก
             </button>
         </div>
-        <div class="admin-section p-5 mb-4">
-            <div class="flex flex-col sm:flex-row gap-3 mb-4">
-                <div class="relative flex-1">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" id="search-input" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pl-11 pr-11" oninput="filterStudents()">
-                    <button id="search-clear" onclick="clearSearch()" class="search-clear-btn hidden" title="ล้างคำค้นหา">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
+
+        <div class="panel p-5 mb-4">
+            <div class="relative mb-4">
+                <input type="text" id="search-input" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pr-11" oninput="filterStudents()">
+                <button id="search-clear" onclick="clearSearch()" class="search-clear-btn hidden" title="ล้างคำค้นหา">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div class="flex flex-wrap gap-2" id="filter-chips">
+            <div class="flex flex-wrap gap-2">
                 <button class="filter-chip active" data-level="all" onclick="setFilter('all')">ทั้งหมด <span class="chip-count" data-count="all">0</span></button>
                 <button class="filter-chip" data-level="ม.4" onclick="setFilter('ม.4')">ม.4 <span class="chip-count" data-count="ม.4">0</span></button>
                 <button class="filter-chip" data-level="ม.5" onclick="setFilter('ม.5')">ม.5 <span class="chip-count" data-count="ม.5">0</span></button>
                 <button class="filter-chip" data-level="ม.6" onclick="setFilter('ม.6')">ม.6 <span class="chip-count" data-count="ม.6">0</span></button>
             </div>
         </div>
-        <div class="flex items-center justify-between mb-3 px-1">
-            <p class="text-sm text-gray-400 font-medium">แสดง <span id="result-count" class="font-bold text-gray-700">0</span> คน</p>
-            <div id="student-loading" class="hidden text-xs text-indigo-400 font-medium flex items-center gap-1">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> loading รอแป๊ป...
-            </div>
-        </div>
-        <div id="student-list" class="flex flex-col gap-2 mb-4"></div>
-        <div id="student-empty" class="hidden text-center py-16">
-            <div class="text-5xl mb-4">🔍</div>
-            <p class="text-gray-400 font-medium">อ้าว ไม่เจอ</p>
-        </div>
-    </div><!-- ปิด #view-students -->
 
-    <!-- ===== ADMIN LOGIN ===== -->
-    <div id="view-login-admin" class="page-view max-w-sm mx-auto mt-12 w-full">
-        <div class="login-card p-8 text-center">
-            <div class="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style="background:linear-gradient(145deg,#9B6EFF,#5B21B6);box-shadow:0 6px 0 #3b0d9e,0 12px 32px rgba(91,33,182,0.32);">
-                <i class="fa-solid fa-shield-halved text-3xl text-white"></i>
+        <div class="flex items-center justify-between mb-3 px-1">
+            <p class="text-sm" style="color:var(--muted);">แสดง <span id="result-count" class="font-bold" style="color:var(--ink);">0</span> คน</p>
+            <div id="student-loading" class="hidden text-xs items-center gap-2" style="color:var(--muted);">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลด...
             </div>
-            <h2 class="text-3xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">ฝ่ายวิชาการ</h2>
-            <p class="text-gray-400 mb-7 text-sm">password</p>
-            <input type="password" id="admin-pass" inputmode="numeric" pattern="[0-9]*" placeholder="••••••••" class="input-3d mb-5" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') loginAdmin()">
-            <button onclick="loginAdmin()" class="btn-pixar btn-violet w-full py-4 text-white text-lg font-black" style="font-family:'Kanit',sans-serif;border:none;">
+        </div>
+        <div id="student-list" class="flex flex-col gap-2"></div>
+        <div id="student-empty" class="hidden text-center py-16">
+            <i class="fa-regular fa-folder-open text-4xl mb-3" style="color:#CFC7B2;"></i>
+            <p style="color:var(--muted);">ไม่พบรายชื่อที่ค้นหา</p>
+        </div>
+    </div>
+
+    <!-- ═══════════ ADMIN LOGIN ═══════════ -->
+    <div id="view-login-admin" class="page-view max-w-sm mx-auto mt-10">
+        <div class="login-card p-8 text-center">
+            <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center" style="background:var(--green);">
+                <i class="fa-solid fa-shield-halved text-2xl" style="color:var(--gold);"></i>
+            </div>
+            <h2 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.6rem;color:var(--green);">ฝ่ายวิชาการ</h2>
+            <p class="text-sm mb-6 mt-1" style="color:var(--muted);">กรอกรหัสผ่านเพื่อเข้าสู่ระบบ</p>
+            <input type="password" id="admin-pass" inputmode="numeric" pattern="[0-9]*" placeholder="••••••••"
+                   class="input text-center mb-4" style="letter-spacing:0.3em;font-size:1.1rem;"
+                   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                   onkeydown="if(event.key==='Enter') loginAdmin()">
+            <button onclick="loginAdmin()" class="btn-solid btn-green">
                 <i class="fa-solid fa-right-to-bracket mr-2"></i> เข้าสู่ระบบ
             </button>
-            <button onclick="navigate('dashboard')" class="mt-4 text-sm text-gray-400 hover:text-gray-600 transition underline block w-full">main page</button>
+            <button onclick="navigate('dashboard')" class="mt-4 text-sm underline w-full" style="color:var(--muted);">กลับหน้าหลัก</button>
         </div>
-    </div><!-- ปิด #view-login-admin -->
+    </div>
 
-    <!-- ===== ADMIN PANEL ===== -->
+    <!-- ═══════════ ADMIN PANEL ═══════════ -->
     <div id="view-admin-panel" class="page-view">
-        <div class="admin-section p-6 mb-5 flex justify-between items-center">
+        <div class="panel p-6 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <p class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-1">⚙️ Control Center</p>
-                <h2 class="text-3xl font-black text-gray-800" style="font-family:'Kanit',sans-serif;">ศูนย์ควบคุมส่วนกลาง</h2>
-                <p class="text-gray-400 text-sm">จัดการระบบและปรับแต่งหน้าเว็บ</p>
+                <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:var(--gold);">Control Center</p>
+                <h2 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.6rem;color:var(--green);">ศูนย์ควบคุมส่วนกลาง</h2>
+                <p class="text-sm mt-1" style="color:var(--muted);">จัดการระบบและปรับแต่งหน้าเว็บ</p>
             </div>
-            <button onclick="navigate('dashboard')" class="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-gray-600 text-sm hover:-translate-y-1 transition-all" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;">
+            <button onclick="navigate('dashboard')" class="btn-ghost self-start sm:self-auto">
                 <i class="fa-solid fa-house"></i> หน้าหลัก
             </button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
-            <!-- คอลัมน์ซ้าย: ตั้งค่าทั่วไป + ประกาศ -->
-            <div class="space-y-5">
+            <!-- ───── คอลัมน์ซ้าย ───── -->
+            <div class="flex flex-col gap-5">
 
-            <!-- ตั้งค่าทั่วไป -->
-            <div class="admin-section p-6">
-                <div class="section-tag" style="background:#dbeafe;color:#1d4ed8;"><i class="fa-solid fa-sliders"></i> ตั้งค่าทั่วไป</div>
-                <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส Admin</label>
-                            <input type="password" id="set-admin-pwd" inputmode="numeric" pattern="[0-9]*" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                <!-- ตั้งค่าทั่วไป -->
+                <div class="panel p-6">
+                    <div class="tag" style="background:var(--green-3);color:var(--green);"><i class="fa-solid fa-sliders"></i> ตั้งค่าทั่วไป</div>
+                    <div class="flex flex-col gap-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="field-label">เปลี่ยนรหัส Admin</label>
+                                <input type="password" id="set-admin-pwd" inputmode="numeric" pattern="[0-9]*" class="input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                            </div>
+                            <div>
+                                <label class="field-label">เปลี่ยนรหัส ครู</label>
+                                <input type="password" id="set-teacher-pwd" inputmode="numeric" pattern="[0-9]*" class="input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">เปลี่ยนรหัส ครู</label>
-                            <input type="password" id="set-teacher-pwd" inputmode="numeric" pattern="[0-9]*" class="admin-input" placeholder="เว้นว่างถ้าไม่เปลี่ยน" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                            <label class="field-label">Folder ID (Google Drive) — ใช้เก็บรูปที่อัปโหลด</label>
+                            <input type="text" id="set-folder-id" class="input">
                         </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="field-label">ชื่อผู้อำนวยการ</label>
+                                <input type="text" id="set-director" class="input">
+                            </div>
+                            <div>
+                                <label class="field-label">หัวหน้าฝ่ายวิชาการ</label>
+                                <input type="text" id="set-academic" class="input">
+                            </div>
+                        </div>
+                        <button onclick="saveAdminSettingsFn()" class="btn-solid btn-green"><i class="fa-solid fa-floppy-disk mr-2"></i>บันทึกการตั้งค่า</button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-400 mb-1.5">Folder ID (Google Drive)</label>
-                        <input type="text" id="set-folder-id" class="admin-input">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">ชื่อผู้อำนวยการ</label>
-                            <input type="text" id="set-director" class="admin-input">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">หัวหน้าฝ่ายวิชาการ</label>
-                            <input type="text" id="set-academic" class="admin-input">
-                        </div>
-                    </div>
-                    <button onclick="saveAdminSettingsFn()" class="admin-btn admin-btn-blue"><i class="fa-solid fa-floppy-disk mr-2"></i>save</button>
                 </div>
-            </div>
+
+                <!-- รูปภาพหน้าเว็บ -->
+                <div class="panel p-6">
+                    <div class="tag" style="background:#FBF1E0;color:#B5741A;"><i class="fa-solid fa-images"></i> รูปภาพหน้าเว็บ</div>
+                    <div class="flex flex-col gap-4">
+                        <div>
+                            <label class="field-label">โลโก้โรงเรียน (ใช้เป็น favicon ด้วย) — แนะนำ PNG พื้นโปร่งใส</label>
+                            <div class="uploader" id="up-logo"></div>
+                        </div>
+                        <div>
+                            <label class="field-label">รูป Hero — จอคอมพิวเตอร์ (แนวนอน)</label>
+                            <div class="uploader" id="up-hero"></div>
+                        </div>
+                        <div>
+                            <label class="field-label">รูป Hero — มือถือ (แนวตั้ง/จัตุรัส)</label>
+                            <div class="uploader" id="up-hero-m"></div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- ประกาศ -->
-                <div class="admin-section p-6">
-                    <div class="section-tag" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullhorn"></i> ประกาศ</div>
-                    <div class="space-y-3">
+                <div class="panel p-6">
+                    <div class="tag" style="background:#FDE8E8;color:#C0392B;"><i class="fa-solid fa-bullhorn"></i> ประกาศ</div>
+                    <div class="flex flex-col gap-3">
                         <div class="toggle-row">
                             <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-tower-broadcast text-orange-400 text-sm"></i>
-                                <span class="text-sm font-semibold text-gray-600">แสดงประกาศตอนเปิดเว็บ</span>
+                                <i class="fa-solid fa-tower-broadcast text-sm" style="color:var(--muted);"></i>
+                                <span class="text-sm font-semibold" style="color:var(--ink);">แสดงประกาศตอนเปิดเว็บ</span>
                             </div>
                             <div class="flex items-center gap-2.5">
                                 <span id="ann-status-label" class="toggle-status">ปิดอยู่</span>
@@ -589,103 +596,108 @@
                                 </label>
                             </div>
                         </div>
-                        <input type="text" id="ann-img" class="admin-input text-sm" placeholder="URL รูปภาพ (ถ้ามี)">
-                        <textarea id="ann-text" rows="3" class="admin-input text-sm resize-none" placeholder="ข้อความประกาศ..."></textarea>
-                        <button onclick="saveAnnouncementFn()" class="admin-btn admin-btn-orange"><i class="fa-solid fa-bullhorn mr-2"></i>อัปเดตประกาศ</button>
-                    </div>
-                </div>
-
-            </div><!-- ปิดคอลัมน์ซ้าย -->
-
-                <!-- ===== เมนูเสริม (ปรับปรุงใหม่) ===== -->
-                <div class="admin-section p-6">
-                    <div class="section-tag" style="background:#ede9fe;color:#5b21b6;"><i class="fa-solid fa-wand-magic-sparkles"></i> จัดการปุ่มเมนูเสริม</div>
-
-                    <!-- ฟอร์มเพิ่ม/แก้ไข -->
-                    <div class="space-y-3 mb-4" id="card-form-wrap">
-                        <input type="text" id="new-card-title" class="admin-input" placeholder="ชื่อเมนู เช่น ประกาศผลสอบ">
-                        <input type="text" id="new-card-desc"  class="admin-input text-sm" placeholder="คำอธิบาย (ถ้ามี)">
-                        <input type="text" id="new-card-url"   class="admin-input text-sm" placeholder="ลิงก์ URL ปลายทาง (ถ้ามี)">
                         <div>
-                            <input type="text" id="new-card-pwd" class="admin-input text-sm" placeholder="🔒 รหัสผ่านสำหรับปุ่มนี้ (เว้นว่าง = ไม่ต้องใส่รหัส)" autocomplete="off">
-                            <p class="text-[11px] text-gray-400 mt-1 ml-1">ถ้ากรอกไว้ นักเรียนต้องใส่รหัสนี้ก่อนถึงจะเปิดเมนูได้</p>
+                            <label class="field-label">รูปประกอบประกาศ</label>
+                            <div class="uploader" id="up-ann"></div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-400 mb-1">สีของปุ่ม</label>
-                                <select id="new-card-color" class="admin-input text-sm">
-                                    <option value="purple">🟣 สีม่วง</option>
-                                    <option value="blue">🔵 สีฟ้า</option>
-                                    <option value="pink">🩷 สีชมพู</option>
-                                    <option value="orange">🟠 สีส้ม</option>
-                                    <option value="teal">🟢 สีเขียว</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-400 mb-1">ไอคอน</label>
-                                <select id="new-card-icon" class="admin-input text-sm">
-                                    <option value="fa-star">⭐ ดาว</option>
-                                    <option value="fa-link">🔗 ลิงก์</option>
-                                    <option value="fa-file-lines">📄 เอกสาร</option>
-                                    <option value="fa-bullhorn">📢 ประกาศ</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- ปุ่ม: สลับระหว่าง "เพิ่ม" กับ "บันทึกการแก้ไข" -->
-                        <div class="flex gap-2">
-                            <button id="btn-add-card" onclick="addWebCardFn()" class="admin-btn admin-btn-violet flex-1">
-                                <i class="fa-solid fa-plus mr-2"></i>เพิ่มปุ่มขึ้นหน้าเว็บ
-                            </button>
-                            <button id="btn-save-edit" onclick="saveEditCardFn()" class="admin-btn admin-btn-blue flex-1 hidden">
-                                <i class="fa-solid fa-floppy-disk mr-2"></i>บันทึกการแก้ไข
-                            </button>
-                            <button id="btn-cancel-edit" onclick="cancelEditCardFn()" class="hidden px-4 rounded-2xl font-bold text-gray-500 text-sm" style="background:#f1f5f9;border:1.5px solid #e2e8f0;font-family:'Kanit',sans-serif;cursor:pointer;">
-                                ยกเลิก
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- รายการ card ที่มีอยู่ -->
-                    <div>
-                        <p class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">รายการที่มีอยู่</p>
-                        <div id="card-manager-list" class="flex flex-col gap-2"></div>
-                        <div id="card-manager-empty" class="hidden text-center py-6 text-gray-300 text-sm">
-                            <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>ยังไม่มีเมนูเสริม
-                        </div>
-                    </div>
-
-                    <div class="text-right mt-3">
-                        <button onclick="clearWebCardsFn()" class="text-xs text-red-400 hover:text-red-600 underline">ลบทั้งหมด</button>
+                        <textarea id="ann-text" rows="3" class="input resize-none" placeholder="ข้อความประกาศ..."></textarea>
+                        <button onclick="saveAnnouncementFn()" class="btn-solid btn-amberS"><i class="fa-solid fa-bullhorn mr-2"></i>อัปเดตประกาศ</button>
                     </div>
                 </div>
+
+            </div>
+
+            <!-- ───── คอลัมน์ขวา: เมนูเสริม ───── -->
+            <div class="panel p-6">
+                <div class="tag" style="background:#EDE9FE;color:#5B21B6;"><i class="fa-solid fa-wand-magic-sparkles"></i> จัดการปุ่มเมนู</div>
+
+                <div class="flex flex-col gap-3 mb-5" id="card-form-wrap">
+                    <input type="text" id="new-card-title" class="input" placeholder="ชื่อเมนู เช่น ประกาศผลสอบ">
+                    <input type="text" id="new-card-desc"  class="input" placeholder="คำอธิบาย (ถ้ามี)">
+                    <input type="text" id="new-card-url"   class="input" placeholder="ลิงก์ URL ปลายทาง (ถ้ามี)">
+                    <div>
+                        <input type="text" id="new-card-pwd" class="input" placeholder="🔒 รหัสผ่านปุ่มนี้ (เว้นว่าง = ไม่ต้องใส่รหัส)" autocomplete="off">
+                        <p class="text-[11px] mt-1 ml-1" style="color:var(--muted);">ถ้ากรอกไว้ นักเรียนต้องใส่รหัสนี้ก่อนถึงจะเปิดเมนูได้</p>
+                    </div>
+                    <div>
+                        <label class="field-label">รูปปกของปุ่ม (ถ้าใส่ จะแสดงแทนไอคอน)</label>
+                        <div class="uploader" id="up-card"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="field-label">สีของปุ่ม</label>
+                            <select id="new-card-color" class="input">
+                                <option value="purple">🟣 สีม่วง</option>
+                                <option value="blue">🔵 สีฟ้า</option>
+                                <option value="pink">🩷 สีชมพู</option>
+                                <option value="orange">🟠 สีส้ม</option>
+                                <option value="teal">🟢 สีเขียว</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="field-label">ไอคอน</label>
+                            <select id="new-card-icon" class="input">
+                                <option value="fa-star">⭐ ดาว</option>
+                                <option value="fa-link">🔗 ลิงก์</option>
+                                <option value="fa-file-lines">📄 เอกสาร</option>
+                                <option value="fa-bullhorn">📢 ประกาศ</option>
+                                <option value="fa-graduation-cap">🎓 การศึกษา</option>
+                                <option value="fa-calendar-days">📅 ปฏิทิน</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-add-card" onclick="addWebCardFn()" class="btn-solid" style="background:var(--violet);box-shadow:0 4px 0 #4013AF;">
+                            <i class="fa-solid fa-plus mr-2"></i>เพิ่มปุ่ม
+                        </button>
+                        <button id="btn-save-edit" onclick="saveEditCardFn()" class="btn-solid btn-green hidden">
+                            <i class="fa-solid fa-floppy-disk mr-2"></i>บันทึกการแก้ไข
+                        </button>
+                        <button id="btn-cancel-edit" onclick="cancelEditCardFn()" class="btn-ghost hidden justify-center">ยกเลิก</button>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="field-label uppercase tracking-wider">รายการที่มีอยู่</p>
+                    <div id="card-manager-list" class="flex flex-col gap-2"></div>
+                    <div id="card-manager-empty" class="hidden text-center py-7" style="color:#C3CCC7;">
+                        <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>
+                        <span class="text-sm">ยังไม่มีเมนู</span>
+                    </div>
+                </div>
+
+                <div class="text-right mt-3">
+                    <button onclick="clearWebCardsFn()" class="text-xs underline" style="color:#C0392B;">ลบทั้งหมด</button>
+                </div>
+            </div>
 
         </div>
-    </div><!-- ปิด #view-admin-panel -->
+    </div>
 
 </main>
 
-<footer class="py-8 px-4 mt-4">
+<footer class="py-8 px-4">
     <div class="max-w-md mx-auto flex flex-col items-center gap-3">
-        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur-md border border-white/80 px-5 py-2.5 rounded-full shadow-sm">
-            <span class="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:linear-gradient(145deg,#D92B77,#7C3AED);box-shadow:0 2px 8px rgba(124,58,237,0.35);">
+        <div class="flex items-center gap-2.5 px-5 py-2.5 rounded-full" style="background:#fff;border:1px solid var(--line);">
+            <span class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--green);color:var(--gold);">
                 <i class="fa-solid fa-graduation-cap text-xs"></i>
             </span>
-            <span class="text-sm font-extrabold tracking-tight" style="font-family:'Kanit',sans-serif;background:linear-gradient(125deg,#D92B77,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Academic System</span>
+            <span style="font-family:'Kanit',sans-serif;font-weight:700;font-size:0.85rem;color:var(--green);">Academic System</span>
         </div>
-        <p class="text-xs text-gray-400 font-medium tracking-wide">Copyright &copy; 2026 Academic System@J.SUTTIPRAPA</p>
+        <p class="text-xs" style="color:var(--muted);">Copyright &copy; 2026 Academic System@J.SUTTIPRAPA</p>
     </div>
 </footer>
 
 <!-- QR Modal -->
 <div id="qr-modal" class="modal-overlay fixed inset-0 z-50 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
-    <div class="login-card p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
-        <div class="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center" style="background:linear-gradient(145deg,#FF6B9D,#D92B77);box-shadow:0 5px 0 #9e1855,0 8px 20px rgba(217,43,119,0.28);">
-            <i class="fa-solid fa-qrcode text-2xl text-white"></i>
+    <div class="login-card p-8 max-w-sm w-11/12 text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background:var(--green);">
+            <i class="fa-solid fa-qrcode text-xl" style="color:var(--gold);"></i>
         </div>
-        <h3 class="text-2xl font-black text-gray-800 mb-1" style="font-family:'Kanit',sans-serif;">scan</h3>
-        <p class="text-gray-400 text-sm mb-5">ระบบวิชาการม.ปลาย</p>
-        <div id="qrcode-container" class="bg-white p-4 rounded-2xl inline-block border border-pink-100 mb-5 shadow-inner"></div>
-        <button onclick="closeQRModal()" class="btn-pixar btn-crimson w-full py-3 text-white font-black text-base" style="font-family:'Kanit',sans-serif;border:none;">ปิดหน้าต่าง</button>
+        <h3 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.4rem;color:var(--green);">สแกนเพื่อเข้าเว็บ</h3>
+        <p class="text-sm mb-5 mt-1" style="color:var(--muted);">ระบบวิชาการ ม.ปลาย</p>
+        <div id="qrcode-container" class="inline-block p-4 rounded-2xl mb-5" style="background:#fff;border:1px solid var(--line);"></div>
+        <button onclick="closeQRModal()" class="btn-solid btn-green">ปิดหน้าต่าง</button>
     </div>
 </div>
 
@@ -693,7 +705,6 @@
 // ════════════════════════════════════════
 // API CONFIG — GitHub Pages -> GAS Web App
 // ════════════════════════════════════════
-// ⚠️ URL นี้คือ Deployment URL (/exec) ของระบบ "วิชาการ @High School"
 const API_URL = 'https://script.google.com/macros/s/AKfycbx9majzXlQoNQV_BL2oxSa8y3glZDtkooUCRLxHG1Tlx-GeALdotkRx20Vp7NkxjSK32A/exec';
 
 async function callAPI(action, payload = {}) {
@@ -702,62 +713,333 @@ async function callAPI(action, payload = {}) {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action, ...payload })
     });
-    if (!res.ok) {
-        throw new Error('เครือข่ายผิดพลาด (HTTP ' + res.status + ')');
-    }
-    // ฟังก์ชันฝั่ง Code.gs ทุกตัว return JSON.stringify(...) เป็น string อยู่แล้ว
-    // ใช้ res.text() แล้วค่อย JSON.parse ให้เหมือนพฤติกรรมเดิมของ google.script.run
+    if (!res.ok) throw new Error('เครือข่ายผิดพลาด (HTTP ' + res.status + ')');
     return res.text();
 }
 
 function handleScriptError(error) {
     Swal.close();
-    Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text: (error && error.message) ? error.message : String(error), confirmButtonColor:'#5B21B6' });
+    Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text:(error && error.message) ? error.message : String(error), confirmButtonColor:'#0F3D2E' });
 }
 
-// ===== Navigation =====
+// กันข้อความจากผู้ใช้ไปทำลายโครงสร้าง HTML ตอนแทรกด้วย innerHTML
+function esc(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ════════════════════════════════════════
+// ระบบอัปโหลดรูป
+// ════════════════════════════════════════
+
+/**
+ * ย่อรูปด้วย canvas ก่อนส่งขึ้นเซิร์ฟเวอร์
+ * - รูปจากกล้องมือถือมักใหญ่ 3-8 MB ถ้าส่งดิบๆ จะช้ามากและ GAS อาจไม่รับ
+ * - PNG ที่พื้นโปร่งใสจะคงเป็น PNG ไว้ (เช่นโลโก้) ที่เหลือแปลงเป็น JPEG
+ */
+function processImage(file, maxDim, keepPng) {
+    return new Promise((resolve, reject) => {
+        if (!file.type || file.type.indexOf('image/') !== 0) {
+            return reject(new Error('กรุณาเลือกไฟล์รูปภาพ'));
+        }
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('อ่านไฟล์ไม่สำเร็จ'));
+        reader.onload = () => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('เปิดไฟล์รูปนี้ไม่ได้'));
+            img.onload = () => {
+                let w = img.naturalWidth, h = img.naturalHeight;
+                if (!w || !h) return reject(new Error('ไฟล์รูปเสียหาย'));
+                const scale = Math.min(1, maxDim / Math.max(w, h));
+                w = Math.max(1, Math.round(w * scale));
+                h = Math.max(1, Math.round(h * scale));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+
+                const usePng = keepPng && file.type === 'image/png';
+                // ถ้าแปลงเป็น JPEG ต้องรองพื้นขาวก่อน ไม่งั้นพื้นโปร่งใสจะกลายเป็นสีดำ
+                if (!usePng) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, w, h); }
+                ctx.drawImage(img, 0, 0, w, h);
+
+                const mime = usePng ? 'image/png' : 'image/jpeg';
+                let dataUrl;
+                try {
+                    dataUrl = usePng ? canvas.toDataURL(mime) : canvas.toDataURL(mime, 0.82);
+                } catch (e) { return reject(new Error('แปลงรูปไม่สำเร็จ')); }
+
+                const base = (file.name || 'image').replace(/\.[^.]+$/, '');
+                resolve({ b64: dataUrl.split(',')[1], mime: mime, name: base, preview: dataUrl });
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+/**
+ * สร้างตัวอัปโหลดรูปในกล่องที่กำหนด
+ * opts: { id, maxDim, keepPng, hint, round, onChange(url) }
+ * ตัวมันเองเก็บ url ปัจจุบันไว้ อ่านได้ด้วย uploaders[id].getUrl()
+ */
+const uploaders = {};
+
+function createUploader(opts) {
+    const box = document.getElementById(opts.id);
+    if (!box) return null;
+
+    const state = { url: '', busy: false };
+
+    box.innerHTML =
+        '<div class="up-row">' +
+            '<div class="up-preview' + (opts.logoFit ? ' logo-fit' : '') + '"><i class="fa-regular fa-image"></i></div>' +
+            '<div class="up-info">' +
+                '<p class="hint">' + esc(opts.hint || 'ยังไม่ได้เลือกรูป') + '</p>' +
+                '<div class="up-actions">' +
+                    '<button type="button" class="up-btn up-pick"><i class="fa-solid fa-arrow-up-from-bracket"></i> เลือกรูป</button>' +
+                    '<button type="button" class="up-btn up-del hidden"><i class="fa-solid fa-trash"></i> ลบรูป</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="up-bar"><i></i></div>' +
+        '<input type="file" accept="image/*" class="hidden">';
+
+    const preview = box.querySelector('.up-preview');
+    const hint    = box.querySelector('.hint');
+    const pickBtn = box.querySelector('.up-pick');
+    const delBtn  = box.querySelector('.up-del');
+    const bar     = box.querySelector('.up-bar');
+    const input   = box.querySelector('input[type=file]');
+
+    function render() {
+        if (state.url) {
+            preview.innerHTML = '<img src="' + esc(state.url) + '" alt="">';
+            hint.textContent = 'อัปโหลดแล้ว';
+            delBtn.classList.remove('hidden');
+            box.classList.add('has-img');
+        } else {
+            preview.innerHTML = '<i class="fa-regular fa-image"></i>';
+            hint.textContent = opts.hint || 'ยังไม่ได้เลือกรูป';
+            delBtn.classList.add('hidden');
+            box.classList.remove('has-img');
+        }
+    }
+
+    function setBusy(on) {
+        state.busy = on;
+        bar.classList.toggle('on', on);
+        pickBtn.disabled = on;
+        delBtn.disabled = on;
+        pickBtn.innerHTML = on
+            ? '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังอัปโหลด'
+            : '<i class="fa-solid fa-arrow-up-from-bracket"></i> เลือกรูป';
+    }
+
+    pickBtn.addEventListener('click', () => { if (!state.busy) input.click(); });
+
+    input.addEventListener('change', async () => {
+        const file = input.files && input.files[0];
+        input.value = ''; // เคลียร์เพื่อให้เลือกไฟล์เดิมซ้ำได้
+        if (!file) return;
+        setBusy(true);
+        try {
+            const img = await processImage(file, opts.maxDim || 1400, !!opts.keepPng);
+            // โชว์รูปทันทีจากเครื่อง ไม่ต้องรอ Drive ตอบ
+            preview.innerHTML = '<img src="' + img.preview + '" alt="">';
+            const res = JSON.parse(await callAPI('uploadImage', { b64: img.b64, mime: img.mime, name: img.name }));
+            if (res.status !== 'success') throw new Error(res.message || 'อัปโหลดไม่สำเร็จ');
+            state.url = res.data.url;
+            render();
+            if (opts.onChange) opts.onChange(state.url);
+        } catch (err) {
+            render();
+            Swal.fire({ icon:'error', title:'อัปโหลดไม่สำเร็จ', text:err.message, confirmButtonColor:'#0F3D2E' });
+        } finally {
+            setBusy(false);
+        }
+    });
+
+    delBtn.addEventListener('click', () => {
+        if (state.busy) return;
+        state.url = '';
+        render();
+        if (opts.onChange) opts.onChange('');
+    });
+
+    const api = {
+        getUrl: () => state.url,
+        setUrl: (u) => { state.url = u || ''; render(); },
+        isBusy: () => state.busy
+    };
+    uploaders[opts.id] = api;
+    render();
+    return api;
+}
+
+// ════════════════════════════════════════
+// Navigation
+// ════════════════════════════════════════
 function navigate(viewId) {
     document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-    document.getElementById('view-' + viewId).classList.add('active');
+    const view = document.getElementById('view-' + viewId);
+    if (view) view.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (viewId === 'dashboard')   { loadDashboardStats(); loadWebCards(); }
     if (viewId === 'admin-panel') { loadAdminSettings(); loadCardManager(); }
     if (viewId === 'students')    loadStudents();
 }
 
-// ===== Clock =====
 setInterval(() => {
-    document.getElementById('clock-span').textContent = new Date().toLocaleTimeString('th-TH');
+    const el = document.getElementById('clock-span');
+    if (el) el.textContent = new Date().toLocaleTimeString('th-TH');
 }, 1000);
 
-// ===== Stats =====
+// ════════════════════════════════════════
+// Dashboard
+// ════════════════════════════════════════
 function renderSkeletonStats() {
     const c = document.getElementById('stats-container');
     c.innerHTML = '';
     for (let i = 0; i < 4; i++) {
-        c.innerHTML += `<div class="stat-card py-5 pl-7 pr-5 flex flex-col gap-3" style="box-shadow:0 4px 0 rgba(0,0,0,0.04),0 10px 20px -8px rgba(60,40,120,0.22);">
-            <div class="skeleton h-3 w-20 rounded-full"></div>
-            <div class="skeleton h-8 w-14 rounded-xl"></div>
-        </div>`;
+        c.innerHTML += '<div class="stat-card"><div class="skeleton h-3 w-20 rounded-full mb-3"></div><div class="skeleton h-7 w-14 rounded-lg"></div></div>';
     }
 }
+
 function loadDashboardStats() {
     renderSkeletonStats();
     callAPI('getDashboardStats').then(response => {
         const res = JSON.parse(response);
-        if (res.status !== 'success') return;
+        const c = document.getElementById('stats-container');
+        if (res.status !== 'success') { c.innerHTML = ''; return; }
         const d = res.data;
-        document.getElementById('stats-container').innerHTML = `
-            <div class="stat-card stat-pink py-5 pl-7 pr-5"><p class="stat-label">นักเรียนทั้งหมด</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.total}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
-            <div class="stat-card stat-blue py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 4</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m4}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
-            <div class="stat-card stat-orange py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 5</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m5}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>
-            <div class="stat-card stat-teal py-5 pl-7 pr-5"><p class="stat-label">มัธยมศึกษาปีที่ 6</p><h3 class="text-4xl font-black" style="font-family:'Kanit',sans-serif;">${d.m6}</h3><p class="text-xs text-gray-400 mt-1">คน</p></div>`;
-    }).catch(handleScriptError);
+        const cell = (k, v) => '<div class="stat-card"><p class="stat-k">' + k + '</p><h3 class="stat-v">' + v + '</h3><p class="stat-u">คน</p></div>';
+        c.innerHTML = cell('นักเรียนทั้งหมด', d.total) + cell('มัธยมศึกษาปีที่ 4', d.m4) +
+                      cell('มัธยมศึกษาปีที่ 5', d.m5) + cell('มัธยมศึกษาปีที่ 6', d.m6);
+    }).catch(err => {
+        document.getElementById('stats-container').innerHTML = '';
+        handleScriptError(err);
+    });
 }
 
-// ===== Students =====
+function renderSkeletonCards(n) {
+    const c = document.getElementById('all-cards-container');
+    document.getElementById('menu-section').classList.remove('hidden');
+    c.innerHTML = '';
+    for (let i = 0; i < (n || 2); i++) {
+        c.insertAdjacentHTML('beforeend',
+            '<div class="card-skeleton">' +
+                '<div class="skeleton" style="width:46px;height:46px;border-radius:15px;flex-shrink:0;"></div>' +
+                '<div class="flex-1"><div class="skeleton h-3.5 w-1/2 rounded-full mb-2"></div><div class="skeleton h-2.5 w-1/3 rounded-full"></div></div>' +
+            '</div>');
+    }
+}
+
+const btnMap = { purple:'t-violet', blue:'t-sky', pink:'t-rose', orange:'t-amber', teal:'t-jade' };
+
+function loadWebCards() {
+    renderSkeletonCards();
+    callAPI('getWebCards').then(res => {
+        const r = JSON.parse(res);
+        const container = document.getElementById('all-cards-container');
+        const section = document.getElementById('menu-section');
+        container.innerHTML = '';
+        if (r.status !== 'success' || !r.data.length) { section.classList.add('hidden'); return; }
+        section.classList.remove('hidden');
+
+        r.data.forEach(card => {
+            const cls  = btnMap[card.color] || 't-violet';
+            const icon = card.icon || 'fa-star';
+            const el = document.createElement('div');
+            el.className = 'tile ' + cls + ' menu-row';
+            el.innerHTML =
+                (card.img
+                    ? '<img class="tile-cover" style="width:46px;height:46px;" src="' + esc(card.img) + '" alt="">'
+                    : '<div class="tile-icon" style="width:46px;height:46px;"><i class="fa-solid ' + esc(icon) + ' text-lg"></i></div>') +
+                '<div class="flex-1 min-w-0">' +
+                    '<h3 class="menu-title">' + esc(card.title) + '</h3>' +
+                    (card.desc ? '<p class="menu-desc">' + esc(card.desc) + '</p>' : '') +
+                '</div>' +
+                (card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : '') +
+                '<i class="fa-solid fa-chevron-right menu-chev"></i>';
+            // ผูก event ด้วย addEventListener แทนการฝัง onclick เป็นสตริง
+            // กันปัญหาชื่อเมนู/คำอธิบาย/URL ที่มีเครื่องหมาย ' หรือ " ทำให้ปุ่มพัง
+            el.addEventListener('click', () => {
+                if (card.pwd) askCardPassword(card);
+                else openCard(card);
+            });
+            container.appendChild(el);
+        });
+    }).catch(err => {
+        document.getElementById('all-cards-container').innerHTML = '';
+        document.getElementById('menu-section').classList.add('hidden');
+        handleScriptError(err);
+    });
+}
+
+function openCard(card) {
+    if (card.url) window.open(card.url, '_blank');
+    else Swal.fire({ title: card.title, text: card.desc || '', icon: 'info', confirmButtonColor:'#0F3D2E' });
+}
+
+function askCardPassword(card) {
+    Swal.fire({
+        title: '🔒 เมนูนี้ต้องใส่รหัส',
+        text: card.title,
+        input: 'password',
+        inputPlaceholder: 'กรอกรหัสผ่าน',
+        inputAttributes: { autocomplete: 'off' },
+        showCancelButton: true,
+        confirmButtonText: 'เปิดเมนู',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#0F3D2E',
+        cancelButtonColor: '#9AA8A1'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        if ((result.value || '').trim() === card.pwd) openCard(card);
+        else Swal.fire({ icon:'error', title:'รหัสไม่ถูกต้อง', confirmButtonColor:'#C0392B' })
+                 .then(() => askCardPassword(card));
+    });
+}
+
+// การตั้งค่าที่หน้าแรกต้องใช้ (โลโก้ / hero)
+function loadPublicSettings() {
+    callAPI('getPublicSettings').then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        applyBranding(r.data);
+    }).catch(() => { /* ใช้รูป default ที่ฝังไว้ในหน้าเว็บต่อไป */ });
+}
+
+function applyBranding(d) {
+    if (d.logo_img) {
+        const logo = document.getElementById('site-logo');
+        if (logo) logo.src = d.logo_img;
+        const fav = document.getElementById('favicon');
+        if (fav) fav.href = d.logo_img;
+        const apple = document.getElementById('apple-icon');
+        if (apple) apple.href = d.logo_img;
+    }
+    if (d.hero_img) {
+        const h = document.getElementById('hero-desktop');
+        if (h) h.src = d.hero_img;
+    }
+    if (d.hero_img_mobile) {
+        const m = document.getElementById('hero-mobile');
+        if (m) m.src = d.hero_img_mobile;
+    }
+}
+
+// ════════════════════════════════════════
+// Students
+// ════════════════════════════════════════
 let allStudents = [], activeLevel = 'all';
+
 function loadStudents() {
-    document.getElementById('student-loading').classList.remove('hidden');
+    const loading = document.getElementById('student-loading');
+    loading.classList.remove('hidden');
+    loading.classList.add('flex');
     document.getElementById('student-list').innerHTML = '';
     document.getElementById('student-empty').classList.add('hidden');
     document.getElementById('search-input').value = '';
@@ -765,61 +1047,76 @@ function loadStudents() {
     activeLevel = 'all';
     document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
     document.querySelector('[data-level="all"]').classList.add('active');
+
     callAPI('getStudentList').then(response => {
-        document.getElementById('student-loading').classList.add('hidden');
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
         const res = JSON.parse(response);
         if (res.status !== 'success') return;
         allStudents = res.data;
         updateChipCounts();
         renderStudents(allStudents);
-    }).catch(handleScriptError);
+    }).catch(err => {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
+        handleScriptError(err);
+    });
 }
+
 function renderStudents(list) {
     const container = document.getElementById('student-list');
     const empty = document.getElementById('student-empty');
     container.innerHTML = '';
-    if (list.length === 0) { empty.classList.remove('hidden'); document.getElementById('result-count').textContent = '0'; return; }
-    empty.classList.add('hidden');
     document.getElementById('result-count').textContent = list.length;
-    const avClass = {'ม.4':'av-m4','ม.5':'av-m5','ม.6':'av-m6'};
-    const badgeClass = {'ม.4':'badge-m4','ม.5':'badge-m5','ม.6':'badge-m6'};
+    if (!list.length) { empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+
+    const avClass = { 'ม.4':'av-m4', 'ม.5':'av-m5', 'ม.6':'av-m6' };
+    const badgeClass = { 'ม.4':'badge-m4', 'ม.5':'badge-m5', 'ม.6':'badge-m6' };
+
     list.forEach(row => {
-        const id=row[0]||'', name=row[1]||'', lvl=row[2]||'', room=row[3]||'';
-        const initials=name.trim().charAt(0)||'?';
-        container.insertAdjacentHTML('beforeend',`
-            <div class="student-row">
-                <div class="avatar-circle ${avClass[lvl]||'av-default'}">${initials}</div>
-                <div class="flex-1 min-w-0"><p class="font-semibold text-gray-800 text-sm truncate">${name}</p><p class="text-xs text-gray-400 mt-0.5">${id}</p></div>
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    ${room?`<span class="text-xs text-gray-400 font-medium">ห้อง ${room}</span>`:''}
-                    ${lvl?`<span class="class-badge ${badgeClass[lvl]||'badge-def'}">${lvl}</span>`:''}
-                </div>
-            </div>`);
+        const id = row[0] || '', name = row[1] || '', lvl = row[2] || '', room = row[3] || '';
+        const initial = String(name).trim().charAt(0) || '?';
+        container.insertAdjacentHTML('beforeend',
+            '<div class="student-row">' +
+                '<div class="avatar ' + (avClass[lvl] || 'av-default') + '">' + esc(initial) + '</div>' +
+                '<div class="flex-1 min-w-0">' +
+                    '<p class="font-semibold text-sm truncate">' + esc(name) + '</p>' +
+                    '<p class="text-xs mt-0.5" style="color:var(--muted);">' + esc(id) + '</p>' +
+                '</div>' +
+                '<div class="flex items-center gap-2 flex-shrink-0">' +
+                    (room ? '<span class="text-xs" style="color:var(--muted);">ห้อง ' + esc(room) + '</span>' : '') +
+                    (lvl ? '<span class="class-badge ' + (badgeClass[lvl] || 'badge-def') + '">' + esc(lvl) + '</span>' : '') +
+                '</div>' +
+            '</div>');
     });
 }
+
 function setFilter(level) {
     activeLevel = level;
     document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    document.querySelector(`[data-level="${level}"]`).classList.add('active');
+    const chip = document.querySelector('[data-level="' + level + '"]');
+    if (chip) chip.classList.add('active');
     filterStudents();
 }
+
 function filterStudents() {
     const input = document.getElementById('search-input');
     const q = input.value.trim().toLowerCase();
-    // โชว์ปุ่มกากบาทเฉพาะตอนที่มีข้อความในช่องค้นหา
     document.getElementById('search-clear').classList.toggle('hidden', input.value === '');
     let list = allStudents;
     if (activeLevel !== 'all') list = list.filter(r => r[2] === activeLevel);
-    if (q) list = list.filter(r => (r[0]+' '+r[1]).toLowerCase().includes(q));
+    if (q) list = list.filter(r => (r[0] + ' ' + r[1]).toLowerCase().includes(q));
     renderStudents(list);
 }
+
 function clearSearch() {
     const input = document.getElementById('search-input');
     input.value = '';
     filterStudents();
     input.focus();
 }
-// อัปเดตตัวเลขจำนวนนักเรียนบนชิปกรองแต่ละอัน
+
 function updateChipCounts() {
     const counts = { all: allStudents.length, 'ม.4':0, 'ม.5':0, 'ม.6':0 };
     allStudents.forEach(r => { if (counts[r[2]] !== undefined) counts[r[2]]++; });
@@ -829,43 +1126,51 @@ function updateChipCounts() {
     });
 }
 
-// ===== Admin Auth =====
+// ════════════════════════════════════════
+// Admin
+// ════════════════════════════════════════
 function loginAdmin() {
     const pwd = document.getElementById('admin-pass').value;
     if (!pwd) return;
     Swal.fire({ title:'กำลังตรวจสอบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    callAPI('authenticate', { role: 'admin', password: pwd }).then(res => {
+    callAPI('authenticate', { role:'admin', password: pwd }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
             Swal.close();
             document.getElementById('admin-pass').value = '';
             navigate('admin-panel');
         } else {
-            Swal.fire({ icon:'error', title:'รหัสผ่านไม่ถูกต้อง', text:r.message, confirmButtonColor:'#5B21B6' });
+            Swal.fire({ icon:'error', title:'รหัสผ่านไม่ถูกต้อง', text:r.message, confirmButtonColor:'#0F3D2E' });
         }
     }).catch(handleScriptError);
 }
 
-// ===== Admin Settings =====
 function loadAdminSettings() {
     callAPI('getAdminSettings').then(res => {
-        const d = JSON.parse(res).data;
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        const d = r.data;
         document.getElementById('set-folder-id').value = d.folder_id;
         document.getElementById('set-director').value  = d.director_name;
         document.getElementById('set-academic').value  = d.academic_head;
         document.getElementById('ann-text').value      = d.announcement_text;
-        document.getElementById('ann-img').value       = d.announcement_img;
-        // ถ้ายังไม่เคยตั้งค่านี้ในฝั่ง backend (undefined) ให้ถือว่า "เปิด" ไว้ก่อน เพื่อไม่ให้พฤติกรรมเดิมเปลี่ยนไปเอง
         document.getElementById('ann-enabled-toggle').checked = d.announcement_enabled !== false;
         updateAnnToggleLabel();
+
+        uploaders['up-ann'].setUrl(d.announcement_img);
+        uploaders['up-logo'].setUrl(d.logo_img);
+        uploaders['up-hero'].setUrl(d.hero_img);
+        uploaders['up-hero-m'].setUrl(d.hero_img_mobile);
     }).catch(handleScriptError);
 }
+
 function updateAnnToggleLabel() {
     const on = document.getElementById('ann-enabled-toggle').checked;
     const label = document.getElementById('ann-status-label');
     label.textContent = on ? 'เปิดอยู่' : 'ปิดอยู่';
     label.classList.toggle('is-on', on);
 }
+
 function saveAdminSettingsFn() {
     const data = {
         admin_pwd:     document.getElementById('set-admin-pwd').value,
@@ -878,115 +1183,63 @@ function saveAdminSettingsFn() {
     callAPI('saveAdminSettings', { data }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:'บันทึกสำเร็จ ✅', confirmButtonColor:'#00897b' });
-            document.getElementById('set-admin-pwd').value   = '';
+            Swal.fire({ icon:'success', title:'บันทึกสำเร็จ', confirmButtonColor:'#0F3D2E' });
+            document.getElementById('set-admin-pwd').value = '';
             document.getElementById('set-teacher-pwd').value = '';
+        } else {
+            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
         }
     }).catch(handleScriptError);
 }
+
+// บันทึกรูป hero / โลโก้ ทันทีที่อัปโหลดหรือลบเสร็จ
+function saveImageSetting(key, url) {
+    callAPI('saveImageSetting', { key, url }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') {
+            Swal.fire({ icon:'error', title:'บันทึกรูปไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            return;
+        }
+        // อัปเดตหน้าเว็บให้เห็นผลทันทีโดยไม่ต้องรีเฟรช
+        const patch = {};
+        patch[key] = url;
+        if (url) applyBranding(patch);
+        Swal.fire({ icon:'success', title: url ? 'อัปเดตรูปแล้ว' : 'นำรูปออกแล้ว',
+                    timer:1400, showConfirmButton:false });
+    }).catch(handleScriptError);
+}
+
 function saveAnnouncementFn() {
     const text = document.getElementById('ann-text').value;
-    const img  = document.getElementById('ann-img').value;
+    const img  = uploaders['up-ann'].getUrl();
     const enabled = document.getElementById('ann-enabled-toggle').checked;
-    if (enabled && !text && !img) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือ URL รูปภาพ' });
+    if (uploaders['up-ann'].isBusy()) {
+        return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
+    }
+    if (enabled && !text && !img) {
+        return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือใส่รูปประกาศ', confirmButtonColor:'#0F3D2E' });
+    }
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     callAPI('saveAnnouncementOnly', { text, img, enabled }).then(res => {
         const r = JSON.parse(res);
-        if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ ✅', confirmButtonColor:'#00897b' });
+        if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ', confirmButtonColor:'#0F3D2E' });
+        else Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
     }).catch(handleScriptError);
 }
 
-// ===== Dashboard: แสดง card บนหน้าหลัก =====
-function renderSkeletonCards(n = 2) {
-    const c = document.getElementById('all-cards-container');
-    c.innerHTML = '';
-    for (let i = 0; i < n; i++) {
-        c.insertAdjacentHTML('beforeend', `
-            <div class="card-skeleton">
-                <div class="skeleton" style="width:44px;height:44px;border-radius:50%;flex-shrink:0;"></div>
-                <div class="flex-1">
-                    <div class="skeleton h-3.5 w-1/2 rounded-full mb-2"></div>
-                    <div class="skeleton h-2.5 w-1/3 rounded-full"></div>
-                </div>
-            </div>`);
-    }
-}
-
-function loadWebCards() {
-    renderSkeletonCards();
-    callAPI('getWebCards').then(res => {
-        const r = JSON.parse(res);
-        const container = document.getElementById('all-cards-container');
-        // ถ้าโหลดไม่สำเร็จ ต้องล้าง skeleton ทิ้งด้วย ไม่งั้นจะค้างเป็นแถบเทาตลอด
-        if (r.status !== 'success') { container.innerHTML = ''; return; }
-        container.innerHTML = '';
-        const btnMap = { purple:'btn-violet', blue:'btn-sky', pink:'btn-rose', orange:'btn-amber', teal:'btn-teal' };
-        r.data.forEach(card => {
-            const btnClass = btnMap[card.color] || 'btn-violet';
-            const icon = card.icon || 'fa-star';
-            const el = document.createElement('div');
-            el.className = `btn-pixar ${btnClass} menu-tile text-white`;
-            el.innerHTML = `
-                <div class="icon-bubble bg-white/20" style="width:46px;height:46px;"><i class="fa-solid ${icon} text-lg"></i></div>
-                <div class="flex-1 min-w-0">
-                    <h3 class="menu-tile-title">${card.title}</h3>
-                    ${card.desc ? `<p class="menu-tile-desc">${card.desc}</p>` : ''}
-                </div>
-                ${card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : ''}
-                <i class="fa-solid fa-chevron-right menu-tile-chev"></i>`;
-            // ผูก event ด้วย addEventListener แทนการฝัง onclick เป็น string
-            // กันปัญหาชื่อเมนู/คำอธิบาย/URL ที่มีเครื่องหมาย ' หรือ " ทำให้ปุ่มพัง
-            el.addEventListener('click', () => {
-                if (card.pwd) askCardPassword(card);
-                else openCard(card);
-            });
-            container.appendChild(el);
-        });
-    }).catch(err => {
-        document.getElementById('all-cards-container').innerHTML = '';
-        handleScriptError(err);
-    });
-}
-
-// เปิดเมนู: ถ้ามีลิงก์ก็เปิดแท็บใหม่ ถ้าไม่มีก็โชว์รายละเอียดเป็นป๊อปอัป
-function openCard(card) {
-    if (card.url) window.open(card.url, '_blank');
-    else Swal.fire({ title: card.title, text: card.desc || '', icon: 'info' });
-}
-
-// ถามรหัสผ่านก่อนเปิดเมนูที่แอดมินตั้งรหัสไว้
-function askCardPassword(card) {
-    Swal.fire({
-        title: '🔒 เมนูนี้ต้องใส่รหัส',
-        text: card.title,
-        input: 'password',
-        inputPlaceholder: 'กรอกรหัสผ่าน',
-        inputAttributes: { autocomplete: 'off' },
-        showCancelButton: true,
-        confirmButtonText: 'เปิดเมนู',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#5B21B6',
-        cancelButtonColor: '#9ca3af',
-        customClass: { popup: 'rounded-3xl' }
-    }).then(result => {
-        if (!result.isConfirmed) return;
-        if ((result.value || '').trim() === card.pwd) {
-            openCard(card);
-        } else {
-            Swal.fire({ icon:'error', title:'รหัสไม่ถูกต้อง', confirmButtonColor:'#D92B77' })
-                .then(() => askCardPassword(card)); // ให้ลองใหม่ได้เลย ไม่ต้องกดปุ่มซ้ำ
-        }
-    });
-}
-
-// ===== Admin: Card Manager (ตารางแก้ไข/ลบ) =====
+// ════════════════════════════════════════
+// Card Manager
+// ════════════════════════════════════════
 const colorDotMap = { purple:'dot-purple', blue:'dot-blue', pink:'dot-pink', orange:'dot-orange', teal:'dot-teal' };
+let editingIndex = -1;
+let cardCache = [];
 
 function loadCardManager() {
     callAPI('getWebCards').then(res => {
         const r = JSON.parse(res);
         if (r.status !== 'success') return;
-        renderCardManager(r.data);
+        cardCache = r.data;
+        renderCardManager(cardCache);
     }).catch(handleScriptError);
 }
 
@@ -994,87 +1247,78 @@ function renderCardManager(cards) {
     const list  = document.getElementById('card-manager-list');
     const empty = document.getElementById('card-manager-empty');
     list.innerHTML = '';
-    if (cards.length === 0) { empty.classList.remove('hidden'); return; }
+    if (!cards.length) { empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
+
     cards.forEach((card, i) => {
-        const dotClass = colorDotMap[card.color] || 'dot-purple';
-        list.insertAdjacentHTML('beforeend', `
-            <div class="card-row" id="card-row-${i}">
-                <div class="color-dot ${dotClass}"></div>
-                <div class="min-w-0">
-                    <p class="font-semibold text-gray-800 text-sm truncate">${card.title}</p>
-                    <p class="text-xs text-gray-400 truncate">${card.desc || '—'}&nbsp;${card.url ? '<i class="fa-solid fa-link text-indigo-300"></i>' : ''}${card.pwd ? '&nbsp;<i class="fa-solid fa-lock text-amber-400" title="มีรหัสผ่าน"></i>' : ''}</p>
-                </div>
-                <div class="flex gap-1.5">
-                    <button class="card-action-btn btn-edit" onclick="startEditCard(${i})" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
-                    <button class="card-action-btn btn-delete" onclick="deleteCardFn(${i})" title="ลบ"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>`);
+        const dot = colorDotMap[card.color] || 'dot-purple';
+        list.insertAdjacentHTML('beforeend',
+            '<div class="card-row" id="card-row-' + i + '">' +
+                (card.img
+                    ? '<img class="card-thumb" src="' + esc(card.img) + '" alt="">'
+                    : '<div class="color-dot ' + dot + '"></div>') +
+                '<div class="min-w-0 flex-1">' +
+                    '<p class="font-semibold text-sm truncate">' + esc(card.title) + '</p>' +
+                    '<p class="text-xs truncate" style="color:var(--muted);">' + esc(card.desc || '—') + ' ' +
+                        (card.url ? '<i class="fa-solid fa-link" style="color:#B6C2BC;"></i> ' : '') +
+                        (card.pwd ? '<i class="fa-solid fa-lock" style="color:var(--gold);"></i>' : '') +
+                    '</p>' +
+                '</div>' +
+                '<div class="flex gap-1.5 flex-shrink-0">' +
+                    '<button class="mini-btn mb-move" onclick="moveCardFn(' + i + ',-1)" title="เลื่อนขึ้น"' + (i === 0 ? ' disabled' : '') + '><i class="fa-solid fa-arrow-up"></i></button>' +
+                    '<button class="mini-btn mb-move" onclick="moveCardFn(' + i + ',1)" title="เลื่อนลง"' + (i === cards.length - 1 ? ' disabled' : '') + '><i class="fa-solid fa-arrow-down"></i></button>' +
+                    '<button class="mini-btn mb-edit" onclick="startEditCard(' + i + ')" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>' +
+                    '<button class="mini-btn mb-del" onclick="deleteCardFn(' + i + ')" title="ลบ"><i class="fa-solid fa-trash"></i></button>' +
+                '</div>' +
+            '</div>');
     });
 }
 
-// state สำหรับ edit mode
-let editingIndex = -1;
-
-function startEditCard(index) {
-    callAPI('getWebCards').then(res => {
-        const r = JSON.parse(res);
-        if (r.status !== 'success') return;
-        const card = r.data[index];
-        if (!card) return;
-
-        // เติมฟอร์ม
-        document.getElementById('new-card-title').value = card.title || '';
-        document.getElementById('new-card-desc').value  = card.desc  || '';
-        document.getElementById('new-card-url').value   = card.url   || '';
-        document.getElementById('new-card-pwd').value   = card.pwd   || '';
-        document.getElementById('new-card-color').value = card.color || 'purple';
-        document.getElementById('new-card-icon').value  = card.icon  || 'fa-star';
-
-        // สลับปุ่ม
-        document.getElementById('btn-add-card').classList.add('hidden');
-        document.getElementById('btn-save-edit').classList.remove('hidden');
-        document.getElementById('btn-cancel-edit').classList.remove('hidden');
-
-        // highlight row
-        document.querySelectorAll('.card-row').forEach(r => r.style.background = '');
-        const row = document.getElementById(`card-row-${index}`);
-        if (row) row.style.background = '#ede9fe';
-
-        editingIndex = index;
-        // scroll ขึ้นไปหาฟอร์ม
-        document.getElementById('card-form-wrap').scrollIntoView({ behavior:'smooth', block:'nearest' });
-    }).catch(handleScriptError);
-}
-
-function saveEditCardFn() {
-    if (editingIndex < 0) return;
-    const cardData = {
+function readCardForm() {
+    return {
         title: document.getElementById('new-card-title').value.trim(),
         desc:  document.getElementById('new-card-desc').value.trim(),
         url:   document.getElementById('new-card-url').value.trim(),
         pwd:   document.getElementById('new-card-pwd').value.trim(),
+        img:   uploaders['up-card'].getUrl(),
         color: document.getElementById('new-card-color').value,
         icon:  document.getElementById('new-card-icon').value
     };
-    if (!cardData.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู' });
-    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    callAPI('updateWebCard', { index: editingIndex, data: cardData }).then(res => {
-        const r = JSON.parse(res);
-        if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
-            cancelEditCardFn();
-            loadCardManager();
-            loadWebCards();
-        }
-    }).catch(handleScriptError);
+}
+
+function resetCardForm() {
+    ['new-card-title','new-card-desc','new-card-url','new-card-pwd'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('new-card-color').value = 'purple';
+    document.getElementById('new-card-icon').value  = 'fa-star';
+    uploaders['up-card'].setUrl('');
+}
+
+function startEditCard(index) {
+    const card = cardCache[index];
+    if (!card) return;
+    document.getElementById('new-card-title').value = card.title || '';
+    document.getElementById('new-card-desc').value  = card.desc  || '';
+    document.getElementById('new-card-url').value   = card.url   || '';
+    document.getElementById('new-card-pwd').value   = card.pwd   || '';
+    document.getElementById('new-card-color').value = card.color || 'purple';
+    document.getElementById('new-card-icon').value  = card.icon  || 'fa-star';
+    uploaders['up-card'].setUrl(card.img || '');
+
+    document.getElementById('btn-add-card').classList.add('hidden');
+    document.getElementById('btn-save-edit').classList.remove('hidden');
+    document.getElementById('btn-cancel-edit').classList.remove('hidden');
+
+    document.querySelectorAll('.card-row').forEach(r => r.style.background = '');
+    const row = document.getElementById('card-row-' + index);
+    if (row) row.style.background = '#F3F8F6';
+
+    editingIndex = index;
+    document.getElementById('card-form-wrap').scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
 function cancelEditCardFn() {
     editingIndex = -1;
-    ['new-card-title','new-card-desc','new-card-url','new-card-pwd'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('new-card-color').value = 'purple';
-    document.getElementById('new-card-icon').value  = 'fa-star';
+    resetCardForm();
     document.getElementById('btn-add-card').classList.remove('hidden');
     document.getElementById('btn-save-edit').classList.add('hidden');
     document.getElementById('btn-cancel-edit').classList.add('hidden');
@@ -1082,22 +1326,46 @@ function cancelEditCardFn() {
 }
 
 function addWebCardFn() {
-    const title = document.getElementById('new-card-title').value.trim();
-    const desc  = document.getElementById('new-card-desc').value.trim();
-    const url   = document.getElementById('new-card-url').value.trim();
-    const pwd   = document.getElementById('new-card-pwd').value.trim();
-    const color = document.getElementById('new-card-color').value;
-    const icon  = document.getElementById('new-card-icon').value;
-    if (!title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู' });
+    const data = readCardForm();
+    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#0F3D2E' });
+    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
     Swal.fire({ title:'กำลังสร้างเมนู...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    callAPI('addWebCard', { data: { title, desc, url, pwd, color, icon } }).then(res => {
+    callAPI('addWebCard', { data }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#00897b' });
-            ['new-card-title','new-card-desc','new-card-url','new-card-pwd'].forEach(id => document.getElementById(id).value='');
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#0F3D2E' });
+            resetCardForm();
             loadCardManager();
             loadWebCards();
-        }
+        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+    }).catch(handleScriptError);
+}
+
+function saveEditCardFn() {
+    if (editingIndex < 0) return;
+    const data = readCardForm();
+    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#0F3D2E' });
+    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
+    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('updateWebCard', { index: editingIndex, data }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#0F3D2E' });
+            cancelEditCardFn();
+            loadCardManager();
+            loadWebCards();
+        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+    }).catch(handleScriptError);
+}
+
+function moveCardFn(index, direction) {
+    callAPI('moveWebCard', { index, direction }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        // ถ้ากำลังแก้ไขการ์ดที่ถูกย้าย ให้ยกเลิกไว้ก่อน ไม่งั้น index จะชี้ผิดใบ
+        if (editingIndex === index || editingIndex === index + direction) cancelEditCardFn();
+        loadCardManager();
+        loadWebCards();
     }).catch(handleScriptError);
 }
 
@@ -1105,7 +1373,7 @@ function deleteCardFn(index) {
     Swal.fire({
         title:'ยืนยันการลบ?', text:'ปุ่มนี้จะหายไปจากหน้าเว็บ',
         icon:'warning', showCancelButton:true,
-        confirmButtonColor:'#D92B77', cancelButtonColor:'#9ca3af',
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
         confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก'
     }).then(result => {
         if (!result.isConfirmed) return;
@@ -1113,7 +1381,7 @@ function deleteCardFn(index) {
         callAPI('deleteWebCard', { index }).then(res => {
             const r = JSON.parse(res);
             if (r.status === 'success') {
-                Swal.fire({ icon:'success', title:r.message });
+                Swal.fire({ icon:'success', title:r.message, timer:1400, showConfirmButton:false });
                 if (editingIndex === index) cancelEditCardFn();
                 loadCardManager();
                 loadWebCards();
@@ -1124,15 +1392,15 @@ function deleteCardFn(index) {
 
 function clearWebCardsFn() {
     Swal.fire({
-        title:'ยืนยันการลบ?', text:'ปุ่มเสริมทั้งหมดจะหายไป',
+        title:'ยืนยันการลบ?', text:'ปุ่มเมนูทั้งหมดจะหายไป',
         icon:'warning', showCancelButton:true,
-        confirmButtonColor:'#D92B77', cancelButtonColor:'#9ca3af',
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
         confirmButtonText:'ลบทั้งหมด', cancelButtonText:'ยกเลิก'
     }).then(result => {
         if (!result.isConfirmed) return;
         Swal.fire({ title:'กำลังล้างข้อมูล...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
         callAPI('clearWebCards').then(() => {
-            Swal.fire({ icon:'success', title:'ล้างข้อมูลสำเร็จ' });
+            Swal.fire({ icon:'success', title:'ล้างข้อมูลสำเร็จ', timer:1400, showConfirmButton:false });
             cancelEditCardFn();
             loadCardManager();
             loadWebCards();
@@ -1140,18 +1408,19 @@ function clearWebCardsFn() {
     });
 }
 
-// ===== QR =====
+// ════════════════════════════════════════
+// QR
+// ════════════════════════════════════════
 let qrcodeInstance = null;
 function showQRModal() {
     const modal = document.getElementById('qr-modal');
     const content = document.getElementById('qr-modal-content');
     modal.classList.remove('hidden');
     setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
-    if (!qrcodeInstance) {
+    if (!qrcodeInstance && typeof QRCode !== 'undefined') {
         qrcodeInstance = new QRCode(document.getElementById('qrcode-container'), {
-            // บน GitHub Pages ใช้ URL ของหน้าเว็บปัจจุบันแทน webAppUrl ของ GAS
             text: window.location.href,
-            width:180, height:180, colorDark:'#5B21B6', colorLight:'#ffffff',
+            width:180, height:180, colorDark:'#0F3D2E', colorLight:'#ffffff',
             correctLevel: QRCode.CorrectLevel.H
         });
     }
@@ -1165,30 +1434,41 @@ function closeQRModal() {
     setTimeout(() => modal.classList.add('hidden'), 300);
 }
 
-// ===== Init =====
-let mainAppStarted = false;
-function initMainApp() {
-    if (mainAppStarted) return; // กันการรันซ้ำ
-    mainAppStarted = true;
-    loadDashboardStats();
-    loadWebCards();
-    callAPI('getAnnouncement').then(res => {
-        const r = JSON.parse(res);
-        // แสดงป๊อปอัปเฉพาะตอนที่ admin เปิดสวิตช์ไว้ (ถ้า backend ยังไม่มีฟิลด์นี้ ให้ถือว่าเปิดไว้ก่อนตามพฤติกรรมเดิม)
-        if (r.status === 'success' && r.data.enabled !== false && (r.data.text || r.data.img)) {
-            Swal.fire({
-                title:'📢 ประกาศ',
-                html:`<p class="text-gray-700 text-lg mb-4">${r.data.text}</p>${r.data.img?`<img src="${r.data.img}" class="w-full h-40 object-cover rounded-2xl shadow">` : ''}`,
-                confirmButtonText:'รับทราบ', confirmButtonColor:'#5B21B6',
-                customClass:{ popup:'rounded-3xl' }
-            });
-        }
-    }).catch(handleScriptError);
+// ════════════════════════════════════════
+// Init
+// ════════════════════════════════════════
+function initUploaders() {
+    createUploader({ id:'up-logo', maxDim:512, keepPng:true, logoFit:true,
+        hint:'ยังไม่ได้เลือกโลโก้', onChange:(url) => saveImageSetting('logo_img', url) });
+    createUploader({ id:'up-hero', maxDim:1600,
+        hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img', url) });
+    createUploader({ id:'up-hero-m', maxDim:1200,
+        hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img_mobile', url) });
+    // สองตัวนี้ไม่บันทึกทันที แต่รอผู้ใช้กดปุ่มบันทึกของส่วนนั้น
+    createUploader({ id:'up-ann',  maxDim:1200, hint:'ยังไม่ได้เลือกรูป' });
+    createUploader({ id:'up-card', maxDim:600,  hint:'ไม่ใส่ก็ได้ — จะใช้ไอคอนแทน' });
 }
 
-window.onload = function () {
-    initMainApp();
-};
+window.addEventListener('DOMContentLoaded', () => {
+    initUploaders();
+    loadPublicSettings();
+    loadDashboardStats();
+    loadWebCards();
+
+    callAPI('getAnnouncement').then(res => {
+        const r = JSON.parse(res);
+        // แสดงป๊อปอัปเฉพาะตอนที่ admin เปิดสวิตช์ไว้
+        if (r.status === 'success' && r.data.enabled !== false && (r.data.text || r.data.img)) {
+            Swal.fire({
+                title: '📢 ประกาศ',
+                html: (r.data.text ? '<p style="color:#15211C;font-size:1.02rem;margin-bottom:14px;">' + esc(r.data.text) + '</p>' : '') +
+                      (r.data.img ? '<img src="' + esc(r.data.img) + '" style="width:100%;border-radius:14px;">' : ''),
+                confirmButtonText: 'รับทราบ',
+                confirmButtonColor: '#0F3D2E'
+            });
+        }
+    }).catch(() => { /* ประกาศโหลดไม่ได้ ไม่ควรขวางการใช้งานหน้าเว็บ */ });
+});
 </script>
 </body>
 </html>
