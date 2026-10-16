@@ -819,7 +819,10 @@ function createUploader(opts) {
     function render() {
         if (state.url) {
             preview.innerHTML = '<img src="' + esc(state.url) + '" alt="">';
-            hint.textContent = 'อัปโหลดแล้ว';
+            // แยกข้อความให้ชัด: ช่องที่บันทึกเองได้ กับช่องที่ต้องกดปุ่มยืนยันก่อน
+            hint.innerHTML = opts.autoSave
+                ? '<span style="color:#0F3D2E;font-weight:600;">✓ บันทึกแล้ว</span> — ใช้งานบนหน้าเว็บทันที'
+                : '<span style="color:#B5741A;font-weight:600;">อัปโหลดแล้ว</span> — ' + esc(opts.saveHint || 'กดปุ่มบันทึกด้านล่างเพื่อยืนยัน');
             delBtn.classList.remove('hidden');
             box.classList.add('has-img');
         } else {
@@ -1460,15 +1463,18 @@ function closeQRModal() {
 // Init
 // ════════════════════════════════════════
 function initUploaders() {
-    createUploader({ id:'up-logo', maxDim:512, keepPng:true, logoFit:true,
+    // สามตัวนี้บันทึกเองทันทีที่อัปโหลดเสร็จ ไม่มีปุ่มบันทึกของตัวเอง
+    createUploader({ id:'up-logo', maxDim:512, keepPng:true, logoFit:true, autoSave:true,
         hint:'ยังไม่ได้เลือกโลโก้', onChange:(url) => saveImageSetting('logo_img', url) });
-    createUploader({ id:'up-hero', maxDim:1600,
+    createUploader({ id:'up-hero', maxDim:1600, autoSave:true,
         hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img', url) });
-    createUploader({ id:'up-hero-m', maxDim:1200,
+    createUploader({ id:'up-hero-m', maxDim:1200, autoSave:true,
         hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img_mobile', url) });
-    // สองตัวนี้ไม่บันทึกทันที แต่รอผู้ใช้กดปุ่มบันทึกของส่วนนั้น
-    createUploader({ id:'up-ann',  maxDim:1200, hint:'ยังไม่ได้เลือกรูป' });
-    createUploader({ id:'up-card', maxDim:600,  hint:'ไม่ใส่ก็ได้ — จะใช้ไอคอนแทน' });
+    // สองตัวนี้ไม่บันทึกทันที เพราะต้องไปพร้อมข้อความ/ชื่อเมนูในฟอร์มเดียวกัน
+    createUploader({ id:'up-ann',  maxDim:1200, hint:'ยังไม่ได้เลือกรูป',
+        saveHint:'กดปุ่ม "อัปเดตประกาศ" ด้านล่างเพื่อบันทึก' });
+    createUploader({ id:'up-card', maxDim:600,  hint:'ไม่ใส่ก็ได้ — จะใช้ไอคอนแทน',
+        saveHint:'กดปุ่ม "เพิ่มปุ่ม" หรือ "บันทึกการแก้ไข" เพื่อบันทึก' });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
