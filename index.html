@@ -251,6 +251,18 @@
         .up-btn:disabled { opacity:0.5; cursor:not-allowed; }
         .up-bar { height:4px; border-radius:99px; background:var(--line); overflow:hidden; margin-top:8px; display:none; }
         .up-bar.on { display:block; }
+        /* ช่องวาง URL รูปจากที่อื่น (ใช้แทนได้เมื่อ Drive แชร์ไม่ได้) */
+        .up-url-row { display:flex; gap:7px; margin-top:10px; padding-top:10px; border-top:1px dashed #E0DACB; }
+        .up-url {
+            flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:9px;
+            padding:7px 11px; font-family:'Prompt',sans-serif; font-size:0.78rem; color:var(--ink); outline:none;
+        }
+        .up-url:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(15,61,46,0.08); }
+        .up-url::placeholder { color:#B4BEB8; }
+        .up-use { background:var(--green); color:#fff; white-space:nowrap; }
+        .up-use:hover { background:var(--green-2); }
+        .up-warn { font-size:0.72rem; color:#B5741A; margin-top:6px; line-height:1.45; display:none; }
+        .up-warn.on { display:block; }
         .up-bar i { display:block; height:100%; width:40%; border-radius:99px; background:var(--green);
                     animation:upSlide 1.1s ease-in-out infinite; }
         @keyframes upSlide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
@@ -413,7 +425,7 @@
                 <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
             </div>
             <div class="hero-body p-7 md:p-9 lg:w-1/2">
-                <span class="term-chip">ภาคเรียนที่ 1 · ปีการศึกษา 2569</span>
+                <span class="term-chip">ภาคเรียนที่ 2 · ปีการศึกษา 2569</span>
                 <h2 class="hero-title">ยินดีต้อนรับ<br><span class="hl">นักเรียนมัธยมปลาย</span></h2>
                 <div class="gold-rule"></div>
                 <p class="hero-sub">เลือกรายการด้านล่างเพื่อเข้าใช้งานระบบงานวิชาการ</p>
@@ -807,6 +819,11 @@ function createUploader(opts) {
             '</div>' +
         '</div>' +
         '<div class="up-bar"><i></i></div>' +
+        '<p class="up-warn"></p>' +
+        '<div class="up-url-row">' +
+            '<input type="text" class="up-url" placeholder="หรือวางลิงก์รูปจากที่อื่น เช่น Postimages">' +
+            '<button type="button" class="up-btn up-use">ใช้ลิงก์</button>' +
+        '</div>' +
         '<input type="file" accept="image/*" class="hidden">';
 
     const preview = box.querySelector('.up-preview');
@@ -815,14 +832,32 @@ function createUploader(opts) {
     const delBtn  = box.querySelector('.up-del');
     const bar     = box.querySelector('.up-bar');
     const input   = box.querySelector('input[type=file]');
+    const warn    = box.querySelector('.up-warn');
+    const urlIn   = box.querySelector('.up-url');
+    const useBtn  = box.querySelector('.up-use');
+
+    function showWarn(msg) {
+        warn.textContent = msg || '';
+        warn.classList.toggle('on', !!msg);
+    }
 
     function render() {
+        showWarn('');
         if (state.url) {
-            preview.innerHTML = '<img src="' + esc(state.url) + '" alt="">';
+            // สร้าง img ด้วย DOM เพื่อดักกรณีโหลดรูปไม่ขึ้น (ลิงก์ผิด หรือไฟล์ Drive ไม่ได้แชร์)
+            preview.innerHTML = '';
+            const im = document.createElement('img');
+            im.alt = '';
+            im.onerror = () => {
+                preview.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#D98A1A;"></i>';
+                showWarn('แสดงรูปนี้ไม่ได้ — ถ้าเป็นลิงก์จากเว็บอื่น ต้องใช้ "ลิงก์รูปโดยตรง" ที่ลงท้ายด้วย .jpg/.png ไม่ใช่ลิงก์หน้าเว็บ');
+            };
+            im.src = state.url;
+            preview.appendChild(im);
             // แยกข้อความให้ชัด: ช่องที่บันทึกเองได้ กับช่องที่ต้องกดปุ่มยืนยันก่อน
             hint.innerHTML = opts.autoSave
                 ? '<span style="color:#0F3D2E;font-weight:600;">✓ บันทึกแล้ว</span> — ใช้งานบนหน้าเว็บทันที'
-                : '<span style="color:#B5741A;font-weight:600;">อัปโหลดแล้ว</span> — ' + esc(opts.saveHint || 'กดปุ่มบันทึกด้านล่างเพื่อยืนยัน');
+                : '<span style="color:#B5741A;font-weight:600;">พร้อมบันทึก</span> — ' + esc(opts.saveHint || 'กดปุ่มบันทึกด้านล่างเพื่อยืนยัน');
             delBtn.classList.remove('hidden');
             box.classList.add('has-img');
         } else {
@@ -833,11 +868,28 @@ function createUploader(opts) {
         }
     }
 
+    // ใช้ลิงก์รูปจากที่อื่นแทนการอัปโหลดขึ้น Drive
+    function applyUrl() {
+        const v = urlIn.value.trim();
+        if (!v) return;
+        if (!/^https?:\/\//i.test(v)) {
+            return Swal.fire({ icon:'warning', title:'ลิงก์ไม่ถูกต้อง',
+                text:'ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://', confirmButtonColor:'#0F3D2E' });
+        }
+        state.url = v;
+        urlIn.value = '';
+        render();
+        if (opts.onChange) opts.onChange(state.url);
+    }
+    useBtn.addEventListener('click', applyUrl);
+    urlIn.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); applyUrl(); } });
+
     function setBusy(on) {
         state.busy = on;
         bar.classList.toggle('on', on);
         pickBtn.disabled = on;
         delBtn.disabled = on;
+        useBtn.disabled = on;
         pickBtn.innerHTML = on
             ? '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังอัปโหลด'
             : '<i class="fa-solid fa-arrow-up-from-bracket"></i> เลือกรูป';
