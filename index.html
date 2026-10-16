@@ -413,7 +413,7 @@
                 <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
             </div>
             <div class="hero-body p-7 md:p-9 lg:w-1/2">
-                <span class="term-chip">ภาคเรียนที่ 2 · ปีการศึกษา 2569</span>
+                <span class="term-chip">ภาคเรียนที่ 1 · ปีการศึกษา 2569</span>
                 <h2 class="hero-title">ยินดีต้อนรับ<br><span class="hl">นักเรียนมัธยมปลาย</span></h2>
                 <div class="gold-rule"></div>
                 <p class="hero-sub">เลือกรายการด้านล่างเพื่อเข้าใช้งานระบบงานวิชาการ</p>
@@ -544,7 +544,10 @@
                         </div>
                         <div>
                             <label class="field-label">Folder ID (Google Drive) — ใช้เก็บรูปที่อัปโหลด</label>
-                            <input type="text" id="set-folder-id" class="input">
+                            <input type="text" id="set-folder-id" class="input" placeholder="วางรหัสโฟลเดอร์ หรือวางลิงก์โฟลเดอร์ทั้งอันก็ได้">
+                            <button onclick="testDriveFn()" class="btn-ghost mt-2" style="font-size:0.78rem;padding:7px 13px;">
+                                <i class="fa-solid fa-plug-circle-check"></i> ทดสอบการเชื่อมต่อ Drive
+                            </button>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
@@ -1188,6 +1191,20 @@ function saveAdminSettingsFn() {
             document.getElementById('set-teacher-pwd').value = '';
         } else {
             Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        }
+    }).catch(handleScriptError);
+}
+
+// ทดสอบว่าโฟลเดอร์ Drive ที่ตั้งค่าไว้ใช้อัปโหลดได้จริงไหม
+function testDriveFn() {
+    Swal.fire({ title:'กำลังทดสอบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('testDriveFolder').then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:'ใช้งานได้', text:r.message, confirmButtonColor:'#0F3D2E' });
+        } else {
+            Swal.fire({ icon:'error', title:'เชื่อมต่อไม่ได้', text:r.message,
+                        confirmButtonColor:'#0F3D2E', width:620 });
         }
     }).catch(handleScriptError);
 }
