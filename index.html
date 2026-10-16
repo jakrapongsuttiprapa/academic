@@ -856,6 +856,11 @@ function createUploader(opts) {
             state.url = res.data.url;
             render();
             if (opts.onChange) opts.onChange(state.url);
+            // ไฟล์ขึ้น Drive แล้ว แต่ตั้งค่าแชร์ไม่ได้ — เตือนให้ไปตั้งสิทธิ์ที่โฟลเดอร์เอง
+            if (res.warning) {
+                Swal.fire({ icon:'warning', title:'ต้องตั้งสิทธิ์โฟลเดอร์เพิ่ม', text:res.warning,
+                            confirmButtonColor:'#0F3D2E', width:620 });
+            }
         } catch (err) {
             render();
             Swal.fire({ icon:'error', title:'อัปโหลดไม่สำเร็จ', text:err.message, confirmButtonColor:'#0F3D2E' });
