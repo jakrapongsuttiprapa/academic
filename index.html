@@ -949,7 +949,8 @@ function navigate(viewId) {
     const view = document.getElementById('view-' + viewId);
     if (view) view.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (viewId === 'dashboard')   { loadDashboardStats(); loadWebCards(); }
+    // ดึงรูปโลโก้/hero ใหม่ทุกครั้งที่กลับหน้าแรก เผื่อเพิ่งเปลี่ยนรูปในหน้า admin
+    if (viewId === 'dashboard')   { loadPublicSettings(); loadDashboardStats(); loadWebCards(); }
     if (viewId === 'admin-panel') { loadAdminSettings(); loadCardManager(); }
     if (viewId === 'students')    loadStudents();
 }
@@ -1075,22 +1076,35 @@ function loadPublicSettings() {
     }).catch(() => { /* ใช้รูป default ที่ฝังไว้ในหน้าเว็บต่อไป */ });
 }
 
-function applyBranding(d) {
+/**
+ * ต่อท้าย URL ด้วยเลขเวลา เพื่อบังคับให้เบราว์เซอร์โหลดรูปใหม่
+ * ใช้เฉพาะตอนเพิ่งเปลี่ยนรูปเท่านั้น ถ้าใส่ทุกครั้งที่โหลดหน้า
+ * เบราว์เซอร์จะแคชรูปไม่ได้เลย ทำให้เว็บช้าโดยไม่จำเป็น
+ */
+function bustCache(url) {
+    if (!url) return url;
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + 'v=' + Date.now();
+}
+
+function applyBranding(d, freshen) {
+    const fix = (u) => freshen ? bustCache(u) : u;
     if (d.logo_img) {
+        const u = fix(d.logo_img);
         const logo = document.getElementById('site-logo');
-        if (logo) logo.src = d.logo_img;
+        if (logo) logo.src = u;
+        // favicon ถูกเบราว์เซอร์แคชหนักมาก ต้องใส่เลขเวลาเสมอถึงจะยอมเปลี่ยน
         const fav = document.getElementById('favicon');
-        if (fav) fav.href = d.logo_img;
+        if (fav) fav.href = bustCache(d.logo_img);
         const apple = document.getElementById('apple-icon');
-        if (apple) apple.href = d.logo_img;
+        if (apple) apple.href = bustCache(d.logo_img);
     }
     if (d.hero_img) {
         const h = document.getElementById('hero-desktop');
-        if (h) h.src = d.hero_img;
+        if (h) h.src = fix(d.hero_img);
     }
     if (d.hero_img_mobile) {
         const m = document.getElementById('hero-mobile');
-        if (m) m.src = d.hero_img_mobile;
+        if (m) m.src = fix(d.hero_img_mobile);
     }
 }
 
@@ -1278,9 +1292,10 @@ function saveImageSetting(key, url) {
             return;
         }
         // อัปเดตหน้าเว็บให้เห็นผลทันทีโดยไม่ต้องรีเฟรช
+        // ส่ง freshen=true เพื่อเลี่ยงรูปเก่าที่ค้างในแคชเบราว์เซอร์
         const patch = {};
         patch[key] = url;
-        if (url) applyBranding(patch);
+        if (url) applyBranding(patch, true);
         Swal.fire({ icon:'success', title: url ? 'อัปเดตรูปแล้ว' : 'นำรูปออกแล้ว',
                     timer:1400, showConfirmButton:false });
     }).catch(handleScriptError);
