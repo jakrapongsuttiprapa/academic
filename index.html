@@ -114,52 +114,80 @@
         .stat-v { font-family:'Kanit',sans-serif; font-weight:700; font-size:1.95rem; color:var(--green); line-height:1.1; margin-top:3px; }
         .stat-u { font-size:0.65rem; color:#9AA8A1; }
 
-        /* ───────── การ์ดเมนูสีสด ───────── */
+        /* ───────── การ์ดเมนู (ผิวเคลือบมีมิติ + ขอบทองตามตราโรงเรียน) ───────── */
         .tile {
-            border-radius:20px; position:relative; overflow:hidden; cursor:pointer;
+            border-radius:22px; position:relative; overflow:hidden; cursor:pointer;
             color:#fff; isolation:isolate;
-            transition: transform 0.18s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.18s ease;
+            transition: transform 0.2s cubic-bezier(0.34,1.45,0.64,1), box-shadow 0.2s ease;
         }
-        /* เส้นแสงบางที่ขอบบนเท่านั้น ไม่ใช่ฟิล์มขาวคลุมทั้งใบ สีจึงสดเต็มที่ */
+        /* ชั้นแสง: ไฮไลต์โค้งมุมบนซ้าย ทำให้ผิวดูนูนเหมือนงานเคลือบ ไม่ใช่สี่เหลี่ยมแบนๆ */
         .tile::before {
-            content:''; position:absolute; left:0; right:0; top:0; height:46%;
-            background:linear-gradient(180deg, rgba(255,255,255,0.20), transparent);
-            pointer-events:none; z-index:1;
+            content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+            background:
+                radial-gradient(118% 72% at 16% -14%, rgba(255,255,255,0.34), rgba(255,255,255,0.09) 44%, transparent 70%),
+                linear-gradient(180deg, rgba(255,255,255,0.15), transparent 54%);
         }
-        .tile:hover  { transform:translateY(-4px); }
-        .tile:active { transform:translateY(1px) scale(0.99); }
+        /* ชั้นขอบ: เส้นทองบางผูกการ์ดเข้ากับสีตราโรงเรียน + เงาในขอบล่างให้ดูหนา */
+        .tile::after {
+            content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+            border-radius:inherit;
+            box-shadow:
+                inset 0 0 0 1px rgba(255,236,179,0.32),
+                inset 0 1px 0 rgba(255,255,255,0.42),
+                inset 0 -16px 28px -18px rgba(0,0,0,0.55);
+        }
         .tile > * { position:relative; z-index:2; }
+        .tile:hover  { transform:translateY(-5px); }
+        .tile:active { transform:translateY(1px) scale(0.992); }
 
-        .t-rose   { background:linear-gradient(160deg,#FF5C9D,var(--rose) 52%,#A80B4B); box-shadow:0 5px 0 #82093A,0 9px 16px -5px rgba(168,11,75,0.5); }
-        .t-violet { background:linear-gradient(160deg,#A47BFF,var(--violet) 52%,#4013AF); box-shadow:0 5px 0 #310D86,0 9px 16px -5px rgba(64,19,175,0.5); }
-        .t-sky    { background:linear-gradient(160deg,#4FC3FF,var(--sky) 52%,#004E9A); box-shadow:0 5px 0 #003B77,0 9px 16px -5px rgba(0,78,154,0.5); }
-        .t-amber  { background:linear-gradient(160deg,#FFB347,var(--amber) 52%,#8F4606); box-shadow:0 5px 0 #6E3604,0 9px 16px -5px rgba(143,70,6,0.5); }
-        .t-jade   { background:linear-gradient(160deg,#3FD9B4,var(--jade) 52%,#00594A); box-shadow:0 5px 0 #004237,0 9px 16px -5px rgba(0,89,74,0.5); }
-        .t-crimson{ background:linear-gradient(160deg,#FF6E7E,#D91E3C 52%,#9E0E24); box-shadow:0 5px 0 #7B0A1B,0 9px 16px -5px rgba(158,14,36,0.5); }
+        /* เงา 3 ชั้น: ขอบทึบ + เงาใกล้ + แสงสีฟุ้งไกล ทำให้การ์ดลอยจากพื้นกระดาษ */
+        .t-rose   { background:linear-gradient(158deg,#FF84B9 0%,#FF4C90 20%,var(--rose) 56%,#9C0A45 100%); box-shadow:0 6px 0 #7A0837,0 14px 22px -9px rgba(168,11,75,0.55),0 24px 46px -24px rgba(168,11,75,0.85); }
+        .t-violet { background:linear-gradient(158deg,#B79AFF 0%,#8A5CFF 20%,var(--violet) 56%,#3A11A0 100%); box-shadow:0 6px 0 #2C0B7A,0 14px 22px -9px rgba(64,19,175,0.55),0 24px 46px -24px rgba(64,19,175,0.85); }
+        .t-sky    { background:linear-gradient(158deg,#7FD6FF 0%,#2AA8F5 20%,var(--sky) 56%,#00478D 100%); box-shadow:0 6px 0 #00356B,0 14px 22px -9px rgba(0,78,154,0.55),0 24px 46px -24px rgba(0,78,154,0.85); }
+        .t-amber  { background:linear-gradient(158deg,#FFC976 0%,#FFA02E 20%,var(--amber) 56%,#823F05 100%); box-shadow:0 6px 0 #633003,0 14px 22px -9px rgba(143,70,6,0.55),0 24px 46px -24px rgba(143,70,6,0.85); }
+        .t-jade   { background:linear-gradient(158deg,#6FE8CB 0%,#22C7A2 20%,var(--jade) 56%,#004F42 100%); box-shadow:0 6px 0 #003B32,0 14px 22px -9px rgba(0,89,74,0.55),0 24px 46px -24px rgba(0,89,74,0.85); }
+        .t-crimson{ background:linear-gradient(158deg,#FF8E9B 0%,#FF4D62 20%,#D91E3C 56%,#8E0C20 100%); box-shadow:0 6px 0 #6E0918,0 14px 22px -9px rgba(158,14,36,0.55),0 24px 46px -24px rgba(158,14,36,0.85); }
 
-        .t-rose:hover   { box-shadow:0 9px 0 #82093A,0 16px 24px -8px rgba(168,11,75,0.55); }
-        .t-violet:hover { box-shadow:0 9px 0 #310D86,0 16px 24px -8px rgba(64,19,175,0.55); }
-        .t-sky:hover    { box-shadow:0 9px 0 #003B77,0 16px 24px -8px rgba(0,78,154,0.55); }
-        .t-amber:hover  { box-shadow:0 9px 0 #6E3604,0 16px 24px -8px rgba(143,70,6,0.55); }
-        .t-jade:hover   { box-shadow:0 9px 0 #004237,0 16px 24px -8px rgba(0,89,74,0.55); }
-        .t-crimson:hover{ box-shadow:0 9px 0 #7B0A1B,0 16px 24px -8px rgba(158,14,36,0.55); }
+        .t-rose:hover   { box-shadow:0 10px 0 #7A0837,0 22px 32px -12px rgba(168,11,75,0.6),0 34px 56px -26px rgba(168,11,75,0.9); }
+        .t-violet:hover { box-shadow:0 10px 0 #2C0B7A,0 22px 32px -12px rgba(64,19,175,0.6),0 34px 56px -26px rgba(64,19,175,0.9); }
+        .t-sky:hover    { box-shadow:0 10px 0 #00356B,0 22px 32px -12px rgba(0,78,154,0.6),0 34px 56px -26px rgba(0,78,154,0.9); }
+        .t-amber:hover  { box-shadow:0 10px 0 #633003,0 22px 32px -12px rgba(143,70,6,0.6),0 34px 56px -26px rgba(143,70,6,0.9); }
+        .t-jade:hover   { box-shadow:0 10px 0 #003B32,0 22px 32px -12px rgba(0,89,74,0.6),0 34px 56px -26px rgba(0,89,74,0.9); }
+        .t-crimson:hover{ box-shadow:0 10px 0 #6E0918,0 22px 32px -12px rgba(158,14,36,0.6),0 34px 56px -26px rgba(158,14,36,0.9); }
 
+        /* แผ่นไอคอน: ขอบทอง + ไฮไลต์บน ทำให้ดูฝังอยู่ในการ์ด ไม่ใช่สี่เหลี่ยมขาวจางลอยทับ */
         .tile-icon {
-            border-radius:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-            background:rgba(255,255,255,0.20);
-            box-shadow:inset 0 0 0 1px rgba(255,255,255,0.26);
+            border-radius:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+            background:linear-gradient(165deg, rgba(255,255,255,0.32), rgba(255,255,255,0.11));
+            box-shadow:
+                inset 0 0 0 1px rgba(255,236,179,0.42),
+                inset 0 1px 0 rgba(255,255,255,0.5),
+                0 4px 11px rgba(0,0,0,0.24);
+            text-shadow:0 1px 3px rgba(0,0,0,0.28);
         }
-        .tile-cover { border-radius:15px; flex-shrink:0; object-fit:cover; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.26), 0 2px 6px rgba(0,0,0,0.18); }
+        .tile-cover {
+            border-radius:16px; flex-shrink:0; object-fit:cover;
+            box-shadow:inset 0 0 0 1px rgba(255,236,179,0.45), 0 4px 11px rgba(0,0,0,0.3);
+        }
 
-        .menu-row { display:flex; align-items:center; gap:13px; padding:14px 15px; }
-        .menu-title { font-family:'Kanit',sans-serif; font-weight:700; font-size:1rem; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .menu-desc  { font-size:0.76rem; color:rgba(255,255,255,0.84); margin-top:2px; line-height:1.45; }
+        .menu-row { display:flex; align-items:center; gap:13px; padding:15px 15px; }
+        .menu-title {
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.02rem; line-height:1.25;
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+            text-shadow:0 1px 2px rgba(0,0,0,0.22);
+        }
+        .menu-desc {
+            font-size:0.77rem; color:rgba(255,255,255,0.88); margin-top:2px; line-height:1.45;
+            text-shadow:0 1px 2px rgba(0,0,0,0.2);
+        }
         .lock-pill {
             display:flex; align-items:center; justify-content:center; flex-shrink:0;
-            width:26px; height:26px; border-radius:9px; font-size:0.66rem;
-            background:rgba(0,0,0,0.24); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.24);
+            width:27px; height:27px; border-radius:9px; font-size:0.66rem; color:#FFECB3;
+            background:rgba(0,0,0,0.26); box-shadow:inset 0 0 0 1px rgba(255,236,179,0.4);
         }
-        .menu-chev { font-size:0.78rem; opacity:0.6; flex-shrink:0; }
+        /* ลูกศรปล่อยลอยไว้แบบเดิม — เคยลองใส่วงกลมรอบแล้วกินความกว้าง
+           จนคำอธิบายยาวๆ ตกบรรทัด ไม่คุ้มกับความสวยที่ได้ */
+        .menu-chev { font-size:0.78rem; opacity:0.72; flex-shrink:0; text-shadow:0 1px 2px rgba(0,0,0,0.2); }
 
         /* ───────── ปุ่ม QR ───────── */
         .qr-btn {
@@ -530,9 +558,14 @@
                 <h2 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.6rem;color:var(--green);">ศูนย์ควบคุมส่วนกลาง</h2>
                 <p class="text-sm mt-1" style="color:var(--muted);">จัดการระบบและปรับแต่งหน้าเว็บ</p>
             </div>
-            <button onclick="navigate('dashboard')" class="btn-ghost self-start sm:self-auto">
-                <i class="fa-solid fa-house"></i> หน้าหลัก
-            </button>
+            <div class="flex gap-2 self-start sm:self-auto">
+                <button onclick="navigate('roster')" class="btn-ghost">
+                    <i class="fa-solid fa-user-pen"></i> จัดการรายชื่อ
+                </button>
+                <button onclick="navigate('dashboard')" class="btn-ghost">
+                    <i class="fa-solid fa-house"></i> หน้าหลัก
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
@@ -686,6 +719,93 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- ═══════════ จัดการรายชื่อนักเรียน (เฉพาะแอดมิน) ═══════════ -->
+    <div id="view-roster" class="page-view">
+        <div class="panel p-6 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:var(--gold);">Student Roster</p>
+                <h2 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:1.6rem;color:var(--green);">จัดการรายชื่อนักเรียน</h2>
+                <p class="text-sm mt-1" style="color:var(--muted);">เพิ่ม แก้ไข และลบรายชื่อ — บันทึกลง Google Sheets ทันที</p>
+            </div>
+            <button onclick="navigate('admin-panel')" class="btn-ghost self-start sm:self-auto">
+                <i class="fa-solid fa-arrow-left"></i> ศูนย์ควบคุม
+            </button>
+        </div>
+
+        <!-- ฟอร์มเพิ่ม/แก้ไข -->
+        <div class="panel p-6 mb-4" id="roster-form-wrap">
+            <div class="tag" style="background:var(--green-3);color:var(--green);">
+                <i class="fa-solid fa-user-plus"></i> <span id="roster-form-tag">เพิ่มนักเรียนใหม่</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                <div>
+                    <label class="field-label">รหัสนักเรียน *</label>
+                    <input type="text" id="rs-id" class="input" placeholder="เช่น 10234" autocomplete="off">
+                </div>
+                <div>
+                    <label class="field-label">ชื่อ-นามสกุล *</label>
+                    <input type="text" id="rs-name" class="input" placeholder="เช่น สมชาย ใจดี" autocomplete="off">
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div>
+                    <label class="field-label">ระดับชั้น</label>
+                    <select id="rs-level" class="input">
+                        <option value="">—</option>
+                        <option value="ม.4">ม.4</option>
+                        <option value="ม.5">ม.5</option>
+                        <option value="ม.6">ม.6</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="field-label">ห้อง</label>
+                    <input type="text" id="rs-room" class="input" placeholder="1" autocomplete="off">
+                </div>
+                <div>
+                    <label class="field-label">สถานะ</label>
+                    <input type="text" id="rs-status" class="input" placeholder="ปกติ" autocomplete="off">
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button id="rs-btn-add" onclick="addStudentFn()" class="btn-solid btn-green">
+                    <i class="fa-solid fa-plus mr-2"></i>เพิ่มนักเรียน
+                </button>
+                <button id="rs-btn-save" onclick="saveStudentFn()" class="btn-solid btn-green hidden">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i>บันทึกการแก้ไข
+                </button>
+                <button id="rs-btn-cancel" onclick="cancelEditStudent()" class="btn-ghost hidden justify-center">ยกเลิก</button>
+            </div>
+        </div>
+
+        <!-- ค้นหา + กรอง -->
+        <div class="panel p-5 mb-4">
+            <div class="relative mb-4">
+                <input type="text" id="rs-search" placeholder="ค้นหาชื่อหรือรหัสนักเรียน..." class="search-box pr-11" oninput="filterRoster()">
+                <button id="rs-search-clear" onclick="clearRosterSearch()" class="search-clear-btn hidden" title="ล้างคำค้นหา">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex flex-wrap gap-2" id="rs-chips">
+                <button class="filter-chip active" data-rs="all" onclick="setRosterFilter('all')">ทั้งหมด <span class="chip-count" data-rsc="all">0</span></button>
+                <button class="filter-chip" data-rs="ม.4" onclick="setRosterFilter('ม.4')">ม.4 <span class="chip-count" data-rsc="ม.4">0</span></button>
+                <button class="filter-chip" data-rs="ม.5" onclick="setRosterFilter('ม.5')">ม.5 <span class="chip-count" data-rsc="ม.5">0</span></button>
+                <button class="filter-chip" data-rs="ม.6" onclick="setRosterFilter('ม.6')">ม.6 <span class="chip-count" data-rsc="ม.6">0</span></button>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-3 px-1">
+            <p class="text-sm" style="color:var(--muted);">แสดง <span id="rs-result" class="font-bold" style="color:var(--ink);">0</span> คน</p>
+            <div id="rs-loading" class="hidden text-xs items-center gap-2" style="color:var(--muted);">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลด...
+            </div>
+        </div>
+        <div id="rs-list" class="flex flex-col gap-2"></div>
+        <div id="rs-empty" class="hidden text-center py-16">
+            <i class="fa-regular fa-folder-open text-4xl mb-3" style="color:#CFC7B2;"></i>
+            <p style="color:var(--muted);">ไม่พบรายชื่อที่ค้นหา</p>
         </div>
     </div>
 
@@ -945,6 +1065,12 @@ function createUploader(opts) {
 // Navigation
 // ════════════════════════════════════════
 function navigate(viewId) {
+    // หน้าจัดการรายชื่อแก้ข้อมูลจริง ต้องเข้าสู่ระบบก่อนเท่านั้น
+    if (viewId === 'roster' && !adminKey) {
+        Swal.fire({ icon:'info', title:'กรุณาเข้าสู่ระบบก่อน',
+                    text:'หน้าจัดการรายชื่อสำหรับครูวิชาการเท่านั้น', confirmButtonColor:'#0F3D2E' });
+        viewId = 'login-admin';
+    }
     document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
     const view = document.getElementById('view-' + viewId);
     if (view) view.classList.add('active');
@@ -953,6 +1079,7 @@ function navigate(viewId) {
     if (viewId === 'dashboard')   { loadPublicSettings(); loadDashboardStats(); loadWebCards(); }
     if (viewId === 'admin-panel') { loadAdminSettings(); loadCardManager(); }
     if (viewId === 'students')    loadStudents();
+    if (viewId === 'roster')      { cancelEditStudent(); loadRoster(); }
 }
 
 setInterval(() => {
@@ -1197,15 +1324,212 @@ function clearSearch() {
 function updateChipCounts() {
     const counts = { all: allStudents.length, 'ม.4':0, 'ม.5':0, 'ม.6':0 };
     allStudents.forEach(r => { if (counts[r[2]] !== undefined) counts[r[2]]++; });
-    document.querySelectorAll('.chip-count').forEach(el => {
+    // จำกัดขอบเขตไว้ในหน้านี้ ไม่งั้นจะไปล้างตัวเลขของชิปในหน้าจัดการรายชื่อด้วย
+    document.querySelectorAll('#view-students .chip-count').forEach(el => {
         const key = el.getAttribute('data-count');
         el.textContent = counts[key] !== undefined ? counts[key] : 0;
     });
 }
 
 // ════════════════════════════════════════
+// จัดการรายชื่อนักเรียน (เพิ่ม / แก้ไข / ลบ)
+// ════════════════════════════════════════
+let roster = [], rosterLevel = 'all', editingStudentId = null;
+
+function loadRoster() {
+    const loading = document.getElementById('rs-loading');
+    loading.classList.remove('hidden');
+    loading.classList.add('flex');
+    callAPI('getStudentList').then(res => {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
+        const r = JSON.parse(res);
+        if (r.status !== 'success') return;
+        roster = r.data;
+        updateRosterCounts();
+        filterRoster();
+    }).catch(err => {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
+        handleScriptError(err);
+    });
+}
+
+function updateRosterCounts() {
+    const counts = { all: roster.length, 'ม.4':0, 'ม.5':0, 'ม.6':0 };
+    roster.forEach(r => { if (counts[r[2]] !== undefined) counts[r[2]]++; });
+    document.querySelectorAll('#view-roster .chip-count').forEach(el => {
+        const key = el.getAttribute('data-rsc');
+        el.textContent = counts[key] !== undefined ? counts[key] : 0;
+    });
+}
+
+function setRosterFilter(level) {
+    rosterLevel = level;
+    document.querySelectorAll('#rs-chips .filter-chip').forEach(c => c.classList.remove('active'));
+    const chip = document.querySelector('[data-rs="' + level + '"]');
+    if (chip) chip.classList.add('active');
+    filterRoster();
+}
+
+function filterRoster() {
+    const input = document.getElementById('rs-search');
+    const q = input.value.trim().toLowerCase();
+    document.getElementById('rs-search-clear').classList.toggle('hidden', input.value === '');
+    let list = roster;
+    if (rosterLevel !== 'all') list = list.filter(r => r[2] === rosterLevel);
+    if (q) list = list.filter(r => (r[0] + ' ' + r[1]).toLowerCase().includes(q));
+    renderRoster(list);
+}
+
+function clearRosterSearch() {
+    const input = document.getElementById('rs-search');
+    input.value = '';
+    filterRoster();
+    input.focus();
+}
+
+function renderRoster(list) {
+    const box = document.getElementById('rs-list');
+    const empty = document.getElementById('rs-empty');
+    document.getElementById('rs-result').textContent = list.length;
+    if (!list.length) { box.innerHTML = ''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+
+    const avClass = { 'ม.4':'av-m4', 'ม.5':'av-m5', 'ม.6':'av-m6' };
+    const badgeClass = { 'ม.4':'badge-m4', 'ม.5':'badge-m5', 'ม.6':'badge-m6' };
+    const html = [];
+    list.forEach(row => {
+        const id = row[0] || '', name = row[1] || '', lvl = row[2] || '', room = row[3] || '';
+        const initial = String(name).trim().charAt(0) || '?';
+        html.push(
+            '<div class="student-row">' +
+                '<div class="avatar ' + (avClass[lvl] || 'av-default') + '">' + esc(initial) + '</div>' +
+                '<div class="flex-1 min-w-0">' +
+                    '<p class="font-semibold text-sm truncate">' + esc(name) + '</p>' +
+                    '<p class="text-xs mt-0.5" style="color:var(--muted);">' + esc(id) +
+                        (room ? ' · ห้อง ' + esc(room) : '') + '</p>' +
+                '</div>' +
+                (lvl ? '<span class="class-badge ' + (badgeClass[lvl] || 'badge-def') + '">' + esc(lvl) + '</span>' : '') +
+                '<div class="flex gap-1.5 flex-shrink-0">' +
+                    '<button class="mini-btn mb-edit" onclick="startEditStudent(\'' + encodeURIComponent(id) + '\')" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>' +
+                    '<button class="mini-btn mb-del" onclick="deleteStudentFn(\'' + encodeURIComponent(id) + '\')" title="ลบ"><i class="fa-solid fa-trash"></i></button>' +
+                '</div>' +
+            '</div>');
+    });
+    box.innerHTML = html.join('');
+}
+
+function readStudentForm() {
+    return {
+        id:     document.getElementById('rs-id').value.trim(),
+        name:   document.getElementById('rs-name').value.trim(),
+        level:  document.getElementById('rs-level').value,
+        room:   document.getElementById('rs-room').value.trim(),
+        status: document.getElementById('rs-status').value.trim()
+    };
+}
+
+function resetStudentForm() {
+    ['rs-id','rs-name','rs-room','rs-status'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('rs-level').value = '';
+}
+
+function startEditStudent(encId) {
+    const id = decodeURIComponent(encId);
+    const row = roster.find(r => String(r[0]).trim() === id);
+    if (!row) return;
+    document.getElementById('rs-id').value     = row[0] || '';
+    document.getElementById('rs-name').value   = row[1] || '';
+    document.getElementById('rs-level').value  = row[2] || '';
+    document.getElementById('rs-room').value   = row[3] || '';
+    document.getElementById('rs-status').value = row[4] || '';
+
+    editingStudentId = id;
+    document.getElementById('roster-form-tag').textContent = 'แก้ไข: ' + (row[1] || id);
+    document.getElementById('rs-btn-add').classList.add('hidden');
+    document.getElementById('rs-btn-save').classList.remove('hidden');
+    document.getElementById('rs-btn-cancel').classList.remove('hidden');
+    document.getElementById('roster-form-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function cancelEditStudent() {
+    editingStudentId = null;
+    resetStudentForm();
+    document.getElementById('roster-form-tag').textContent = 'เพิ่มนักเรียนใหม่';
+    document.getElementById('rs-btn-add').classList.remove('hidden');
+    document.getElementById('rs-btn-save').classList.add('hidden');
+    document.getElementById('rs-btn-cancel').classList.add('hidden');
+}
+
+function addStudentFn() {
+    const data = readStudentForm();
+    if (!data.id)   return Swal.fire({ icon:'warning', title:'กรุณากรอกรหัสนักเรียน', confirmButtonColor:'#0F3D2E' });
+    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#0F3D2E' });
+    Swal.fire({ title:'กำลังเพิ่ม...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('addStudent', { pwd: adminKey, data }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:r.message, timer:1500, showConfirmButton:false });
+            resetStudentForm();
+            document.getElementById('rs-id').focus();
+            loadRoster();
+        } else {
+            Swal.fire({ icon:'error', title:'เพิ่มไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        }
+    }).catch(handleScriptError);
+}
+
+function saveStudentFn() {
+    if (!editingStudentId) return;
+    const data = readStudentForm();
+    if (!data.id)   return Swal.fire({ icon:'warning', title:'กรุณากรอกรหัสนักเรียน', confirmButtonColor:'#0F3D2E' });
+    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#0F3D2E' });
+    Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    callAPI('updateStudent', { pwd: adminKey, originalId: editingStudentId, data }).then(res => {
+        const r = JSON.parse(res);
+        if (r.status === 'success') {
+            Swal.fire({ icon:'success', title:r.message, timer:1500, showConfirmButton:false });
+            cancelEditStudent();
+            loadRoster();
+        } else {
+            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        }
+    }).catch(handleScriptError);
+}
+
+function deleteStudentFn(encId) {
+    const id = decodeURIComponent(encId);
+    const row = roster.find(r => String(r[0]).trim() === id);
+    const name = row ? (row[1] || id) : id;
+    Swal.fire({
+        title: 'ลบรายชื่อนี้?',
+        html: '<b>' + esc(name) + '</b><br><span style="color:#6B7C74;font-size:.9rem;">รหัส ' + esc(id) + '</span>' +
+              '<br><span style="color:#C0392B;font-size:.85rem;">ข้อมูลจะถูกลบออกจาก Google Sheets ถาวร</span>',
+        icon: 'warning', showCancelButton: true,
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
+        confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        Swal.fire({ title:'กำลังลบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+        callAPI('deleteStudent', { pwd: adminKey, id }).then(res => {
+            const r = JSON.parse(res);
+            if (r.status === 'success') {
+                Swal.fire({ icon:'success', title:r.message, timer:1500, showConfirmButton:false });
+                if (editingStudentId === id) cancelEditStudent();
+                loadRoster();
+            } else {
+                Swal.fire({ icon:'error', title:'ลบไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            }
+        }).catch(handleScriptError);
+    });
+}
+
+// ════════════════════════════════════════
 // Admin
 // ════════════════════════════════════════
+let adminKey = '';   // รหัสแอดมินของรอบนี้ ใช้ยืนยันคำสั่งที่แก้ข้อมูลจริง
+
 function loginAdmin() {
     const pwd = document.getElementById('admin-pass').value;
     if (!pwd) return;
@@ -1214,6 +1538,9 @@ function loginAdmin() {
         const r = JSON.parse(res);
         if (r.status === 'success') {
             Swal.close();
+            // เก็บไว้ในหน่วยความจำรอบนี้เท่านั้น ไม่บันทึกลงเครื่อง
+            // ใช้ยืนยันตัวตนตอนสั่ง เพิ่ม/แก้/ลบ รายชื่อ ซึ่งแก้ข้อมูลจริงของโรงเรียน
+            adminKey = pwd;
             document.getElementById('admin-pass').value = '';
             navigate('admin-panel');
         } else {
