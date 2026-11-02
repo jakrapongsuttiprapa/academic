@@ -99,9 +99,38 @@
         .btn-staff:active { transform:translateY(1px); box-shadow:0 2px 0 var(--gold-700); }
         .nav-clock {
             font-family:ui-monospace,monospace; font-size:0.8rem; font-weight:600;
-            color:var(--gold-200); background:rgba(0,0,0,0.3);
-            border:1px solid rgba(217,182,75,0.3);
-            padding:7px 15px; border-radius:100px;
+            color:var(--gold-200); background:rgba(0,0,0,0.34);
+            border:1px solid rgba(217,182,75,0.46);
+            padding:7px 16px; border-radius:100px;
+            align-items:center; gap:8px;
+            box-shadow:inset 0 1px 0 rgba(251,240,200,0.14);
+            /* ซ่อน/แสดงเองด้วย CSS ไม่ใช้ hidden md:flex ของ Tailwind
+               เพราะ .nav-clock กับ .hidden specificity เท่ากัน แล้วไฟล์นี้โหลดทีหลัง จะชนะจนโชว์บนมือถือ */
+            display:none;
+        }
+        @media (min-width:768px) { .nav-clock { display:inline-flex; } }
+        .nav-clock i { font-size:0.76rem; color:var(--gold-400); }
+
+        /* ───────────── ลายทองประดับมุมหน้าเว็บ ─────────────
+           วางเป็นชั้นลอยคลุมทั้งจอ ไม่รับคลิก และอยู่ใต้เนื้อหา
+           ใช้ SVG ชิ้นเดียวแล้วพลิกด้วย transform ให้ครบสี่มุม */
+        /* z-index:0 ไม่ใช่ 1 — จะได้อยู่เหนือพื้นหลังแต่ยังอยู่หลังการ์ดทุกใบ
+           ถ้าใช้ 1 ลายทองจะทับเนื้อหาตอนจอแคบกว่าความกว้างคอลัมน์ */
+        /* เริ่มต่ำกว่าแถบ nav ไม่งั้นลายมุมบนโดนแถบทึบบังจนไม่เห็น */
+        .page-orn {
+            position:fixed; top:68px; left:0; right:0; bottom:0;
+            z-index:0; pointer-events:none; overflow:hidden;
+        }
+        .page-orn svg {
+            position:absolute; width:clamp(150px,21vw,300px); height:auto; opacity:1;
+        }
+        .page-orn .o-tl { top:0; left:0; }
+        .page-orn .o-tr { top:0; right:0; transform:scaleX(-1); }
+        .page-orn .o-bl { bottom:0; left:0; transform:scaleY(-1); }
+        .page-orn .o-br { bottom:0; right:0; transform:scale(-1,-1); }
+        @media (max-width:640px) {
+            .page-orn svg { width:clamp(78px,26vw,130px); opacity:0.6; }
+            .page-orn .o-bl, .page-orn .o-br { display:none; }
         }
 
         /* ───────────── HERO — โซนพิธีการ ───────────── */
@@ -149,8 +178,19 @@
         /* กรอบทองสองเส้น เลียนขอบเอกสาร/เกียรติบัตรไทย ให้โซนนี้เป็น "แผ่นพิธีการ" จริงๆ */
         .hero-frame {
             position:absolute; inset:13px; z-index:2; pointer-events:none; border-radius:17px;
-            border:1px solid rgba(217,182,75,0.44);
-            box-shadow:inset 0 0 0 4px transparent, inset 0 0 0 5px rgba(217,182,75,0.16);
+            border:1px solid rgba(217,182,75,0.5);
+            box-shadow:inset 0 0 0 4px transparent, inset 0 0 0 5px rgba(217,182,75,0.18);
+        }
+        /* ฉากมุมทองหนาสี่มุมของกรอบ ให้ดูเป็นกรอบเกียรติบัตรหนาๆ ไม่ใช่เส้นบางเส้นเดียว */
+        .hero-frame::before, .hero-frame::after {
+            content:''; position:absolute; width:46px; height:46px; pointer-events:none;
+            border:3px solid rgba(217,182,75,0.72);
+        }
+        .hero-frame::before {
+            top:-1px; left:-1px; border-right:none; border-bottom:none; border-radius:17px 0 0 0;
+        }
+        .hero-frame::after {
+            bottom:-1px; right:-1px; border-left:none; border-top:none; border-radius:0 0 17px 0;
         }
 
         /* ★ จุดเด่นของหน้า: เหรียญตราโรงเรียนในวงแหวนทอง */
@@ -270,10 +310,10 @@
 
         /* ───────────── หัวข้อหมวด ───────────── */
         .sec-label { display:flex; align-items:center; gap:12px; margin:30px 2px 14px; }
+        /* สามเหลี่ยมข้าวหลามตัดซ้อนสามชั้น วาดเป็น SVG ฝังมาเลย จะได้คมทุกความละเอียดจอ */
         .sec-label::before {
-            content:''; width:8px; height:8px; flex-shrink:0; border-radius:1.5px;
-            transform:rotate(45deg); background:var(--gilt);
-            box-shadow:0 0 0 3px rgba(217,182,75,0.14);
+            content:''; width:17px; height:21px; flex-shrink:0;
+            background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 21'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FBF0C8'/%3E%3Cstop offset='.45' stop-color='%23D9B64B'/%3E%3Cstop offset='1' stop-color='%238A6512'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Cpath d='M8.5 0 L13 4 L8.5 8 L4 4 Z'/%3E%3Cpath d='M8.5 6.5 L13.6 10.6 L8.5 14.7 L3.4 10.6 Z' opacity='.86'/%3E%3Cpath d='M8.5 13.2 L12.4 16.6 L8.5 20 L4.6 16.6 Z' opacity='.6'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
         }
         .sec-label span {
             font-family:'Kanit',sans-serif; font-size:1.02rem; font-weight:600;
@@ -283,21 +323,30 @@
 
         /* ───────────── การ์ดสถิติ ───────────── */
         .stat-card {
-            position:relative; overflow:hidden; border-radius:16px; padding:16px 16px 14px;
+            position:relative; overflow:hidden; border-radius:18px; padding:14px 15px;
+            display:flex; align-items:center; gap:13px;
             background:linear-gradient(170deg,#fff,var(--paper-2));
-            border:1px solid var(--line);
-            box-shadow:0 2px 0 rgba(20,32,27,0.04), 0 10px 22px -16px rgba(20,32,27,0.5);
+            border:1px solid rgba(217,182,75,0.55);
+            box-shadow:0 2px 0 rgba(20,32,27,0.04), 0 10px 22px -16px rgba(20,32,27,0.5),
+                       inset 0 0 0 1px rgba(255,255,255,0.7);
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
         .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gilt); }
-        /* ลายน้ำเลขไทยประจำระดับชั้น — แก้จุดที่เคยเป็นกล่องขาวเปล่าที่สุดของหน้า */
+        /* แถบทองกวาดมุมขวาล่าง แทนลายน้ำเลขไทยเดิม ให้เข้าชุดกับลายมุมหน้าเว็บ */
         .stat-card::after {
-            content:attr(data-mark); position:absolute; right:12px; bottom:-10px; z-index:0;
-            font-family:'Kanit',sans-serif; font-weight:700; font-size:3.6rem; line-height:1;
-            color:rgba(11,82,64,0.075); pointer-events:none; user-select:none;
+            content:''; position:absolute; right:-52px; bottom:-62px; width:132px; height:132px; z-index:0;
+            border-radius:50%; pointer-events:none;
+            border:12px solid rgba(217,182,75,0.17);
         }
         .stat-card > * { position:relative; z-index:1; }
         .stat-card:hover { transform:translateY(-3px); box-shadow:0 5px 0 rgba(20,32,27,0.05), 0 18px 30px -18px rgba(20,32,27,0.6); }
+        .stat-ic {
+            width:46px; height:46px; border-radius:14px; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:1.18rem;
+            color:var(--gold-200); background:linear-gradient(165deg,var(--em-700),var(--em-950));
+            box-shadow:inset 0 0 0 1px rgba(251,240,200,0.34), 0 5px 14px -5px rgba(4,32,26,0.75);
+        }
+        .stat-txt { min-width:0; }
         .stat-k { font-size:0.74rem; color:var(--muted); font-weight:500; }
         .stat-v {
             font-family:'Kanit',sans-serif; font-weight:700; font-size:2.1rem;
@@ -309,9 +358,24 @@
         /* ───────────── ประตูหลัก 2 บาน ───────────── */
         .portal {
             position:relative; overflow:hidden; cursor:pointer; isolation:isolate;
-            border-radius:22px; padding:26px 16px 22px; text-align:center; color:#fff;
-            min-height:168px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:13px;
+            border-radius:22px; padding:18px 18px; text-align:left; color:#fff;
+            min-height:96px; display:flex; flex-direction:row; align-items:center; gap:15px;
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
+        }
+        .portal-body { flex:1; min-width:0; }
+        /* ไอคอนจางขนาดใหญ่หลังการ์ด เลียนภาพประกอบในแบบที่ครูส่งมา */
+        .portal-wm {
+            position:absolute; right:-6px; bottom:-18px; z-index:0; pointer-events:none;
+            font-size:5.2rem; line-height:1; color:rgba(255,255,255,0.11);
+        }
+        .portal-b .portal-wm { color:rgba(4,32,26,0.12); }
+        .portal-chev {
+            width:34px; height:34px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:0.8rem;
+            background:rgba(255,255,255,0.18); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.45);
+        }
+        .portal-b .portal-chev {
+            background:rgba(4,32,26,0.12); box-shadow:inset 0 0 0 1px rgba(4,32,26,0.3);
         }
         .portal::before {
             content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
@@ -329,7 +393,7 @@
         /* แผ่นทอง: ตัวหนังสือเขียวเข้ม อ่านชัดและดูเป็นป้ายทองจริง */
         .portal-b { background:var(--gilt); color:var(--em-950); box-shadow:0 6px 0 var(--gold-700), 0 16px 28px -14px rgba(138,101,18,0.9); }
         .portal-b:hover { box-shadow:0 10px 0 var(--gold-700), 0 24px 38px -16px rgba(138,101,18,0.95); }
-        .portal-b p { color:var(--em-950); }
+        .portal-b p { color:var(--em-950); font-weight:500; }
         .portal-b::after { border-color:rgba(4,32,26,0.22); }
         .portal-b .portal-ic {
             background:linear-gradient(165deg,var(--em-700),var(--em-950)); color:var(--gold-200);
@@ -341,8 +405,8 @@
             background:rgba(255,255,255,0.16);
             box-shadow:inset 0 0 0 1px rgba(251,240,200,0.4), 0 6px 16px rgba(0,0,0,0.3);
         }
-        .portal h3 { font-family:'Kanit',sans-serif; font-weight:600; font-size:1.18rem; line-height:1.2; }
-        .portal p  { font-size:0.8rem; color:rgba(255,255,255,0.84); margin-top:3px; }
+        .portal h3 { font-family:'Kanit',sans-serif; font-weight:600; font-size:1.3rem; line-height:1.2; }
+        .portal p  { font-size:0.79rem; color:rgba(255,255,255,0.86); margin-top:3px; line-height:1.45; }
 
         /* ───────────── การ์ดเมนู (ผิวเคลือบ + ขอบทอง) ───────────── */
         .tile {
@@ -704,9 +768,13 @@
             .ornament { margin:13px auto 10px; width:min(200px,66%); }
             .hero-sub { font-size:0.88rem; line-height:1.6; }
             .medallion { width:66px; height:66px; margin-bottom:11px; }
-            .portal { min-height:152px; padding:22px 12px 20px; }
-            .portal-ic { width:50px; height:50px; border-radius:16px; font-size:1.25rem; }
-            .portal h3 { font-size:1.05rem; }
+            .portal { min-height:92px; padding:15px 14px; gap:12px; }
+            .portal-ic { width:48px; height:48px; border-radius:15px; font-size:1.2rem; }
+            .portal h3 { font-size:1.12rem; }
+            .portal p  { font-size:0.74rem; }
+            .portal-wm { font-size:4rem; right:-10px; bottom:-14px; }
+            .stat-card { padding:12px 12px; gap:10px; border-radius:15px; }
+            .stat-ic { width:40px; height:40px; border-radius:12px; font-size:1.02rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -721,6 +789,46 @@
 
 <body class="min-h-screen flex flex-col">
 
+<!-- ลายทองประดับมุมหน้าเว็บ — วาด SVG ชิ้นเดียวแล้วพลิกเอาด้วย CSS ให้ครบสี่มุม -->
+<div class="page-orn" aria-hidden="true">
+    <svg class="o-tl" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
+    <svg class="o-tr" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
+    <svg class="o-bl" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
+    <svg class="o-br" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <linearGradient id="orn-gold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0"   stop-color="#8A6512"/>
+            <stop offset="0.22" stop-color="#F3E3A8"/>
+            <stop offset="0.46" stop-color="#D9B64B"/>
+            <stop offset="0.7"  stop-color="#FBF0C8"/>
+            <stop offset="1"   stop-color="#A97D1C"/>
+        </linearGradient>
+        <g id="corner-orn" stroke="url(#orn-gold)" fill="none" stroke-linecap="round">
+            <!-- ริบบิ้นเส้นใหญ่กวาดจากมุมออกไปสองทาง -->
+            <path d="M0 108 C 26 104, 52 92, 70 70 C 88 48, 100 24, 104 0" stroke-width="13" opacity="1"/>
+            <path d="M0 80 C 22 76, 44 65, 59 49 C 74 33, 82 17, 85 0" stroke-width="5" opacity="0.85"/>
+            <path d="M0 138 C 34 134, 68 118, 91 92 C 114 66, 128 33, 133 0" stroke-width="3.4" opacity="0.62"/>
+            <!-- ก้านย่อยสะบัดออก -->
+            <path d="M56 63 C 69 77, 89 83, 110 81" stroke-width="5" opacity="0.9"/>
+            <path d="M63 56 C 77 43, 83 25, 81 4" stroke-width="5" opacity="0.9"/>
+            <path d="M32 94 C 39 109, 37 124, 24 134" stroke-width="4" opacity="0.72"/>
+            <path d="M94 32 C 109 39, 124 37, 134 24" stroke-width="4" opacity="0.72"/>
+            <!-- หัวก้นหอยปลายลาย -->
+            <path d="M110 81 C 123 80, 130 72, 126 64 C 123 57, 113 58, 112 66 C 111 73, 118 76, 123 72"
+                  stroke-width="4" opacity="0.92"/>
+            <path d="M81 4 C 80 17, 72 24, 64 20 C 57 17, 58 7, 66 6 C 73 5, 76 12, 72 17"
+                  stroke-width="4" opacity="0.92"/>
+            <circle cx="70" cy="70" r="7" fill="url(#orn-gold)" stroke="none" opacity="1"/>
+            <circle cx="24" cy="134" r="4" fill="url(#orn-gold)" stroke="none" opacity="0.8"/>
+            <circle cx="134" cy="24" r="4" fill="url(#orn-gold)" stroke="none" opacity="0.8"/>
+        </g>
+    </defs>
+</svg>
+
+
 <!-- ═══════════ NAVBAR ═══════════ -->
 <nav class="navbar sticky top-0 z-50 px-4 py-3">
     <div class="max-w-6xl mx-auto flex justify-between items-center gap-3">
@@ -732,9 +840,9 @@
             </div>
         </div>
         <div class="flex items-center gap-3 flex-shrink-0">
-            <div class="nav-clock hidden md:block"><span id="clock-span">00:00:00</span></div>
+            <div class="nav-clock"><i class="fa-regular fa-clock"></i><span id="clock-span">00:00:00</span></div>
             <button onclick="navigate('login-admin')" class="btn-staff">
-                <i class="fa-solid fa-lock"></i> ครูวิชาการ
+                <i class="fa-solid fa-user"></i> ครูวิชาการ
             </button>
         </div>
     </div>
@@ -782,20 +890,24 @@
         <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
 
         <div class="sec-label"><span>บริการหลัก</span><i></i></div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div onclick="navigate('students')" class="portal portal-a">
+                <i class="fa-solid fa-book-open portal-wm"></i>
                 <div class="portal-ic"><i class="fa-solid fa-user-graduate"></i></div>
-                <div>
+                <div class="portal-body">
                     <h3>นักเรียน</h3>
-                    <p>รายชื่อนักเรียน</p>
+                    <p>รายชื่อนักเรียน / ข้อมูลนักเรียน</p>
                 </div>
+                <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
             <div onclick="navigate('login-admin')" class="portal portal-b">
-                <div class="portal-ic"><i class="fa-solid fa-shield-halved"></i></div>
-                <div>
+                <i class="fa-solid fa-pen-ruler portal-wm"></i>
+                <div class="portal-ic"><i class="fa-solid fa-book"></i></div>
+                <div class="portal-body">
                     <h3>วิชาการ</h3>
-                    <p>สำหรับครู</p>
+                    <p>คำสั่ง / เอกสาร / ตารางเรียน / ตารางสอน</p>
                 </div>
+                <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
         </div>
 
@@ -1524,7 +1636,10 @@ function renderSkeletonStats() {
     const c = document.getElementById('stats-container');
     c.innerHTML = '';
     for (let i = 0; i < 4; i++) {
-        c.innerHTML += '<div class="stat-card"><div class="skeleton h-3 w-20 rounded-full mb-3"></div><div class="skeleton h-7 w-14 rounded-lg"></div></div>';
+        c.innerHTML += '<div class="stat-card">' +
+            '<div class="skeleton" style="width:46px;height:46px;border-radius:14px;flex-shrink:0;"></div>' +
+            '<div class="stat-txt" style="flex:1;"><div class="skeleton h-3 w-20 rounded-full mb-2"></div>' +
+            '<div class="skeleton h-6 w-14 rounded-lg"></div></div></div>';
     }
 }
 
@@ -1536,10 +1651,14 @@ function loadDashboardStats() {
         if (res.status !== 'success') { c.innerHTML = ''; return; }
         const d = res.data;
         // mark = ลายน้ำเลขไทยประจำการ์ด (๏ คือฟองมัน ใช้กับยอดรวม)
-        const cell = (k, v, mark) => '<div class="stat-card" data-mark="' + mark + '">' +
-            '<p class="stat-k">' + k + '</p><h3 class="stat-v">' + v + '</h3><p class="stat-u">คน</p></div>';
-        c.innerHTML = cell('นักเรียนทั้งหมด', d.total, '๏') + cell('มัธยมศึกษาปีที่ 4', d.m4, '๔') +
-                      cell('มัธยมศึกษาปีที่ 5', d.m5, '๕') + cell('มัธยมศึกษาปีที่ 6', d.m6, '๖');
+        const cell = (k, v, icon) => '<div class="stat-card">' +
+            '<div class="stat-ic"><i class="fa-solid ' + icon + '"></i></div>' +
+            '<div class="stat-txt"><p class="stat-k">' + k + '</p>' +
+            '<h3 class="stat-v">' + v + '</h3><p class="stat-u">คน</p></div></div>';
+        c.innerHTML = cell('นักเรียนทั้งหมด', d.total, 'fa-users') +
+                      cell('มัธยมศึกษาปีที่ 4', d.m4, 'fa-graduation-cap') +
+                      cell('มัธยมศึกษาปีที่ 5', d.m5, 'fa-graduation-cap') +
+                      cell('มัธยมศึกษาปีที่ 6', d.m6, 'fa-graduation-cap');
     }).catch(err => {
         document.getElementById('stats-container').innerHTML = '';
         handleScriptError(err);
