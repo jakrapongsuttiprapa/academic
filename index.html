@@ -356,88 +356,127 @@
         .stat-u { font-size:0.68rem; color:#9AA8A1; }
 
         /* ───────────── ประตูหลัก 2 บาน ───────────── */
+        /* ป้ายบริการหลัก = แผ่นเกียรติบัตรขอบทอง ใช้ระบบเดียวกับการ์ดเมนู
+           (ขอบเป็น border จริงจากเทคนิคพื้นหลังสองชั้น + วงแหวนทองมุมขวาล่าง) */
         .portal {
             position:relative; overflow:hidden; cursor:pointer; isolation:isolate;
-            border-radius:22px; padding:18px 18px; text-align:left; color:#fff;
-            min-height:96px; display:flex; flex-direction:row; align-items:center; gap:15px;
+            border-radius:22px; padding:20px; text-align:left; color:#fff;
+            min-height:110px; display:flex; flex-direction:row; align-items:center; gap:17px;
+            border:1.5px solid transparent;
+            background-origin:border-box;
+            background-clip:padding-box, border-box;
+            background-image:var(--portal-fill, linear-gradient(162deg,#1E7A5E,#0B5240 48%,#063226)), var(--portal-rim, var(--gilt));
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
-        .portal-body { flex:1; min-width:0; }
-        /* ไอคอนจางขนาดใหญ่หลังการ์ด เลียนภาพประกอบในแบบที่ครูส่งมา */
-        .portal-wm {
-            position:absolute; right:-6px; bottom:-18px; z-index:0; pointer-events:none;
-            font-size:5.2rem; line-height:1; color:rgba(255,255,255,0.11);
+        /* เส้นทองคั่นระหว่างไอคอนกับข้อความ เหมือนเส้นแบ่งในเอกสารพิธีการ */
+        .portal-body {
+            flex:1; min-width:0; padding-left:17px;
+            border-left:1px solid rgba(251,240,200,0.32);
         }
-        .portal-b .portal-wm { color:rgba(4,32,26,0.12); }
+        .portal-b .portal-body { border-left-color:rgba(4,32,26,0.24); }
         .portal-chev {
-            width:34px; height:34px; border-radius:50%; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center; font-size:0.8rem;
-            background:rgba(255,255,255,0.18); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.45);
+            width:36px; height:36px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:0.82rem;
+            color:var(--gold-100);
+            background:rgba(4,32,26,0.26); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.48);
         }
         .portal-b .portal-chev {
-            background:rgba(4,32,26,0.12); box-shadow:inset 0 0 0 1px rgba(4,32,26,0.3);
+            color:var(--em-950);
+            background:rgba(4,32,26,0.1); box-shadow:inset 0 0 0 1px rgba(4,32,26,0.34);
         }
         .portal::before {
             content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
-            background:radial-gradient(118% 72% at 16% -14%, rgba(255,255,255,0.3), rgba(255,255,255,0.08) 44%, transparent 70%);
+            background:
+                radial-gradient(122% 76% at 14% -16%, rgba(255,255,255,0.28), rgba(255,255,255,0.06) 46%, transparent 72%),
+                linear-gradient(180deg, transparent 58%, rgba(0,0,0,0.16) 100%);
         }
         .portal::after {
-            content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
-            border-radius:inherit; border:1px solid rgba(251,240,200,0.3);
+            content:''; position:absolute; right:-86px; bottom:-104px; width:196px; height:196px;
+            z-index:1; border-radius:50%; pointer-events:none;
+            border:17px solid rgba(251,240,200,0.14);
         }
+        .portal-b::after { border-color:rgba(4,32,26,0.1); }
         .portal > * { position:relative; z-index:2; }
         .portal:hover  { transform:translateY(-5px); }
         .portal:active { transform:translateY(1px) scale(.99); }
-        .portal-a { background:linear-gradient(162deg,#1E7A5E,var(--em-700) 48%,var(--em-900)); box-shadow:0 6px 0 #042B21, 0 16px 28px -14px rgba(4,32,26,0.9); }
+        .portal-a { box-shadow:0 6px 0 #042B21, 0 16px 28px -14px rgba(4,32,26,0.9); }
         .portal-a:hover { box-shadow:0 10px 0 #042B21, 0 24px 38px -16px rgba(4,32,26,0.95); }
-        /* แผ่นทอง: ตัวหนังสือเขียวเข้ม อ่านชัดและดูเป็นป้ายทองจริง */
-        .portal-b { background:var(--gilt); color:var(--em-950); box-shadow:0 6px 0 var(--gold-700), 0 16px 28px -14px rgba(138,101,18,0.9); }
+        /* แผ่นทอง: ตัวหนังสือเขียวเข้ม อ่านชัดและดูเป็นป้ายทองจริง
+           ขอบใช้เขียวมรกตแทนทอง ไม่งั้นขอบทองบนพื้นทองจะมองไม่เห็น */
+        .portal-b {
+            --portal-fill:var(--gilt);
+            --portal-rim:linear-gradient(170deg,var(--em-700),var(--em-950));
+            color:var(--em-950);
+            box-shadow:0 6px 0 var(--gold-700), 0 16px 28px -14px rgba(138,101,18,0.9);
+        }
         .portal-b:hover { box-shadow:0 10px 0 var(--gold-700), 0 24px 38px -16px rgba(138,101,18,0.95); }
-        .portal-b p { color:var(--em-950); font-weight:500; }
-        .portal-b::after { border-color:rgba(4,32,26,0.22); }
         .portal-b .portal-ic {
             background:linear-gradient(165deg,var(--em-700),var(--em-950)); color:var(--gold-200);
-            box-shadow:inset 0 0 0 1px rgba(251,240,200,0.3), 0 6px 16px rgba(0,0,0,0.3);
+            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.42), 0 6px 16px rgba(0,0,0,0.3);
         }
+        /* แผ่นไอคอนกระจกเขียวเข้มขอบทอง ไอคอนสีทอง — ชุดเดียวกับการ์ดเมนูและการ์ดสถิติ */
         .portal-ic {
-            width:58px; height:58px; border-radius:18px; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center; font-size:1.42rem;
-            background:rgba(255,255,255,0.16);
-            box-shadow:inset 0 0 0 1px rgba(251,240,200,0.4), 0 6px 16px rgba(0,0,0,0.3);
+            width:58px; height:58px; border-radius:17px; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:1.44rem;
+            color:var(--gold-100);
+            background:linear-gradient(165deg, rgba(4,32,26,0.5), rgba(4,32,26,0.24));
+            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.5), inset 0 1px 0 rgba(255,255,255,0.24),
+                       0 6px 16px rgba(0,0,0,0.32);
+            text-shadow:0 1px 3px rgba(0,0,0,0.35);
         }
-        .portal h3 { font-family:'Kanit',sans-serif; font-weight:600; font-size:1.3rem; line-height:1.2; }
-        .portal p  { font-size:0.79rem; color:rgba(255,255,255,0.86); margin-top:3px; line-height:1.45; }
+        .portal h3 {
+            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.34rem; line-height:1.2;
+            text-shadow:0 1px 3px rgba(0,0,0,0.26);
+        }
+        .portal-b h3 { text-shadow:none; }
+        .portal p  {
+            font-size:0.8rem; color:rgba(255,255,255,0.9); margin-top:4px; line-height:1.45;
+            text-shadow:0 1px 3px rgba(0,0,0,0.26);
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+        }
+        /* ต้องอยู่หลัง .portal p — specificity เท่ากัน (คลาสเดียว + type เดียว) ตัวที่อยู่หลังชนะ
+           ถ้าไปประกาศไว้ก่อน ตัวหนังสือบนแผ่นทองจะกลายเป็นสีขาวอ่านไม่ออก */
+        .portal-b p { color:var(--em-950); font-weight:500; text-shadow:none; }
 
         /* ───────────── การ์ดเมนู (ผิวเคลือบ + ขอบทอง) ───────────── */
+        /* การ์ดเมนู = แผ่นลงยาขอบทอง (เหรียญตรา) ไม่ใช่แถบสีแบนๆ
+           ขอบทองเป็น border จริงด้วยเทคนิคสองพื้นหลัง (padding-box + border-box)
+           แต่ละสีจึงเหลือหน้าที่แค่กำหนด --tile-fill กับเงา */
         .tile {
             border-radius:22px; position:relative; overflow:hidden; cursor:pointer;
             color:#fff; isolation:isolate;
+            border:1.5px solid transparent;
+            background-origin:border-box;
+            background-clip:padding-box, border-box;
+            /* ใส่ค่าสำรองไว้ด้วย ถ้า --tile-fill ไม่ถูกกำหนด ทั้ง background-image จะกลายเป็นค่าว่าง
+               แล้วการ์ดจะไม่มีทั้งสีและขอบทอง */
+            background-image:var(--tile-fill, linear-gradient(158deg,#A98CF2,#2C0A7C)), var(--gilt);
             transition:transform .2s cubic-bezier(.34,1.45,.64,1), box-shadow .2s ease;
         }
+        /* ชั้นแสง: ไฮไลต์มุมบนซ้าย + ลำแสงกวาดเฉียง ให้ผิวดูเป็นงานเคลือบมีความลึก */
         .tile::before {
             content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
             background:
-                radial-gradient(118% 72% at 16% -14%, rgba(255,255,255,0.34), rgba(255,255,255,0.09) 44%, transparent 70%),
-                linear-gradient(180deg, rgba(255,255,255,0.15), transparent 54%);
+                radial-gradient(124% 78% at 13% -18%, rgba(255,255,255,0.30), rgba(255,255,255,0.06) 48%, transparent 74%),
+                linear-gradient(180deg, transparent 58%, rgba(0,0,0,0.18) 100%);
         }
+        /* วงแหวนทองจางมุมขวาล่าง ภาษาเดียวกับการ์ดสถิติ ให้ทั้งหน้าเป็นชุดเดียวกัน
+           ดันออกนอกการ์ดเกือบหมด เหลือแค่ส่วนโค้ง ไม่ให้ไปชนวงลูกศร */
         .tile::after {
-            content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
-            border-radius:inherit;
-            box-shadow:
-                inset 0 0 0 1px rgba(255,236,179,0.32),
-                inset 0 1px 0 rgba(255,255,255,0.42),
-                inset 0 -16px 28px -18px rgba(0,0,0,0.55);
+            content:''; position:absolute; right:-78px; bottom:-92px; width:172px; height:172px;
+            z-index:1; border-radius:50%; pointer-events:none;
+            border:15px solid rgba(251,240,200,0.13);
         }
         .tile > * { position:relative; z-index:2; }
         .tile:hover  { transform:translateY(-5px); }
         .tile:active { transform:translateY(1px) scale(.992); }
 
-        .t-rose   { background:linear-gradient(158deg,#FF84B9 0%,#FF4C90 20%,var(--rose) 56%,#9C0A45 100%); box-shadow:0 6px 0 #7A0837,0 14px 22px -9px rgba(168,11,75,.55),0 24px 46px -24px rgba(168,11,75,.85); }
-        .t-violet { background:linear-gradient(158deg,#B79AFF 0%,#8A5CFF 20%,var(--violet) 56%,#3A11A0 100%); box-shadow:0 6px 0 #2C0B7A,0 14px 22px -9px rgba(64,19,175,.55),0 24px 46px -24px rgba(64,19,175,.85); }
-        .t-sky    { background:linear-gradient(158deg,#7FD6FF 0%,#2AA8F5 20%,var(--sky) 56%,#00478D 100%); box-shadow:0 6px 0 #00356B,0 14px 22px -9px rgba(0,78,154,.55),0 24px 46px -24px rgba(0,78,154,.85); }
-        .t-amber  { background:linear-gradient(158deg,#FFC976 0%,#FFA02E 20%,var(--amber) 56%,#823F05 100%); box-shadow:0 6px 0 #633003,0 14px 22px -9px rgba(143,70,6,.55),0 24px 46px -24px rgba(143,70,6,.85); }
-        .t-jade   { background:linear-gradient(158deg,#6FE8CB 0%,#22C7A2 20%,var(--jade) 56%,#004F42 100%); box-shadow:0 6px 0 #003B32,0 14px 22px -9px rgba(0,89,74,.55),0 24px 46px -24px rgba(0,89,74,.85); }
-        .t-crimson{ background:linear-gradient(158deg,#FF8E9B 0%,#FF4D62 20%,var(--crimson) 56%,#8E0C20 100%); box-shadow:0 6px 0 #6E0918,0 14px 22px -9px rgba(158,14,36,.55),0 24px 46px -24px rgba(158,14,36,.85); }
+        .t-rose   { --tile-fill:linear-gradient(158deg,#F279AC 0%,#E8458A 20%,var(--rose) 56%,#79062F 100%); box-shadow:0 6px 0 #7A0837,0 14px 22px -9px rgba(168,11,75,.55),0 24px 46px -24px rgba(168,11,75,.85); }
+        .t-violet { --tile-fill:linear-gradient(158deg,#A98CF2 0%,#7F4DEE 20%,var(--violet) 56%,#2C0A7C 100%); box-shadow:0 6px 0 #2C0B7A,0 14px 22px -9px rgba(64,19,175,.55),0 24px 46px -24px rgba(64,19,175,.85); }
+        .t-sky    { --tile-fill:linear-gradient(158deg,#6CC6F0 0%,#1E93DD 20%,var(--sky) 56%,#043A6B 100%); box-shadow:0 6px 0 #00356B,0 14px 22px -9px rgba(0,78,154,.55),0 24px 46px -24px rgba(0,78,154,.85); }
+        .t-amber  { --tile-fill:linear-gradient(158deg,#F0B45F 0%,#E58A1E 20%,var(--amber) 56%,#5E2D02 100%); box-shadow:0 6px 0 #633003,0 14px 22px -9px rgba(143,70,6,.55),0 24px 46px -24px rgba(143,70,6,.85); }
+        .t-jade   { --tile-fill:linear-gradient(158deg,#5FDCBD 0%,#1BBB95 20%,var(--jade) 56%,#00443A 100%); box-shadow:0 6px 0 #003B32,0 14px 22px -9px rgba(0,89,74,.55),0 24px 46px -24px rgba(0,89,74,.85); }
+        .t-crimson{ --tile-fill:linear-gradient(158deg,#F2838F 0%,#E84156 20%,var(--crimson) 56%,#6E0718 100%); box-shadow:0 6px 0 #6E0918,0 14px 22px -9px rgba(158,14,36,.55),0 24px 46px -24px rgba(158,14,36,.85); }
         .t-rose:hover   { box-shadow:0 10px 0 #7A0837,0 22px 32px -12px rgba(168,11,75,.6),0 34px 56px -26px rgba(168,11,75,.9); }
         .t-violet:hover { box-shadow:0 10px 0 #2C0B7A,0 22px 32px -12px rgba(64,19,175,.6),0 34px 56px -26px rgba(64,19,175,.9); }
         .t-sky:hover    { box-shadow:0 10px 0 #00356B,0 22px 32px -12px rgba(0,78,154,.6),0 34px 56px -26px rgba(0,78,154,.9); }
@@ -445,29 +484,43 @@
         .t-jade:hover   { box-shadow:0 10px 0 #003B32,0 22px 32px -12px rgba(0,89,74,.6),0 34px 56px -26px rgba(0,89,74,.9); }
         .t-crimson:hover{ box-shadow:0 10px 0 #6E0918,0 22px 32px -12px rgba(158,14,36,.6),0 34px 56px -26px rgba(158,14,36,.9); }
 
+        /* แผ่นไอคอนเป็นกระจกสีเขียวเข้มขอบทอง ไอคอนสีทอง — ชุดเดียวกับการ์ดสถิติและปุ่ม QR
+           ของเดิมเป็นแผ่นขาวจาง ทำให้แต่ละสีดูคนละชุดกัน */
         .tile-icon {
-            border-radius:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-            background:linear-gradient(165deg, rgba(255,255,255,0.32), rgba(255,255,255,0.11));
-            box-shadow:inset 0 0 0 1px rgba(255,236,179,0.42), inset 0 1px 0 rgba(255,255,255,0.5), 0 4px 11px rgba(0,0,0,0.24);
-            text-shadow:0 1px 3px rgba(0,0,0,0.28);
+            border-radius:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+            color:var(--gold-100);
+            background:linear-gradient(165deg, rgba(4,32,26,0.52), rgba(4,32,26,0.26));
+            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.52), inset 0 1px 0 rgba(255,255,255,0.26),
+                       0 5px 13px rgba(0,0,0,0.32);
+            text-shadow:0 1px 3px rgba(0,0,0,0.35);
         }
         .tile-cover {
-            border-radius:16px; flex-shrink:0; object-fit:cover;
-            box-shadow:inset 0 0 0 1px rgba(255,236,179,0.45), 0 4px 11px rgba(0,0,0,0.3);
+            border-radius:15px; flex-shrink:0; object-fit:cover;
+            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.55), 0 5px 13px rgba(0,0,0,0.34);
         }
-        .menu-row { display:flex; align-items:center; gap:13px; padding:15px; }
+        .menu-row { display:flex; align-items:center; gap:14px; padding:16px 15px; }
         .menu-title {
-            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.04rem; line-height:1.25;
+            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.1rem; line-height:1.25;
             overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-            text-shadow:0 1px 2px rgba(0,0,0,0.22);
+            text-shadow:0 1px 3px rgba(0,0,0,0.3);
         }
-        .menu-desc { font-size:0.79rem; color:rgba(255,255,255,0.88); margin-top:2px; line-height:1.45; text-shadow:0 1px 2px rgba(0,0,0,0.2); }
+        .menu-desc {
+            font-size:0.79rem; color:rgba(255,255,255,0.92); margin-top:2px; line-height:1.45;
+            text-shadow:0 1px 3px rgba(0,0,0,0.3);
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+        }
         .lock-pill {
             display:flex; align-items:center; justify-content:center; flex-shrink:0;
-            width:27px; height:27px; border-radius:9px; font-size:0.66rem; color:#FFECB3;
-            background:rgba(0,0,0,0.26); box-shadow:inset 0 0 0 1px rgba(255,236,179,0.4);
+            width:30px; height:30px; border-radius:50%; font-size:0.68rem; color:var(--gold-100);
+            background:rgba(4,32,26,0.3); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.5);
         }
-        .menu-chev { font-size:0.78rem; opacity:0.72; flex-shrink:0; text-shadow:0 1px 2px rgba(0,0,0,0.2); }
+        /* ลูกศรอยู่ในวงกลมขอบทอง ให้เหมือนปุ่มบริการหลัก */
+        .menu-chev {
+            width:32px; height:32px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.76rem; color:var(--gold-100);
+            background:rgba(4,32,26,0.22); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.45);
+        }
 
         /* ───────────── ปุ่ม QR ───────────── */
         .qr-btn {
@@ -768,11 +821,11 @@
             .ornament { margin:13px auto 10px; width:min(200px,66%); }
             .hero-sub { font-size:0.88rem; line-height:1.6; }
             .medallion { width:66px; height:66px; margin-bottom:11px; }
-            .portal { min-height:92px; padding:15px 14px; gap:12px; }
-            .portal-ic { width:48px; height:48px; border-radius:15px; font-size:1.2rem; }
-            .portal h3 { font-size:1.12rem; }
-            .portal p  { font-size:0.74rem; }
-            .portal-wm { font-size:4rem; right:-10px; bottom:-14px; }
+            .portal { min-height:96px; padding:15px 14px; gap:13px; }
+            .portal-ic { width:50px; height:50px; border-radius:15px; font-size:1.24rem; }
+            .portal-body { padding-left:13px; }
+            .portal h3 { font-size:1.14rem; }
+            .portal p  { font-size:0.75rem; }
             .stat-card { padding:12px 12px; gap:10px; border-radius:15px; }
             .stat-ic { width:40px; height:40px; border-radius:12px; font-size:1.02rem; }
         }
@@ -892,7 +945,6 @@
         <div class="sec-label"><span>บริการหลัก</span><i></i></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div onclick="navigate('students')" class="portal portal-a">
-                <i class="fa-solid fa-book-open portal-wm"></i>
                 <div class="portal-ic"><i class="fa-solid fa-user-graduate"></i></div>
                 <div class="portal-body">
                     <h3>นักเรียน</h3>
@@ -901,7 +953,6 @@
                 <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
             <div onclick="navigate('login-admin')" class="portal portal-b">
-                <i class="fa-solid fa-pen-ruler portal-wm"></i>
                 <div class="portal-ic"><i class="fa-solid fa-book"></i></div>
                 <div class="portal-body">
                     <h3>วิชาการ</h3>
@@ -1697,11 +1748,12 @@ function loadWebCards() {
             el.className = 'tile ' + cls + ' menu-row';
             el.innerHTML =
                 (card.img
-                    ? '<img class="tile-cover" style="width:46px;height:46px;" src="' + esc(card.img) + '" alt="">'
-                    : '<div class="tile-icon" style="width:46px;height:46px;"><i class="fa-solid ' + esc(icon) + ' text-lg"></i></div>') +
+                    ? '<img class="tile-cover" style="width:50px;height:50px;" src="' + esc(card.img) + '" alt="">'
+                    : '<div class="tile-icon" style="width:50px;height:50px;"><i class="fa-solid ' + esc(icon) + ' text-lg"></i></div>') +
                 '<div class="flex-1 min-w-0">' +
                     '<h3 class="menu-title">' + esc(card.title) + '</h3>' +
-                    (card.desc ? '<p class="menu-desc">' + esc(card.desc) + '</p>' : '') +
+                    // ตัดบรรทัดเดียวด้วย ellipsis ให้ทุกการ์ดสูงเท่ากัน แต่ใส่ title ไว้ให้เห็นข้อความเต็ม
+                    (card.desc ? '<p class="menu-desc" title="' + esc(card.desc) + '">' + esc(card.desc) + '</p>' : '') +
                 '</div>' +
                 (card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : '') +
                 '<i class="fa-solid fa-chevron-right menu-chev"></i>';
