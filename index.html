@@ -130,6 +130,7 @@
             display:flex; flex-direction:column; justify-content:flex-end;
             padding:30px 24px 32px;
         }
+
         /* กรอบทองสองเส้น เลียนขอบเอกสาร/เกียรติบัตรไทย ให้โซนนี้เป็น "แผ่นพิธีการ" จริงๆ */
         .hero-frame {
             position:absolute; inset:13px; z-index:2; pointer-events:none; border-radius:17px;
@@ -183,6 +184,31 @@
         .hero-sub {
             font-size:0.95rem; color:rgba(234,242,238,0.9); line-height:1.6;
             max-width:40ch; margin:0 auto; text-shadow:0 1px 8px rgba(4,32,26,0.8);
+        }
+
+        /* ── จอกว้าง: ย้ายข้อความไปชิดซ้าย เว้นฝั่งขวาไว้ให้เห็นตัวแบบในรูปเต็มๆ ──
+           ม่านจึงเปลี่ยนเป็นไล่จากซ้ายไปขวา แทนไล่จากบนลงล่าง
+           (ต้องวางหลังกฎพื้นฐานของลูกๆ ทั้งหมด ไม่งั้น margin:auto ด้านบนจะทับ) */
+        @media (min-width:901px) {
+            .hero-veil {
+                background:
+                    linear-gradient(96deg,
+                        rgba(4,32,26,0.80) 0%, rgba(4,32,26,0.66) 30%, rgba(4,32,26,0.34) 50%,
+                        rgba(4,32,26,0.08) 70%, rgba(4,32,26,0) 84%),
+                    linear-gradient(180deg,
+                        rgba(4,32,26,0.34) 0%, rgba(4,32,26,0) 26%,
+                        rgba(4,32,26,0) 72%, rgba(4,32,26,0.40) 100%);
+            }
+            .hero-body {
+                text-align:left; align-items:flex-start;
+                width:100%; max-width:min(58%,640px);
+                padding:34px 20px 36px 42px;
+            }
+            .hero-term  { align-self:flex-start; margin:0 0 12px; }
+            .hero-title { font-size:clamp(2.2rem,3.5vw,3.25rem); }
+            .medallion  { margin:0 0 16px; }
+            .ornament   { margin:14px 0 12px; width:min(230px,86%); }
+            .hero-sub   { margin:0; }
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
