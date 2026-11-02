@@ -109,11 +109,15 @@
             position:relative; overflow:hidden; isolation:isolate;
             border-radius:26px; margin-bottom:22px;
             background:var(--em-950);
-            min-height:var(--hero-h, clamp(330px,44vw,500px)); display:flex;
+            /* ค่าของจอคอมกับมือถือแยกกันคนละตัวแปร แล้วให้ media query เลือกว่าจะใช้ชุดไหน */
+            --hero-h:   var(--hero-h-d,   clamp(330px,44vw,500px));
+            --veil-op:  var(--veil-op-d,  1);
+            --hero-pos: var(--hero-pos-d, 50% 32%);
+            min-height:var(--hero-h); display:flex;
             box-shadow:0 26px 60px -28px rgba(4,32,26,0.9), 0 0 0 1px rgba(217,182,75,0.3);
         }
         .hero-img-wrap { position:absolute; inset:0; z-index:0; }
-        .hero-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:var(--hero-pos, 50% 32%); display:block; }
+        .hero-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:var(--hero-pos); display:block; }
         .hero-img-mobile { display:none; }
         /* ซ่อนองค์ประกอบตามสวิตช์ในหน้า admin — ใช้ชื่อคลาสเฉพาะ ไม่ไปชนกับ .hidden ของ Tailwind */
         .hero.no-crest .medallion  { display:none; }
@@ -123,7 +127,7 @@
            แล้วเข้มเฉพาะแถบล่างที่ตัวหนังสือวางอยู่ ให้ยังอ่านออกทุกรูป */
         .hero-veil {
             position:absolute; inset:0; z-index:1; pointer-events:none;
-            opacity:var(--veil-op, 1);
+            opacity:var(--veil-op);
             background:
                 radial-gradient(ellipse 70% 40% at 50% 4%, rgba(217,182,75,0.14), transparent 64%),
                 linear-gradient(180deg,
@@ -194,9 +198,33 @@
         /* ── จอกว้าง: ย้ายข้อความไปชิดซ้าย เว้นฝั่งขวาไว้ให้เห็นตัวแบบในรูปเต็มๆ ──
            ม่านจึงเปลี่ยนเป็นไล่จากซ้ายไปขวา แทนไล่จากบนลงล่าง
            (ต้องวางหลังกฎพื้นฐานของลูกๆ ทั้งหมด ไม่งั้น margin:auto ด้านบนจะทับ) */
-        @media (min-width:901px) {
+        /* ── มือถือ/แท็บเล็ต: ใช้ตัวแปรชุด -m และคลาส m-* / vm-* ──
+           ใช้ 1024px ให้ตรงกับจุดที่สลับรูป desktop→mobile พอดี */
+        @media (max-width:1024px) {
+            .hero {
+                --hero-h:   var(--hero-h-m,   clamp(300px,74vw,430px));
+                --veil-op:  var(--veil-op-m,  1);
+                --hero-pos: var(--hero-pos-m, 50% 32%);
+            }
+            .hero.vm-top    .hero-body { justify-content:flex-start; }
+            .hero.vm-center .hero-body { justify-content:center; }
+            .hero.vm-bottom .hero-body { justify-content:flex-end; }
+            .hero.m-left   .hero-body { text-align:left;  align-items:flex-start; }
+            .hero.m-right  .hero-body { text-align:right; align-items:flex-end; }
+            .hero.m-center .hero-body { text-align:center; align-items:center; }
+            /* จอแคบไม่มีที่พอให้เหรียญ/ลายเส้นใช้ margin:auto จัดกลาง ต้องสั่งตามด้านที่เลือก */
+            .hero.m-left   .medallion, .hero.m-left  .ornament { margin-left:0; margin-right:auto; }
+            .hero.m-right  .medallion, .hero.m-right .ornament { margin-left:auto; margin-right:0; }
+            .hero.m-left   .hero-sub { margin-left:0; margin-right:auto; }
+            .hero.m-right  .hero-sub { margin-left:auto; margin-right:0; }
+        }
+
+        @media (min-width:1025px) {
+            .hero.vd-top    .hero-body { justify-content:flex-start; }
+            .hero.vd-center .hero-body { justify-content:center; }
+            .hero.vd-bottom .hero-body { justify-content:flex-end; }
             /* ม่านเข้มเฉพาะฝั่งที่ตัวหนังสืออยู่ อีกฝั่งปล่อยใสให้เห็นรูปเต็มๆ */
-            .hero.ta-left .hero-veil {
+            .hero.d-left .hero-veil {
                 background:
                     linear-gradient(96deg,
                         rgba(4,32,26,0.80) 0%, rgba(4,32,26,0.66) 30%, rgba(4,32,26,0.34) 50%,
@@ -205,7 +233,7 @@
                         rgba(4,32,26,0.34) 0%, rgba(4,32,26,0) 26%,
                         rgba(4,32,26,0) 72%, rgba(4,32,26,0.40) 100%);
             }
-            .hero.ta-right .hero-veil {
+            .hero.d-right .hero-veil {
                 background:
                     linear-gradient(264deg,
                         rgba(4,32,26,0.80) 0%, rgba(4,32,26,0.66) 30%, rgba(4,32,26,0.34) 50%,
@@ -214,25 +242,24 @@
                         rgba(4,32,26,0.34) 0%, rgba(4,32,26,0) 26%,
                         rgba(4,32,26,0) 72%, rgba(4,32,26,0.40) 100%);
             }
-            .hero.ta-left .hero-body,
-            .hero.ta-right .hero-body { width:100%; max-width:min(58%,640px); }
-            .hero.ta-left .hero-body {
+            .hero.d-left .hero-body,
+            .hero.d-right .hero-body { width:100%; max-width:min(58%,640px); }
+            .hero.d-left .hero-body {
                 text-align:left; align-items:flex-start; padding:34px 20px 36px 42px;
             }
-            .hero.ta-right .hero-body {
+            .hero.d-right .hero-body {
                 text-align:right; align-items:flex-end; margin-left:auto;
                 padding:34px 42px 36px 20px;
             }
-            .hero.ta-left  .hero-term { align-self:flex-start; margin:0 0 12px; }
-            .hero.ta-right .hero-term { align-self:flex-end;   margin:0 0 12px; }
-            .hero.ta-left  .medallion { margin:0 0 16px; }
-            .hero.ta-right .medallion { margin:0 0 16px auto; }
-            .hero.ta-left  .ornament  { margin:14px 0 12px;      width:min(230px,86%); }
-            .hero.ta-right .ornament  { margin:14px 0 12px auto; width:min(230px,86%); }
-            .hero.ta-left  .hero-sub,
-            .hero.ta-right .hero-sub  { margin:0; }
-            .hero.ta-left  .hero-title,
-            .hero.ta-right .hero-title { font-size:clamp(2.2rem,3.5vw,3.25rem); }
+            .hero.d-left  .hero-term { align-self:flex-start; margin:0 0 12px; }
+            .hero.d-right .hero-term { align-self:flex-end;   margin:0 0 12px; }
+            .hero.d-left  .medallion { margin:0 0 16px; }
+            .hero.d-right .medallion { margin:0 0 16px auto; }
+            .hero.d-left  .ornament  { margin:14px 0 12px;      width:min(230px,86%); }
+            .hero.d-right .ornament  { margin:14px 0 12px auto; width:min(230px,86%); }
+            .hero.d-left  .hero-sub,
+            .hero.d-right .hero-sub  { margin:0; }
+            .hero-title { font-size:clamp(2.2rem,3.5vw,3.25rem); }
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
@@ -526,6 +553,24 @@
         }
         .ctl-range:disabled { opacity:0.42; cursor:not-allowed; }
         .ctl-range:disabled::-webkit-slider-thumb { cursor:not-allowed; }
+        .mode-pick {
+            display:flex; gap:6px; padding:5px; border-radius:15px;
+            background:#F3EEE1; border:1px solid var(--line); margin-bottom:8px;
+        }
+        .mode-pick button {
+            flex:1; padding:10px 8px; border-radius:11px; cursor:pointer; border:none;
+            font-family:'Kanit',sans-serif; font-size:0.82rem; font-weight:600;
+            background:transparent; color:var(--muted); transition:all .16s ease;
+        }
+        .mode-pick button.active {
+            background:#fff; color:var(--em-800);
+            box-shadow:0 2px 8px -2px rgba(4,32,26,0.25), inset 0 0 0 1px rgba(217,182,75,0.4);
+        }
+        .mode-note {
+            font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:500;
+            color:var(--em-800); background:var(--em-tint);
+            border-radius:10px; padding:7px 12px; margin-bottom:16px;
+        }
         .align-pick { display:flex; gap:8px; }
         .align-pick button {
             flex:1; padding:10px 6px; border-radius:13px; cursor:pointer;
@@ -653,7 +698,6 @@
             .ornament { margin:13px auto 10px; width:min(200px,66%); }
             .hero-sub { font-size:0.88rem; line-height:1.6; }
             .medallion { width:66px; height:66px; margin-bottom:11px; }
-            .hero { min-height:min(74vw,400px); }
             .portal { min-height:152px; padding:22px 12px 20px; }
             .portal-ic { width:50px; height:50px; border-radius:16px; font-size:1.25rem; }
             .portal h3 { font-size:1.05rem; }
@@ -695,7 +739,7 @@
     <!-- ═══════════ DASHBOARD ═══════════ -->
     <div id="view-dashboard" class="page-view active">
 
-        <header class="hero ta-left">
+        <header class="hero d-left vd-center m-center vm-center">
             <div class="hero-img-wrap">
                 <img id="hero-desktop" class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="">
                 <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
@@ -903,15 +947,31 @@
                         <div class="tag" style="background:#EAF2EE;color:#0B5240;margin-bottom:0;"><i class="fa-solid fa-sliders"></i> ปรับแต่งรูป Hero</div>
                         <span id="hero-dirty" class="ctl-dirty"><i class="fa-solid fa-circle-exclamation mr-1"></i>ยังไม่ได้บันทึก</span>
                     </div>
-                    <p class="ctl-note mb-4">เลื่อนปรับแล้วเห็นผลที่หน้าแรกทันที กด <b>บันทึก</b> เพื่อให้ทุกคนเห็นแบบเดียวกัน</p>
+                    <p class="ctl-note mb-3">เลื่อนปรับแล้วเห็นผลที่หน้าแรกทันที กด <b>บันทึก</b> เพื่อให้ทุกคนเห็นแบบเดียวกัน</p>
+
+                    <!-- สลับโหมด: ค่าของจอคอมกับมือถือแยกกันคนละชุด -->
+                    <div class="mode-pick" id="hero-mode-pick">
+                        <button type="button" data-mode="desktop"><i class="fa-solid fa-desktop mr-1"></i>จอคอมพิวเตอร์</button>
+                        <button type="button" data-mode="mobile"><i class="fa-solid fa-mobile-screen mr-1"></i>มือถือ</button>
+                    </div>
+                    <p class="mode-note" id="hero-mode-note">กำลังตั้งค่าของจอคอมพิวเตอร์</p>
 
                     <div class="flex flex-col gap-4">
                         <div>
-                            <label class="field-label">ตำแหน่งข้อความ <span style="font-weight:400;">(มีผลเฉพาะจอคอมพิวเตอร์)</span></label>
+                            <label class="field-label">ตำแหน่งข้อความ (แนวนอน)</label>
                             <div class="align-pick" id="hero-align-pick">
                                 <button type="button" data-align="left"><i class="fa-solid fa-align-left"></i>ชิดซ้าย</button>
                                 <button type="button" data-align="center"><i class="fa-solid fa-align-center"></i>กึ่งกลาง</button>
                                 <button type="button" data-align="right"><i class="fa-solid fa-align-right"></i>ชิดขวา</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="field-label">ตำแหน่งข้อความ (แนวตั้ง)</label>
+                            <div class="align-pick" id="hero-vpos-pick">
+                                <button type="button" data-vpos="top"><i class="fa-solid fa-arrow-up"></i>ชิดบน</button>
+                                <button type="button" data-vpos="center"><i class="fa-solid fa-arrows-up-down"></i>กึ่งกลาง</button>
+                                <button type="button" data-vpos="bottom"><i class="fa-solid fa-arrow-down"></i>ชิดล่าง</button>
                             </div>
                         </div>
 
@@ -945,12 +1005,14 @@
                                 <label class="field-label" for="hero-height">ความสูงแบนเนอร์</label>
                                 <span class="ctl-val" id="hero-height-val">อัตโนมัติ</span>
                             </div>
-                            <input type="range" class="ctl-range" id="hero-height" min="280" max="680" step="10" value="500" disabled>
+                            <input type="range" class="ctl-range" id="hero-height" min="240" max="680" step="10" value="500" disabled>
                             <label class="flex items-center gap-2 mt-2 text-xs" style="color:var(--muted);cursor:pointer;">
                                 <input type="checkbox" id="hero-height-auto" checked style="width:16px;height:16px;accent-color:var(--em-700);cursor:pointer;">
                                 ใช้ความสูงอัตโนมัติ (ปรับตามขนาดจอ)
                             </label>
                         </div>
+
+                        <p class="ctl-note">สามรายการล่างนี้ใช้ร่วมกันทั้งสองโหมด</p>
 
                         <div class="toggle-row">
                             <div class="flex items-center gap-2">
@@ -1609,29 +1671,58 @@ function applyBranding(d, freshen) {
 }
 
 // ════════════════════════════════════════
-// ปรับแต่งรูป Hero — ค่าทั้งหมดเก็บเป็น JSON ก้อนเดียวในคีย์ hero_layout
+// ปรับแต่งรูป Hero — เก็บเป็น JSON ก้อนเดียวในคีย์ hero_layout
+// แยกค่าจอคอม (desktop) กับมือถือ (mobile) ออกจากกัน ส่วนสวิตช์เปิด/ปิดองค์ประกอบใช้ร่วมกัน
 // ════════════════════════════════════════
-const HERO_DEFAULT = { align:'left', veil:100, posX:50, posY:32, height:0, crest:true, orn:true, frame:true };
-let heroLayout = Object.assign({}, HERO_DEFAULT);
+const HERO_MODE_DEFAULT = {
+    desktop: { align:'left',   vpos:'center', veil:100, posX:50, posY:32, height:0 },
+    mobile:  { align:'center', vpos:'center', veil:100, posX:50, posY:32, height:0 }
+};
+const HERO_DEFAULT = {
+    desktop: Object.assign({}, HERO_MODE_DEFAULT.desktop),
+    mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
+    crest:true, orn:true, frame:true
+};
+function heroDefaults() {
+    return {
+        desktop: Object.assign({}, HERO_MODE_DEFAULT.desktop),
+        mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
+        crest:true, orn:true, frame:true
+    };
+}
+let heroLayout = heroDefaults();
 let heroDirty = false;
+let heroMode = 'desktop';   // โหมดที่กำลังแก้อยู่ในแผงควบคุม (ไม่ได้บันทึก)
 
 // กันค่าเพี้ยน/ค่าที่คนแก้มือใน PropertiesService ไม่ให้ทำหน้าเว็บพัง
 function parseHeroLayout(raw) {
-    const L = Object.assign({}, HERO_DEFAULT);
+    const L = heroDefaults();
     if (!raw) return L;
     let o;
     try { o = (typeof raw === 'string') ? JSON.parse(raw) : raw; } catch (e) { return L; }
     if (!o || typeof o !== 'object') return L;
+
     const num = (v, lo, hi, dflt) => {
         const n = Number(v);
         return (isFinite(n) && n >= lo && n <= hi) ? n : dflt;
     };
-    if (['left','center','right'].indexOf(o.align) !== -1) L.align = o.align;
-    L.veil   = num(o.veil,   0,   100, HERO_DEFAULT.veil);
-    L.posX   = num(o.posX,   0,   100, HERO_DEFAULT.posX);
-    L.posY   = num(o.posY,   0,   100, HERO_DEFAULT.posY);
-    // height 0 = อัตโนมัติ, นอกนั้นต้องอยู่ในช่วงที่สไลเดอร์ให้
-    L.height = (Number(o.height) === 0) ? 0 : num(o.height, 280, 680, HERO_DEFAULT.height);
+    const pick = (src, dst, dflt) => {
+        if (!src || typeof src !== 'object') return;
+        if (['left','center','right'].indexOf(src.align) !== -1)      dst.align = src.align;
+        if (['top','center','bottom'].indexOf(src.vpos)  !== -1)      dst.vpos  = src.vpos;
+        dst.veil = num(src.veil, 0, 100, dflt.veil);
+        dst.posX = num(src.posX, 0, 100, dflt.posX);
+        dst.posY = num(src.posY, 0, 100, dflt.posY);
+        // height 0 = อัตโนมัติ, นอกนั้นต้องอยู่ในช่วงที่สไลเดอร์ให้
+        dst.height = (Number(src.height) === 0) ? 0 : num(src.height, 240, 680, dflt.height);
+    };
+
+    // รูปแบบเก่า (รุ่นก่อนแยกโหมด) เป็น object แบนๆ — ย้ายค่าเดิมไปเป็นค่าของจอคอม
+    if (!o.desktop && !o.mobile) pick(o, L.desktop, HERO_MODE_DEFAULT.desktop);
+    else {
+        pick(o.desktop, L.desktop, HERO_MODE_DEFAULT.desktop);
+        pick(o.mobile,  L.mobile,  HERO_MODE_DEFAULT.mobile);
+    }
     if (typeof o.crest === 'boolean') L.crest = o.crest;
     if (typeof o.orn   === 'boolean') L.orn   = o.orn;
     if (typeof o.frame === 'boolean') L.frame = o.frame;
@@ -1641,61 +1732,86 @@ function parseHeroLayout(raw) {
 function applyHeroLayout(L) {
     const h = document.querySelector('.hero');
     if (!h) return;
-    h.classList.remove('ta-left','ta-center','ta-right');
-    h.classList.add('ta-' + L.align);
+    h.classList.remove('d-left','d-center','d-right','vd-top','vd-center','vd-bottom',
+                       'm-left','m-center','m-right','vm-top','vm-center','vm-bottom');
+    h.classList.add('d-' + L.desktop.align, 'vd-' + L.desktop.vpos,
+                    'm-' + L.mobile.align,  'vm-' + L.mobile.vpos);
     h.classList.toggle('no-crest', !L.crest);
     h.classList.toggle('no-orn',   !L.orn);
     h.classList.toggle('no-frame', !L.frame);
-    h.style.setProperty('--veil-op', (L.veil / 100).toFixed(2));
-    h.style.setProperty('--hero-pos', L.posX + '% ' + L.posY + '%');
-    if (L.height > 0) h.style.setProperty('--hero-h', L.height + 'px');
-    else              h.style.removeProperty('--hero-h');
+
+    const set = (suffix, m, autoH) => {
+        h.style.setProperty('--veil-op-'  + suffix, (m.veil / 100).toFixed(2));
+        h.style.setProperty('--hero-pos-' + suffix, m.posX + '% ' + m.posY + '%');
+        h.style.setProperty('--hero-h-'   + suffix, m.height > 0 ? m.height + 'px' : autoH);
+    };
+    // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
+    set('d', L.desktop, 'clamp(330px,44vw,500px)');
+    set('m', L.mobile,  'clamp(300px,74vw,430px)');
 }
 
-// เอาค่าจากแผงควบคุมลง heroLayout แล้วแสดงผลทันที
+// ── แผงควบคุมในหน้า admin ──
+function heroCur() { return heroLayout[heroMode]; }
+
+// เอาค่าจากแผงควบคุมลง heroLayout ของโหมดที่กำลังแก้ แล้วแสดงผลทันที
 function readHeroControls() {
     const g = (id) => document.getElementById(id);
+    if (!g('hero-veil')) return;
+    const m = heroCur();
     const auto = g('hero-height-auto').checked;
-    heroLayout = {
-        align:  heroLayout.align,
-        veil:   Number(g('hero-veil').value),
-        posX:   Number(g('hero-posx').value),
-        posY:   Number(g('hero-posy').value),
-        height: auto ? 0 : Number(g('hero-height').value),
-        crest:  g('hero-crest-on').checked,
-        orn:    g('hero-orn-on').checked,
-        frame:  g('hero-frame-on').checked
-    };
+    m.veil   = Number(g('hero-veil').value);
+    m.posX   = Number(g('hero-posx').value);
+    m.posY   = Number(g('hero-posy').value);
+    m.height = auto ? 0 : Number(g('hero-height').value);
+    heroLayout.crest = g('hero-crest-on').checked;
+    heroLayout.orn   = g('hero-orn-on').checked;
+    heroLayout.frame = g('hero-frame-on').checked;
     g('hero-height').disabled = auto;
-    g('hero-veil-val').textContent   = heroLayout.veil + '%';
-    g('hero-posx-val').textContent   = heroLayout.posX + '%';
-    g('hero-posy-val').textContent   = heroLayout.posY + '%';
-    g('hero-height-val').textContent = auto ? 'อัตโนมัติ' : heroLayout.height + 'px';
+    updateHeroReadouts();
     applyHeroLayout(heroLayout);
     setHeroDirty(true);
 }
 
-// เอาค่าใน heroLayout ขึ้นไปแสดงบนแผงควบคุม (ตอนเปิดหน้า admin / กดคืนค่า)
+function updateHeroReadouts() {
+    const g = (id) => document.getElementById(id);
+    const m = heroCur();
+    g('hero-veil-val').textContent   = m.veil + '%';
+    g('hero-posx-val').textContent   = m.posX + '%';
+    g('hero-posy-val').textContent   = m.posY + '%';
+    g('hero-height-val').textContent = m.height === 0 ? 'อัตโนมัติ' : m.height + 'px';
+}
+
+// เอาค่าใน heroLayout ขึ้นไปแสดงบนแผงควบคุม (ตอนเปิดหน้า admin / สลับโหมด / กดคืนค่า)
 function fillHeroControls() {
     const g = (id) => document.getElementById(id);
     if (!g('hero-veil')) return;
-    g('hero-veil').value  = heroLayout.veil;
-    g('hero-posx').value  = heroLayout.posX;
-    g('hero-posy').value  = heroLayout.posY;
-    const auto = heroLayout.height === 0;
+    const m = heroCur();
+    g('hero-veil').value = m.veil;
+    g('hero-posx').value = m.posX;
+    g('hero-posy').value = m.posY;
+    const auto = m.height === 0;
     g('hero-height-auto').checked = auto;
-    g('hero-height').value    = auto ? 500 : heroLayout.height;
+    g('hero-height').value    = auto ? (heroMode === 'mobile' ? 340 : 500) : m.height;
     g('hero-height').disabled = auto;
     g('hero-crest-on').checked = heroLayout.crest;
     g('hero-orn-on').checked   = heroLayout.orn;
     g('hero-frame-on').checked = heroLayout.frame;
-    g('hero-veil-val').textContent   = heroLayout.veil + '%';
-    g('hero-posx-val').textContent   = heroLayout.posX + '%';
-    g('hero-posy-val').textContent   = heroLayout.posY + '%';
-    g('hero-height-val').textContent = auto ? 'อัตโนมัติ' : heroLayout.height + 'px';
+    updateHeroReadouts();
     document.querySelectorAll('#hero-align-pick button').forEach(b => {
-        b.classList.toggle('active', b.dataset.align === heroLayout.align);
+        b.classList.toggle('active', b.dataset.align === m.align);
     });
+    document.querySelectorAll('#hero-vpos-pick button').forEach(b => {
+        b.classList.toggle('active', b.dataset.vpos === m.vpos);
+    });
+    document.querySelectorAll('#hero-mode-pick button').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === heroMode);
+    });
+    const note = document.getElementById('hero-mode-note');
+    if (note) {
+        note.textContent = heroMode === 'desktop'
+            ? 'กำลังตั้งค่าของจอคอมพิวเตอร์ (กว้างกว่า 1024px) — ใช้รูป Hero จอคอม'
+            : 'กำลังตั้งค่าของมือถือ/แท็บเล็ต (1024px ลงมา) — ใช้รูป Hero มือถือ';
+    }
     applyHeroLayout(heroLayout);
 }
 
@@ -1715,7 +1831,9 @@ function saveHeroLayoutFn() {
         const r = JSON.parse(res);
         if (r.status === 'success') {
             setHeroDirty(false);
-            Swal.fire({ icon:'success', title:'บันทึกแล้ว', text:'หน้าแรกจะแสดงแบบนี้กับทุกคน', confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'success', title:'บันทึกแล้ว',
+                        text:'บันทึกทั้งค่าจอคอมและมือถือ หน้าแรกจะแสดงแบบนี้กับทุกคน',
+                        confirmButtonColor:'#0F3D2E' });
         } else {
             Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
         }
@@ -1724,20 +1842,20 @@ function saveHeroLayoutFn() {
 
 function resetHeroLayoutFn() {
     Swal.fire({
-        icon:'question', title:'คืนค่าเริ่มต้น?', text:'ค่าที่ปรับไว้ทั้งหมดจะกลับเป็นแบบเดิม',
+        icon:'question', title:'คืนค่าเริ่มต้น?',
+        text:'เฉพาะโหมด' + (heroMode === 'desktop' ? 'จอคอมพิวเตอร์' : 'มือถือ') + ' อีกโหมดไม่เปลี่ยน',
         showCancelButton:true, confirmButtonText:'คืนค่า', cancelButtonText:'ยกเลิก',
         confirmButtonColor:'#0F3D2E', cancelButtonColor:'#9AA8A1'
     }).then(result => {
         if (!result.isConfirmed) return;
-        heroLayout = Object.assign({}, HERO_DEFAULT);
+        heroLayout[heroMode] = Object.assign({}, HERO_MODE_DEFAULT[heroMode]);
         fillHeroControls();
         setHeroDirty(true);
     });
 }
 
 function initHeroControls() {
-    const ids = ['hero-veil','hero-posx','hero-posy','hero-height'];
-    ids.forEach(id => {
+    ['hero-veil','hero-posx','hero-posy','hero-height'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
@@ -1745,10 +1863,23 @@ function initHeroControls() {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', readHeroControls);
     });
+    // สลับโหมดไม่นับเป็นการแก้ค่า แค่เปลี่ยนว่ากำลังดูชุดไหน
+    document.querySelectorAll('#hero-mode-pick button').forEach(b => {
+        b.addEventListener('click', () => { heroMode = b.dataset.mode; fillHeroControls(); });
+    });
     document.querySelectorAll('#hero-align-pick button').forEach(b => {
         b.addEventListener('click', () => {
-            heroLayout.align = b.dataset.align;
+            heroCur().align = b.dataset.align;
             document.querySelectorAll('#hero-align-pick button')
+                    .forEach(x => x.classList.toggle('active', x === b));
+            applyHeroLayout(heroLayout);
+            setHeroDirty(true);
+        });
+    });
+    document.querySelectorAll('#hero-vpos-pick button').forEach(b => {
+        b.addEventListener('click', () => {
+            heroCur().vpos = b.dataset.vpos;
+            document.querySelectorAll('#hero-vpos-pick button')
                     .forEach(x => x.classList.toggle('active', x === b));
             applyHeroLayout(heroLayout);
             setHeroDirty(true);
