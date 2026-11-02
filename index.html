@@ -24,8 +24,8 @@
             --em-tint:#EAF2EE;
             --gold-100:#FBF0C8; --gold-200:#F3E3A8; --gold-400:#D9B64B;
             --gold-600:#A97D1C; --gold-700:#8A6512;
-            --paper:#FAF7EF; --paper-2:#F3EEE1;
-            --ink:#14201B; --muted:#6A7A72; --line:#E6DFCE;
+            --paper:#F5F8F6; --paper-2:#EBF0ED;
+            --ink:#14201B; --muted:#6A7A72; --line:#DFE7E2;
 
             --rose:#D91566; --violet:#6B35F5; --sky:#0072CE;
             --amber:#C2610A; --jade:#00806A; --crimson:#D91E3C;
@@ -43,11 +43,14 @@
             min-height:100vh;
             overflow-x:hidden;
             background:var(--paper);
-            /* เนื้อกระดาษละเอียดจางๆ ไม่ให้พื้นแบนเป็นสีทึบ */
+            /* แสงฟุ้งนุ่มๆ สามจุด แทนเนื้อกระดาษ noise สีครีมแบบเดิมที่ทำให้ดูเป็นเอกสารเก่า
+               ตรึงไว้กับจอ (fixed) เพื่อไม่ให้เห็นรอยต่อตอนเลื่อนหน้า */
             background-image:
-                radial-gradient(ellipse 90% 38% at 50% 0%, rgba(11,82,64,0.055), transparent 70%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
-            background-attachment:fixed,scroll;
+                radial-gradient(1100px 540px at 10% -10%, rgba(11,82,64,0.11), transparent 62%),
+                radial-gradient(900px 500px at 94% 4%,  rgba(217,182,75,0.15), transparent 60%),
+                radial-gradient(1000px 620px at 50% 110%, rgba(11,82,64,0.075), transparent 64%);
+            background-repeat:no-repeat;
+            background-attachment:fixed;
         }
 
         ::selection { background:var(--gold-200); color:var(--em-950); }
@@ -110,28 +113,6 @@
         }
         @media (min-width:768px) { .nav-clock { display:inline-flex; } }
         .nav-clock i { font-size:0.76rem; color:var(--gold-400); }
-
-        /* ───────────── ลายทองประดับมุมหน้าเว็บ ─────────────
-           วางเป็นชั้นลอยคลุมทั้งจอ ไม่รับคลิก และอยู่ใต้เนื้อหา
-           ใช้ SVG ชิ้นเดียวแล้วพลิกด้วย transform ให้ครบสี่มุม */
-        /* z-index:0 ไม่ใช่ 1 — จะได้อยู่เหนือพื้นหลังแต่ยังอยู่หลังการ์ดทุกใบ
-           ถ้าใช้ 1 ลายทองจะทับเนื้อหาตอนจอแคบกว่าความกว้างคอลัมน์ */
-        /* เริ่มต่ำกว่าแถบ nav ไม่งั้นลายมุมบนโดนแถบทึบบังจนไม่เห็น */
-        .page-orn {
-            position:fixed; top:68px; left:0; right:0; bottom:0;
-            z-index:0; pointer-events:none; overflow:hidden;
-        }
-        .page-orn svg {
-            position:absolute; width:clamp(150px,21vw,300px); height:auto; opacity:1;
-        }
-        .page-orn .o-tl { top:0; left:0; }
-        .page-orn .o-tr { top:0; right:0; transform:scaleX(-1); }
-        .page-orn .o-bl { bottom:0; left:0; transform:scaleY(-1); }
-        .page-orn .o-br { bottom:0; right:0; transform:scale(-1,-1); }
-        @media (max-width:640px) {
-            .page-orn svg { width:clamp(78px,26vw,130px); opacity:0.6; }
-            .page-orn .o-bl, .page-orn .o-br { display:none; }
-        }
 
         /* ───────────── HERO — โซนพิธีการ ───────────── */
         .hero {
@@ -589,7 +570,7 @@
         .btn-amberS:hover { box-shadow:0 7px 0 #8F4606, 0 20px 30px -16px rgba(143,70,6,0.95); }
 
         /* ───────────── ตัวอัปโหลดรูป ───────────── */
-        .uploader { border:1.5px dashed #D8CFB4; border-radius:15px; background:#FDFBF5; padding:13px; }
+        .uploader { border:1.5px dashed #CDD9D3; border-radius:15px; background:#F7FAF8; padding:13px; }
         .uploader.has-img { border-style:solid; border-color:var(--line); background:#fff; }
         .up-row { display:flex; align-items:center; gap:13px; }
         .up-preview {
@@ -634,7 +615,7 @@
         /* ───────────── สวิตช์ ───────────── */
         .toggle-row {
             display:flex; align-items:center; justify-content:space-between; gap:12px;
-            padding:12px 15px; background:#FDFBF5; border:1px solid var(--line); border-radius:14px;
+            padding:12px 15px; background:#F7FAF8; border:1px solid var(--line); border-radius:14px;
         }
         .toggle-switch { position:relative; display:inline-block; width:48px; height:28px; flex-shrink:0; }
         .toggle-switch input { opacity:0; width:0; height:0; }
@@ -649,7 +630,7 @@
         }
         .toggle-switch input:checked + .toggle-slider { background:linear-gradient(168deg,var(--em-700),var(--em-900)); }
         .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
-        .toggle-status { font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600; padding:4px 11px; border-radius:100px; background:#F0EDE4; color:#9AA8A1; }
+        .toggle-status { font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600; padding:4px 11px; border-radius:100px; background:#EAF0EC; color:#9AA8A1; }
         .toggle-status.is-on { background:var(--em-tint); color:var(--em-800); }
 
         /* ───────────── แผงปรับแต่งรูป Hero ───────────── */
@@ -678,7 +659,7 @@
         .ctl-range:disabled::-webkit-slider-thumb { cursor:not-allowed; }
         .mode-pick {
             display:flex; gap:6px; padding:5px; border-radius:15px;
-            background:#F3EEE1; border:1px solid var(--line); margin-bottom:8px;
+            background:var(--paper-2); border:1px solid var(--line); margin-bottom:8px;
         }
         .mode-pick button {
             flex:1; padding:10px 8px; border-radius:11px; cursor:pointer; border:none;
@@ -707,7 +688,7 @@
         .align-pick button i { display:block; margin-bottom:3px; font-size:0.9rem; }
         .ctl-note {
             font-size:0.73rem; color:var(--muted); line-height:1.6;
-            background:#FDFBF5; border:1px dashed var(--line); border-radius:12px; padding:9px 12px;
+            background:#F7FAF8; border:1px dashed var(--line); border-radius:12px; padding:9px 12px;
         }
         .ctl-dirty {
             display:none; font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600;
@@ -731,7 +712,7 @@
         }
         .mini-btn:hover:not(:disabled) { transform:scale(1.12); }
         .mini-btn:disabled { opacity:.32; cursor:not-allowed; }
-        .mb-move { background:#F0EDE4; color:#7A8A83; }
+        .mb-move { background:#EAF0EC; color:#7A8A83; }
         .mb-edit { background:var(--em-tint); color:var(--em-800); }
         .mb-del  { background:#FDE8E8; color:#C0392B; }
 
@@ -745,7 +726,7 @@
             position:absolute; right:13px; top:50%; transform:translateY(-50%);
             width:26px; height:26px; border-radius:50%; border:none; cursor:pointer;
             display:flex; align-items:center; justify-content:center;
-            background:#F0EDE4; color:#9AA8A1; font-size:0.74rem; transition:all .15s ease;
+            background:#EAF0EC; color:#9AA8A1; font-size:0.74rem; transition:all .15s ease;
         }
         .search-clear-btn:hover { background:#FDE8E8; color:#C0392B; }
         .filter-chip {
@@ -781,10 +762,10 @@
             font-family:'Kanit',sans-serif; font-weight:600; font-size:0.88rem;
         }
         .av-m4{background:#E6F0F7;color:#1C5E8C} .av-m5{background:#FBF1E0;color:#B5741A}
-        .av-m6{background:var(--em-tint);color:var(--em-700)} .av-default{background:#F0EDE4;color:#7A8A83}
+        .av-m6{background:var(--em-tint);color:var(--em-700)} .av-default{background:#EAF0EC;color:#7A8A83}
         .class-badge { font-family:'Kanit',sans-serif; font-size:0.7rem; font-weight:600; padding:4px 11px; border-radius:100px; }
         .badge-m4{background:#E6F0F7;color:#1C5E8C} .badge-m5{background:#FBF1E0;color:#B5741A}
-        .badge-m6{background:var(--em-tint);color:var(--em-700)} .badge-def{background:#F0EDE4;color:#7A8A83}
+        .badge-m6{background:var(--em-tint);color:var(--em-700)} .badge-def{background:#EAF0EC;color:#7A8A83}
 
         /* ───────────── ส่วนท้าย ───────────── */
         .footer-mark {
@@ -803,7 +784,7 @@
         .page-view { display:none; }
         .page-view.active { display:block; animation:rise .34s cubic-bezier(.22,1,.36,1) both; }
         @keyframes rise { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-        .skeleton { background:linear-gradient(90deg,#EFEBE1 25%,#F8F6EF 50%,#EFEBE1 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
+        .skeleton { background:linear-gradient(90deg,#E6EDE9 25%,#F4F8F6 50%,#E6EDE9 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
         @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
         .card-skeleton { display:flex; align-items:center; gap:14px; padding:15px; border-radius:22px; background:#fff; border:1px solid var(--line); }
         .modal-overlay { background:rgba(4,32,26,0.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
@@ -841,46 +822,6 @@
 </head>
 
 <body class="min-h-screen flex flex-col">
-
-<!-- ลายทองประดับมุมหน้าเว็บ — วาด SVG ชิ้นเดียวแล้วพลิกเอาด้วย CSS ให้ครบสี่มุม -->
-<div class="page-orn" aria-hidden="true">
-    <svg class="o-tl" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
-    <svg class="o-tr" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
-    <svg class="o-bl" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
-    <svg class="o-br" viewBox="0 0 240 240" fill="none"><use href="#corner-orn"/></svg>
-</div>
-
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-        <linearGradient id="orn-gold" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0"   stop-color="#8A6512"/>
-            <stop offset="0.22" stop-color="#F3E3A8"/>
-            <stop offset="0.46" stop-color="#D9B64B"/>
-            <stop offset="0.7"  stop-color="#FBF0C8"/>
-            <stop offset="1"   stop-color="#A97D1C"/>
-        </linearGradient>
-        <g id="corner-orn" stroke="url(#orn-gold)" fill="none" stroke-linecap="round">
-            <!-- ริบบิ้นเส้นใหญ่กวาดจากมุมออกไปสองทาง -->
-            <path d="M0 108 C 26 104, 52 92, 70 70 C 88 48, 100 24, 104 0" stroke-width="13" opacity="1"/>
-            <path d="M0 80 C 22 76, 44 65, 59 49 C 74 33, 82 17, 85 0" stroke-width="5" opacity="0.85"/>
-            <path d="M0 138 C 34 134, 68 118, 91 92 C 114 66, 128 33, 133 0" stroke-width="3.4" opacity="0.62"/>
-            <!-- ก้านย่อยสะบัดออก -->
-            <path d="M56 63 C 69 77, 89 83, 110 81" stroke-width="5" opacity="0.9"/>
-            <path d="M63 56 C 77 43, 83 25, 81 4" stroke-width="5" opacity="0.9"/>
-            <path d="M32 94 C 39 109, 37 124, 24 134" stroke-width="4" opacity="0.72"/>
-            <path d="M94 32 C 109 39, 124 37, 134 24" stroke-width="4" opacity="0.72"/>
-            <!-- หัวก้นหอยปลายลาย -->
-            <path d="M110 81 C 123 80, 130 72, 126 64 C 123 57, 113 58, 112 66 C 111 73, 118 76, 123 72"
-                  stroke-width="4" opacity="0.92"/>
-            <path d="M81 4 C 80 17, 72 24, 64 20 C 57 17, 58 7, 66 6 C 73 5, 76 12, 72 17"
-                  stroke-width="4" opacity="0.92"/>
-            <circle cx="70" cy="70" r="7" fill="url(#orn-gold)" stroke="none" opacity="1"/>
-            <circle cx="24" cy="134" r="4" fill="url(#orn-gold)" stroke="none" opacity="0.8"/>
-            <circle cx="134" cy="24" r="4" fill="url(#orn-gold)" stroke="none" opacity="0.8"/>
-        </g>
-    </defs>
-</svg>
-
 
 <!-- ═══════════ NAVBAR ═══════════ -->
 <nav class="navbar sticky top-0 z-50 px-4 py-3">
