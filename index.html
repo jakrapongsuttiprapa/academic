@@ -117,8 +117,14 @@
             box-shadow:0 26px 60px -28px rgba(4,32,26,0.9), 0 0 0 1px rgba(217,182,75,0.3);
         }
         .hero-img-wrap { position:absolute; inset:0; z-index:0; }
-        .hero-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:var(--hero-pos); display:block; }
-        .hero-img-mobile { display:none; }
+        /* วางรูปซ้อนกันแบบ absolute ทั้งคู่ ถ้ามีรูปไหนโผล่มาเกินจะได้ทับกันพอดี ไม่ดันกล่องเสียทรง */
+        .hero-img-wrap img {
+            position:absolute; inset:0;
+            width:100%; height:100%; object-fit:cover; object-position:var(--hero-pos); display:block;
+        }
+        /* ต้องเขียนเจาะจงถึง .hero-img-wrap img ด้วย ไม่งั้น display:block ข้างบน
+           (specificity สูงกว่า .hero-img-mobile เฉยๆ) จะชนะ แล้วรูปสองใบโชว์พร้อมกัน */
+        .hero-img-wrap img.hero-img-mobile { display:none; }
         /* ซ่อนองค์ประกอบตามสวิตช์ในหน้า admin — ใช้ชื่อคลาสเฉพาะ ไม่ไปชนกับ .hidden ของ Tailwind */
         .hero.no-crest .medallion  { display:none; }
         .hero.no-orn   .ornament   { display:none; }
@@ -687,8 +693,8 @@
 
         /* ───────────── จอเล็ก ───────────── */
         @media (max-width:1024px) {
-            .hero-img-desktop { display:none; }
-            .hero-img-mobile  { display:block; }
+            .hero-img-wrap img.hero-img-desktop { display:none; }
+            .hero-img-wrap img.hero-img-mobile  { display:block; }
         }
         @media (max-width:430px) {
             /* บีบโซนพิธีการบนจอเล็ก ไม่ให้กินทั้งหน้าจนไม่เห็นเมนู */
@@ -935,7 +941,7 @@
                             <div class="uploader" id="up-hero"></div>
                         </div>
                         <div>
-                            <label class="field-label">รูป Hero — มือถือ (แนวตั้ง/จัตุรัส)</label>
+                            <label class="field-label">รูป Hero — มือถือ (แนวตั้ง/จัตุรัส) — ไม่ใส่ก็ได้ จะใช้รูปจอคอมแทน</label>
                             <div class="uploader" id="up-hero-m"></div>
                         </div>
                     </div>
@@ -1658,9 +1664,13 @@ function applyBranding(d, freshen) {
         const h = document.getElementById('hero-desktop');
         if (h) h.src = fix(d.hero_img);
     }
-    if (d.hero_img_mobile) {
-        const m = document.getElementById('hero-mobile');
-        if (m) m.src = fix(d.hero_img_mobile);
+    const m = document.getElementById('hero-mobile');
+    if (m) {
+        if (d.hero_img_mobile) m.src = fix(d.hero_img_mobile);
+        // ยังไม่ได้ใส่รูปมือถือ → ยืมรูปจอคอมมาใช้ ดีกว่าค้างรูปเริ่มต้นที่ฝังมากับไฟล์
+        // เช็ค 'in' ด้วย เพราะตอนอัปโหลดรูปจอคอมจะส่งมาเฉพาะคีย์เดียว ไม่ได้ส่งค่ารูปมือถือมา
+        // ถ้าไม่เช็ค รูปมือถือที่ตั้งไว้แล้วจะโดนรูปจอคอมทับทันที
+        else if (d.hero_img && ('hero_img_mobile' in d)) m.src = fix(d.hero_img);
     }
     // ค่าปรับแต่ง hero ต้อง apply ทุกครั้งที่โหลด แม้เป็นค่าว่าง (จะได้กลับไปใช้ค่าเริ่มต้น)
     // แต่ถ้ากำลังลองปรับอยู่แล้วยังไม่บันทึก ห้ามทับ ไม่งั้นกดดูหน้าแรกแล้วค่าที่ปรับหายหมด
@@ -2536,7 +2546,8 @@ function initUploaders() {
     createUploader({ id:'up-hero', maxDim:1600, autoSave:true,
         hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img', url) });
     createUploader({ id:'up-hero-m', maxDim:1200, autoSave:true,
-        hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img_mobile', url) });
+        hint:'ยังไม่ได้เลือกรูป — ถ้าไม่ใส่ จะใช้รูปจอคอมแทน',
+        onChange:(url) => saveImageSetting('hero_img_mobile', url) });
     // สองตัวนี้ไม่บันทึกทันที เพราะต้องไปพร้อมข้อความ/ชื่อเมนูในฟอร์มเดียวกัน
     createUploader({ id:'up-ann',  maxDim:1200, hint:'ยังไม่ได้เลือกรูป',
         saveHint:'กดปุ่ม "อัปเดตประกาศ" ด้านล่างเพื่อบันทึก' });
