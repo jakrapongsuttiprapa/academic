@@ -122,19 +122,27 @@
         @media (min-width:768px) { .nav-clock { display:inline-flex; } }
         .nav-clock i { font-size:0.76rem; color:var(--gold-600); }
 
-        /* ───────────── HERO — การ์ดสว่าง: รูปด้านบน + แถบข้อความด้านล่าง ───────────── */
+        /* ───────────── HERO — การ์ดสว่าง: รูปด้านบน + แถบข้อความด้านล่าง ─────────────
+           ตำแหน่งโลโก้กับสโลแกนเป็น "พิกัดอิสระ" (% ของเวทีรูป) ไม่ใช่ชิดซ้าย/กลาง/ขวาแล้ว
+           ครูลากวางเองได้จากพรีวิวในหน้า admin */
         .hero {
             position:relative; border-radius:34px; margin-bottom:22px;
             background:var(--card); border:1px solid var(--line); padding:10px;
             box-shadow:0 20px 48px -28px rgba(90,20,45,0.3), 0 2px 0 rgba(255,255,255,0.7) inset;
         }
-        /* เวทีรูป: ตัวแปรของจอคอมกับมือถือแยกกัน แล้วให้ media query เลือกว่าใช้ชุดไหน */
         .hero-stage {
-            --hero-h:   var(--hero-h-d,   clamp(260px,32vw,400px));
-            --veil-op:  var(--veil-op-d,  1);
-            --hero-pos: var(--hero-pos-d, 50% 32%);
+            --hero-h:    var(--hero-h-d,    clamp(260px,32vw,400px));
+            --veil-op:   var(--veil-op-d,   1);
+            --hero-pos:  var(--hero-pos-d,  50% 32%);
+            --crest-x:   var(--crest-x-d,   8%);
+            --crest-y:   var(--crest-y-d,   14%);
+            --crest-sz:  var(--crest-sz-d,  54px);
+            --slo-x:     var(--slo-x-d,     26%);
+            --slo-y:     var(--slo-y-d,     56%);
+            --slo-w:     var(--slo-w-d,     42%);
+            --slo-fs:    var(--slo-fs-d,    1.7rem);
             position:relative; overflow:hidden; isolation:isolate;
-            border-radius:26px; min-height:var(--hero-h); display:flex;
+            border-radius:26px; min-height:var(--hero-h); display:block;
             background:var(--paper-2);
         }
         .hero-img-wrap { position:absolute; inset:0; z-index:0; }
@@ -145,40 +153,18 @@
         /* ต้องเขียนเจาะจงถึง .hero-img-wrap img ด้วย ไม่งั้น display:block ข้างบน
            (specificity สูงกว่า .hero-img-mobile เฉยๆ) จะชนะ แล้วรูปสองใบโชว์พร้อมกัน */
         .hero-img-wrap img.hero-img-mobile { display:none; }
-        /* ม่านบางๆ โทนสว่าง ไว้ให้แผ่นข้อความลอยอ่านออก ไม่ได้ทำให้รูปมืดแบบธีมเดิม */
         .hero-veil {
             position:absolute; inset:0; z-index:1; pointer-events:none;
             opacity:var(--veil-op);
-            background:linear-gradient(100deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.3) 34%,
-                                       rgba(255,255,255,0.04) 56%, transparent 72%);
+            background:radial-gradient(130% 110% at var(--slo-x) var(--slo-y),
+                       rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.34) 26%,
+                       rgba(255,255,255,0.05) 48%, transparent 64%);
         }
-        .hero-body {
-            position:relative; z-index:3; width:100%;
-            display:flex; flex-direction:column; justify-content:center;
-            padding:22px;
-        }
-        /* แผ่นกระจกฝ้าใส่สโลแกน เลียนแบบแผ่นข้อความมุมซ้ายบนในแบบที่ครูส่งมา */
-        .hero-slogan {
-            display:inline-block; max-width:min(72%,340px);
-            background:rgba(255,255,255,0.82);
-            backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
-            border:1px solid rgba(255,255,255,0.9); border-radius:20px;
-            padding:18px 22px;
-            box-shadow:0 14px 34px -20px rgba(90,20,45,0.45);
-            font-family:'Kanit',sans-serif; font-weight:700;
-            font-size:clamp(1.3rem,2.5vw,1.9rem); line-height:1.3; color:var(--mar-800);
-        }
-        .hero-slogan .accent { color:var(--rose-500); display:block; }
-        .hero.no-slogan .hero-slogan { display:none; }
-        .hero.no-crest .medallion  { display:none; }
-        .hero.no-orn   .ornament   { display:none; }
-        .hero.no-frame .hero-frame { display:none; }
         .hero-frame {
             position:absolute; inset:9px; z-index:2; pointer-events:none; border-radius:19px;
             border:1.5px solid rgba(255,255,255,0.78);
             box-shadow:0 0 0 1px rgba(242,193,74,0.34), inset 0 0 0 1px rgba(255,255,255,0.34);
         }
-        /* จุดสี่เหลี่ยมชมพูคู่มุมบนซ้าย — รายละเอียดเล็กๆ ที่มีในแบบต้นฉบับ */
         .hero-frame::before {
             content:''; position:absolute; top:14px; right:14px; width:32px; height:14px;
             background:
@@ -187,15 +173,37 @@
             border-radius:3px;
         }
 
-        /* เหรียญตราเล็กมุมบน (เปิด/ปิดได้จากหน้า admin) */
-        .medallion { position:relative; width:52px; height:52px; margin:0 0 12px; }
+        /* โลโก้ — วางตามพิกัดที่ครูลาก จุดอ้างอิงคือกึ่งกลางโลโก้ */
+        .medallion {
+            position:absolute; z-index:3; margin:0;
+            left:var(--crest-x); top:var(--crest-y); transform:translate(-50%,-50%);
+            width:var(--crest-sz); height:var(--crest-sz);
+        }
         .medallion img {
-            position:relative; z-index:2; width:100%; height:100%; border-radius:50%;
+            width:100%; height:100%; border-radius:50%;
             object-fit:cover; background:#fff; padding:3px; display:block;
             box-shadow:0 0 0 1.5px var(--gold-400), 0 4px 14px rgba(90,20,45,0.25);
         }
+        /* แผ่นสโลแกน — วางตามพิกัดเช่นกัน */
+        .hero-slogan {
+            position:absolute; z-index:3;
+            left:var(--slo-x); top:var(--slo-y); transform:translate(-50%,-50%);
+            width:var(--slo-w); max-width:none; text-align:center;
+            background:rgba(255,255,255,0.82);
+            backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
+            border:1px solid rgba(255,255,255,0.9); border-radius:20px;
+            padding:16px 18px;
+            box-shadow:0 14px 34px -20px rgba(90,20,45,0.45);
+            font-family:'Kanit',sans-serif; font-weight:700;
+            font-size:var(--slo-fs); line-height:1.3; color:var(--mar-800);
+        }
+        .hero-slogan .accent { color:var(--rose-500); display:block; }
+        .hero.no-slogan .hero-slogan { display:none; }
+        .hero.no-crest  .medallion   { display:none; }
+        .hero.no-orn    .ornament    { display:none; }
+        .hero.no-frame  .hero-frame  { display:none; }
 
-        /* แถบข้อความใต้รูป: หัวเรื่องแดงเลือดหมู + ตัวสลับภาคเรียน */
+        /* แถบข้อความใต้รูป */
         .hero-foot { padding:20px 14px 8px; text-align:center; }
         .hero-title {
             font-family:'Kanit',sans-serif; font-weight:700;
@@ -205,7 +213,6 @@
         .ornament { display:block; margin:12px auto 0; width:min(200px,56%); height:auto; }
         .hero-sub { font-size:0.84rem; color:var(--muted); line-height:1.6; margin-top:10px; }
 
-        /* ตัวสลับภาคเรียน 1|2 — ปุ่มเลื่อนทองในกรอบขาว */
         .term-bar {
             display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
             justify-content:center; margin-top:16px;
@@ -236,33 +243,26 @@
                 --hero-h:   var(--hero-h-m,   clamp(230px,56vw,340px));
                 --veil-op:  var(--veil-op-m,  1);
                 --hero-pos: var(--hero-pos-m, 50% 32%);
+                --crest-x:  var(--crest-x-m,  13%);
+                --crest-y:  var(--crest-y-m,  15%);
+                --crest-sz: var(--crest-sz-m, 44px);
+                --slo-x:    var(--slo-x-m,    38%);
+                --slo-y:    var(--slo-y-m,    58%);
+                --slo-w:    var(--slo-w-m,    62%);
+                --slo-fs:   var(--slo-fs-m,   1.18rem);
             }
-            .hero.vm-top    .hero-body { justify-content:flex-start; }
-            .hero.vm-center .hero-body { justify-content:center; }
-            .hero.vm-bottom .hero-body { justify-content:flex-end; }
-            .hero.m-left   .hero-body { align-items:flex-start; text-align:left; }
-            .hero.m-right  .hero-body { align-items:flex-end;   text-align:right; }
-            .hero.m-center .hero-body { align-items:center;      text-align:center; }
-            .hero-slogan { max-width:min(78%,260px); padding:13px 16px; font-size:1.22rem; }
-            .hero-body { padding:16px; }
+            .hero-slogan { padding:13px 15px; }
             .hero-foot { padding:16px 8px 6px; }
         }
-        @media (min-width:1025px) {
-            .hero.vd-top    .hero-body { justify-content:flex-start; }
-            .hero.vd-center .hero-body { justify-content:center; }
-            .hero.vd-bottom .hero-body { justify-content:flex-end; }
-            .hero.d-left   .hero-body { align-items:flex-start; text-align:left; }
-            .hero.d-right  .hero-body { align-items:flex-end;   text-align:right; }
-            .hero.d-center .hero-body { align-items:center;      text-align:center; }
-            /* ชิดขวา: ม่านต้องสลับข้างด้วย ไม่งั้นแผ่นสโลแกนไปอยู่บนส่วนที่ไม่มีม่าน */
-            .hero.d-right .hero-veil {
-                background:linear-gradient(260deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.3) 34%,
-                                           rgba(255,255,255,0.04) 56%, transparent 72%);
-            }
-            .hero.d-center .hero-veil {
-                background:linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.12) 40%,
-                                           rgba(255,255,255,0.5) 100%);
-            }
+        @media (max-width:430px) {
+            .hero-frame { inset:7px; border-radius:17px; }
+            .hero-frame::before { top:11px; right:11px; width:26px; height:11px;
+                background-size:11px 11px, 11px 11px; }
+            .hero-title { font-size:clamp(1.4rem,6.6vw,1.9rem); }
+            .ornament { margin:10px auto 0; width:min(170px,54%); }
+            .hero-sub { font-size:0.8rem; }
+            .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
+            .hero-slogan { padding:11px 13px; }
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
@@ -292,6 +292,23 @@
             color:var(--mar-800); background:var(--gold-orb);
             box-shadow:0 5px 12px -4px rgba(201,144,15,0.65), inset 0 -2px 5px rgba(168,117,18,0.32),
                        inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+        /* สีประจำระดับชั้น ใช้ชุดเดียวกับแถบสีในหน้ารายชื่อ จะได้จำสีได้ตรงกันทั้งเว็บ */
+        .sc-m4 { --sc:#1C5E8C; --sc-lite:#5FA8D8; }
+        .sc-m5 { --sc:#B5741A; --sc-lite:#E8B35C; }
+        .sc-m6 { --sc:#0E6E75; --sc-lite:#3FD9B4; }
+        .sc-all{ --sc:var(--mar-700); --sc-lite:#D8597D; }
+        .stat-card[class*="sc-"] .stat-ic {
+            color:#fff;
+            background:radial-gradient(circle at 32% 26%, var(--sc-lite) 0%, var(--sc) 72%);
+            box-shadow:0 5px 12px -4px color-mix(in srgb, var(--sc) 55%, transparent),
+                       inset 0 -2px 5px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.45);
+        }
+        .stat-card[class*="sc-"] .stat-v { color:var(--sc); }
+        /* ขีดสีบางๆ ขอบซ้าย บอกระดับชั้นได้ด้วยหางตา */
+        .stat-card[class*="sc-"]::before {
+            content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+            background:linear-gradient(180deg, var(--sc-lite), var(--sc));
         }
         .stat-txt { min-width:0; }
         .stat-k { font-size:0.74rem; color:var(--muted); font-weight:500; }
@@ -349,6 +366,14 @@
             border:1.5px solid rgba(255,255,255,0.45);
         }
         .tile-body, .portal-body { margin-top:auto; padding-top:16px; min-width:0; }
+        /* ไอคอนจางใหญ่ฝั่งขวาของไทล์บริการหลัก — ต้อง absolute เท่านั้น
+           ถ้าปล่อยให้อยู่ใน flow มันจะดันไอคอนกับข้อความไปกองกลางการ์ด */
+        .portal-art {
+            position:absolute; z-index:0; pointer-events:none;
+            right:4%; top:50%; transform:translateY(-50%);
+            font-size:clamp(5rem,11vw,8.5rem); line-height:1;
+            color:rgba(255,255,255,0.13);
+        }
         .menu-title, .portal h3 {
             font-family:'Kanit',sans-serif; font-weight:700; font-size:1.26rem; line-height:1.22;
             text-shadow:0 1px 4px rgba(0,0,0,0.26);
@@ -363,6 +388,16 @@
             width:30px; height:30px; border-radius:50%; font-size:0.68rem; color:#fff;
             background:rgba(0,0,0,0.22); border:1.5px solid rgba(255,255,255,0.4);
         }
+
+        @media (min-width:768px) {
+            .portal { min-height:248px; padding:24px; }
+            .portal h3 { font-size:1.72rem; }
+            .portal p  { font-size:0.92rem; margin-top:5px; }
+            .portal-ic { width:66px; height:66px; font-size:1.62rem; }
+            .portal-chev { width:42px; height:42px; font-size:0.9rem; }
+        }
+        /* จอเล็กไม่มีที่พอ ซ่อนไอคอนจางไปเลย ไม่งั้นแย่งที่ตัวหนังสือ */
+        @media (max-width:767px) { .portal-art { display:none; } }
 
         /* ชุดสีไทล์ */
         .t-violet,  .portal-b { --t-base:var(--violet);  --t-fill:linear-gradient(152deg,#A46BE0,#7B2FBF 46%,#4E1788); --t-shadow:rgba(78,23,136,0.85); }
@@ -501,6 +536,86 @@
         .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
         .toggle-status { font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600; padding:4px 11px; border-radius:100px; background:#F3E7EB; color:#6A5460; }
         .toggle-status.is-on { background:var(--em-tint); color:var(--em-800); }
+
+        /* ───────────── พรีวิวแบบลากวาง (หน้า admin) ─────────────
+           เวทีจำลองของจริง ลากโลโก้/สโลแกน/รูป ได้ตรงนี้เลย */
+        .hp-wrap { margin-bottom:14px; }
+        .hp-stage {
+            position:relative; overflow:hidden; border-radius:18px;
+            border:1px solid var(--line); background:var(--paper-2);
+            touch-action:none; user-select:none; -webkit-user-select:none;
+            box-shadow:inset 0 2px 10px -6px rgba(90,20,45,0.4);
+        }
+        .hp-stage img.hp-bg {
+            position:absolute; inset:0; width:100%; height:100%;
+            object-fit:cover; object-position:var(--hp-pos,50% 32%); display:block;
+        }
+        .hp-veil {
+            position:absolute; inset:0; pointer-events:none; opacity:var(--hp-veil,1);
+            background:radial-gradient(130% 110% at var(--hp-slo-x,26%) var(--hp-slo-y,56%),
+                       rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.34) 26%,
+                       rgba(255,255,255,0.05) 48%, transparent 64%);
+        }
+        .hp-frame {
+            position:absolute; inset:7px; pointer-events:none; border-radius:13px;
+            border:1.5px solid rgba(255,255,255,0.78);
+            box-shadow:0 0 0 1px rgba(242,193,74,0.34);
+        }
+        /* ชิ้นที่ลากได้ */
+        .hp-item { position:absolute; transform:translate(-50%,-50%); cursor:grab; }
+        .hp-item.dragging { cursor:grabbing; }
+        .hp-item::after {
+            content:''; position:absolute; inset:-7px; border-radius:inherit;
+            border:1.5px dashed transparent; transition:border-color .15s ease;
+        }
+        .hp-stage:not(.pan-mode) .hp-item:hover::after,
+        .hp-item.dragging::after { border-color:var(--mar-700); }
+        .hp-crest {
+            left:var(--hp-crest-x,8%); top:var(--hp-crest-y,14%);
+            width:var(--hp-crest-sz,40px); height:var(--hp-crest-sz,40px); border-radius:50%;
+        }
+        .hp-crest img {
+            width:100%; height:100%; border-radius:50%; object-fit:cover;
+            background:#fff; padding:2px; display:block;
+            box-shadow:0 0 0 1.5px var(--gold-400), 0 3px 10px rgba(90,20,45,0.25);
+        }
+        .hp-slo {
+            left:var(--hp-slo-x,26%); top:var(--hp-slo-y,56%);
+            width:var(--hp-slo-w,42%); border-radius:13px;
+            background:rgba(255,255,255,0.86);
+            backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+            border:1px solid rgba(255,255,255,0.9);
+            padding:9px 11px; text-align:center;
+            font-family:'Kanit',sans-serif; font-weight:700; line-height:1.3;
+            font-size:var(--hp-slo-fs,0.9rem); color:var(--mar-800);
+            box-shadow:0 8px 20px -14px rgba(90,20,45,0.5);
+        }
+        .hp-slo .accent { color:var(--rose-500); display:block; }
+        /* โหมดเลื่อนรูป: ชิ้นอื่นหยุดรับคลิก ลากพื้นหลังได้เต็มที่ */
+        .hp-stage.pan-mode { cursor:move; }
+        .hp-stage.pan-mode .hp-item { pointer-events:none; opacity:0.55; }
+        .hp-hint {
+            display:flex; align-items:center; gap:7px; flex-wrap:wrap;
+            font-size:0.73rem; color:var(--muted); margin-top:8px; line-height:1.5;
+        }
+        .hp-tools { display:flex; gap:7px; flex-wrap:wrap; margin-top:9px; }
+        .hp-tools button {
+            flex:1; min-width:96px; padding:9px 10px; border-radius:11px; cursor:pointer;
+            font-family:'Kanit',sans-serif; font-size:0.76rem; font-weight:600;
+            background:#fff; color:var(--muted); border:1px solid var(--line);
+            transition:all .15s ease;
+        }
+        .hp-tools button.active {
+            background:linear-gradient(168deg,var(--mar-700),var(--mar-900));
+            color:#fff; border-color:transparent;
+        }
+        .hp-coord {
+            position:absolute; right:8px; bottom:8px; z-index:5; pointer-events:none;
+            font-family:ui-monospace,monospace; font-size:0.66rem;
+            background:rgba(42,27,34,0.72); color:#fff; padding:3px 8px; border-radius:7px;
+            opacity:0; transition:opacity .15s ease;
+        }
+        .hp-stage.showing-coord .hp-coord { opacity:1; }
 
         /* ───────────── แผงปรับแต่งรูป Hero ───────────── */
         .ctl-row { display:flex; align-items:center; gap:12px; }
@@ -665,7 +780,6 @@
         }
         @media (max-width:430px) {
             /* บีบโซนพิธีการบนจอเล็ก ไม่ให้กินทั้งหน้าจนไม่เห็นเมนู */
-            .hero-body { padding:14px; }
             .hero-frame { inset:7px; border-radius:17px; }
             .hero-frame::before { top:11px; right:11px; width:26px; height:11px;
                 background-size:11px 11px, 11px 11px; }
@@ -673,7 +787,7 @@
             .hero-title { font-size:clamp(1.4rem,6.6vw,1.9rem); }
             .ornament { margin:10px auto 0; width:min(170px,54%); }
             .hero-sub { font-size:0.8rem; }
-            .medallion { width:42px; height:42px; margin-bottom:9px; }
+            .medallion { width:40px; height:40px; top:14px; left:14px; }
             .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
             .tile, .portal { min-height:172px; padding:16px; border-radius:25px; }
             .tile-icon, .portal-ic { width:46px; height:46px; font-size:1.14rem; }
@@ -722,7 +836,7 @@
     <!-- ═══════════ DASHBOARD ═══════════ -->
     <div id="view-dashboard" class="page-view active">
 
-        <header class="hero d-left vd-center m-center vm-center">
+        <header class="hero">
             <div class="hero-stage">
                 <div class="hero-img-wrap">
                     <img id="hero-desktop" class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="">
@@ -730,12 +844,10 @@
                 </div>
                 <div class="hero-veil"></div>
                 <div class="hero-frame"></div>
-                <div class="hero-body">
-                    <div class="medallion">
-                        <img id="hero-crest" src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="ตราโรงเรียน">
-                    </div>
-                    <p class="hero-slogan" id="hero-slogan">ตั้งใจเรียน<br>พัฒนาตน<span class="accent">สู่อนาคตที่ดี</span></p>
+                <div class="medallion">
+                    <img id="hero-crest" src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="ตราโรงเรียน">
                 </div>
+                <p class="hero-slogan" id="hero-slogan">ตั้งใจเรียน<br>พัฒนาตน<span class="accent">สู่อนาคตที่ดี</span></p>
             </div>
 
             <div class="hero-foot">
@@ -775,6 +887,7 @@
         <div class="sec-label"><span>บริการหลัก</span><i></i></div>
         <div class="grid grid-cols-2 gap-3">
             <div onclick="navigate('students')" class="portal portal-a">
+                <i class="fa-solid fa-user-group portal-art" aria-hidden="true"></i>
                 <div class="tile-head">
                     <div class="portal-ic"><i class="fa-solid fa-user-graduate"></i></div>
                     <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
@@ -785,6 +898,7 @@
                 </div>
             </div>
             <div onclick="navigate('login-admin')" class="portal portal-b">
+                <i class="fa-solid fa-chalkboard-user portal-art" aria-hidden="true"></i>
                 <div class="tile-head">
                     <div class="portal-ic"><i class="fa-solid fa-book"></i></div>
                     <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
@@ -979,23 +1093,47 @@
                     </div>
                     <p class="mode-note" id="hero-mode-note">กำลังตั้งค่าของจอคอมพิวเตอร์</p>
 
+                    <!-- พรีวิวลากวาง: ลากโลโก้/สโลแกน/รูปได้ตรงนี้ -->
+                    <div class="hp-wrap">
+                        <div class="hp-stage" id="hp-stage">
+                            <img class="hp-bg" id="hp-bg" alt="">
+                            <div class="hp-veil"></div>
+                            <div class="hp-frame"></div>
+                            <div class="hp-item hp-crest" id="hp-crest" data-target="crest">
+                                <img id="hp-crest-img" alt="">
+                            </div>
+                            <div class="hp-item hp-slo" id="hp-slo" data-target="slo"></div>
+                            <div class="hp-coord" id="hp-coord"></div>
+                        </div>
+                        <div class="hp-tools" id="hp-tools">
+                            <button type="button" data-tool="move" class="active"><i class="fa-solid fa-arrows-up-down-left-right mr-1"></i>ลากโลโก้ / สโลแกน</button>
+                            <button type="button" data-tool="pan"><i class="fa-solid fa-image mr-1"></i>เลื่อนรูป</button>
+                        </div>
+                        <p class="hp-hint"><i class="fa-solid fa-hand-pointer"></i>
+                            ลากชิ้นในกรอบเพื่อจัดตำแหน่ง · ปรับขนาดด้วยสไลเดอร์ด้านล่าง · ค่าที่ตั้งมีผลเฉพาะโหมดที่เลือกอยู่</p>
+                    </div>
+
                     <div class="flex flex-col gap-4">
                         <div>
-                            <label class="field-label">ตำแหน่งข้อความ (แนวนอน)</label>
-                            <div class="align-pick" id="hero-align-pick">
-                                <button type="button" data-align="left"><i class="fa-solid fa-align-left"></i>ชิดซ้าย</button>
-                                <button type="button" data-align="center"><i class="fa-solid fa-align-center"></i>กึ่งกลาง</button>
-                                <button type="button" data-align="right"><i class="fa-solid fa-align-right"></i>ชิดขวา</button>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-crest-size">ขนาดโลโก้</label>
+                                <span class="ctl-val" id="hero-crest-size-val">54px</span>
                             </div>
+                            <input type="range" class="ctl-range" id="hero-crest-size" min="24" max="140" step="2" value="54">
                         </div>
-
                         <div>
-                            <label class="field-label">ตำแหน่งข้อความ (แนวตั้ง)</label>
-                            <div class="align-pick" id="hero-vpos-pick">
-                                <button type="button" data-vpos="top"><i class="fa-solid fa-arrow-up"></i>ชิดบน</button>
-                                <button type="button" data-vpos="center"><i class="fa-solid fa-arrows-up-down"></i>กึ่งกลาง</button>
-                                <button type="button" data-vpos="bottom"><i class="fa-solid fa-arrow-down"></i>ชิดล่าง</button>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-w">ความกว้างแผ่นสโลแกน</label>
+                                <span class="ctl-val" id="hero-slo-w-val">42%</span>
                             </div>
+                            <input type="range" class="ctl-range" id="hero-slo-w" min="15" max="96" step="1" value="42">
+                        </div>
+                        <div>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-fs">ขนาดตัวหนังสือสโลแกน</label>
+                                <span class="ctl-val" id="hero-slo-fs-val">1.70rem</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-slo-fs" min="0.7" max="3.4" step="0.05" value="1.7">
                         </div>
 
                         <div>
@@ -1572,14 +1710,14 @@ function loadDashboardStats() {
         if (res.status !== 'success') { c.innerHTML = ''; return; }
         const d = res.data;
         // mark = ลายน้ำเลขไทยประจำการ์ด (๏ คือฟองมัน ใช้กับยอดรวม)
-        const cell = (k, v, icon) => '<div class="stat-card">' +
+        const cell = (k, v, icon, tone) => '<div class="stat-card ' + tone + '">' +
             '<div class="stat-ic"><i class="fa-solid ' + icon + '"></i></div>' +
             '<div class="stat-txt"><p class="stat-k">' + k + '</p>' +
             '<h3 class="stat-v">' + v + '</h3><p class="stat-u">คน</p></div></div>';
-        c.innerHTML = cell('นักเรียนทั้งหมด', d.total, 'fa-users') +
-                      cell('มัธยมศึกษาปีที่ 4', d.m4, 'fa-graduation-cap') +
-                      cell('มัธยมศึกษาปีที่ 5', d.m5, 'fa-graduation-cap') +
-                      cell('มัธยมศึกษาปีที่ 6', d.m6, 'fa-graduation-cap');
+        c.innerHTML = cell('นักเรียนทั้งหมด', d.total, 'fa-users', 'sc-all') +
+                      cell('มัธยมศึกษาปีที่ 4', d.m4, 'fa-graduation-cap', 'sc-m4') +
+                      cell('มัธยมศึกษาปีที่ 5', d.m5, 'fa-graduation-cap', 'sc-m5') +
+                      cell('มัธยมศึกษาปีที่ 6', d.m6, 'fa-graduation-cap', 'sc-m6');
     }).catch(err => {
         document.getElementById('stats-container').innerHTML = '';
         handleScriptError(err);
@@ -1729,9 +1867,14 @@ function applyBranding(d, freshen) {
 // แยกค่าจอคอม (desktop) กับมือถือ (mobile) ออกจากกัน ส่วนสวิตช์เปิด/ปิดองค์ประกอบใช้ร่วมกัน
 // ════════════════════════════════════════
 const HERO_MODE_DEFAULT = {
-    desktop: { align:'left', vpos:'top', veil:100, posX:50, posY:32, height:0 },
-    mobile:  { align:'left', vpos:'top', veil:100, posX:50, posY:32, height:0 }
+    desktop: { veil:100, posX:50, posY:32, height:0,
+               crestX:8,  crestY:14, crestSize:54, sloX:26, sloY:56, sloW:42, sloFS:1.7 },
+    mobile:  { veil:100, posX:50, posY:32, height:0,
+               crestX:13, crestY:15, crestSize:44, sloX:38, sloY:58, sloW:62, sloFS:1.18 }
 };
+// แปลงค่ารุ่นเก่า (ชิดซ้าย/กลาง/ขวา) ให้เป็นพิกัด % โดยประมาณ ค่าที่ครูเคยตั้งไว้จะได้ไม่หาย
+const ALIGN_TO_X = { left:24, center:50, right:76 };
+const VPOS_TO_Y  = { top:26, center:50, bottom:74 };
 const SLOGAN_DEFAULT = 'ตั้งใจเรียน\nพัฒนาตน\nสู่อนาคตที่ดี';
 function heroDefaults() {
     return {
@@ -1759,13 +1902,21 @@ function parseHeroLayout(raw) {
     };
     const pick = (src, dst, dflt) => {
         if (!src || typeof src !== 'object') return;
-        if (['left','center','right'].indexOf(src.align) !== -1)      dst.align = src.align;
-        if (['top','center','bottom'].indexOf(src.vpos)  !== -1)      dst.vpos  = src.vpos;
         dst.veil = num(src.veil, 0, 100, dflt.veil);
         dst.posX = num(src.posX, 0, 100, dflt.posX);
         dst.posY = num(src.posY, 0, 100, dflt.posY);
         // height 0 = อัตโนมัติ, นอกนั้นต้องอยู่ในช่วงที่สไลเดอร์ให้
         dst.height = (Number(src.height) === 0) ? 0 : num(src.height, 240, 680, dflt.height);
+        // พิกัดอิสระ — ถ้าไฟล์เก่ายังเป็น align/vpos ให้แปลงเป็นพิกัดแทน
+        dst.crestX    = num(src.crestX, -10, 110, dflt.crestX);
+        dst.crestY    = num(src.crestY, -10, 110, dflt.crestY);
+        dst.crestSize = num(src.crestSize, 24, 140, dflt.crestSize);
+        dst.sloX = (src.sloX === undefined && ALIGN_TO_X[src.align] !== undefined)
+                     ? ALIGN_TO_X[src.align] : num(src.sloX, -10, 110, dflt.sloX);
+        dst.sloY = (src.sloY === undefined && VPOS_TO_Y[src.vpos] !== undefined)
+                     ? VPOS_TO_Y[src.vpos] : num(src.sloY, -10, 110, dflt.sloY);
+        dst.sloW  = num(src.sloW, 15, 96, dflt.sloW);
+        dst.sloFS = num(src.sloFS, 0.7, 3.4, dflt.sloFS);
     };
 
     // รูปแบบเก่า (รุ่นก่อนแยกโหมด) เป็น object แบนๆ — ย้ายค่าเดิมไปเป็นค่าของจอคอม
@@ -1788,25 +1939,28 @@ function parseHeroLayout(raw) {
 function applyHeroLayout(L) {
     const h = document.querySelector('.hero');
     if (!h) return;
-    h.classList.remove('d-left','d-center','d-right','vd-top','vd-center','vd-bottom',
-                       'm-left','m-center','m-right','vm-top','vm-center','vm-bottom');
-    h.classList.add('d-' + L.desktop.align, 'vd-' + L.desktop.vpos,
-                    'm-' + L.mobile.align,  'vm-' + L.mobile.vpos);
     h.classList.toggle('no-crest',  !L.crest);
     h.classList.toggle('no-slogan', !L.slogan);
+    h.classList.toggle('no-orn',    !L.orn);
+    h.classList.toggle('no-frame',  !L.frame);
     renderSlogan(L);
-    h.classList.toggle('no-orn',   !L.orn);
-    h.classList.toggle('no-frame', !L.frame);
 
-    const set = (suffix, m, autoH) => {
-        h.style.setProperty('--veil-op-'  + suffix, (m.veil / 100).toFixed(2));
-        h.style.setProperty('--hero-pos-' + suffix, m.posX + '% ' + m.posY + '%');
-        h.style.setProperty('--hero-h-'   + suffix, m.height > 0 ? m.height + 'px' : autoH);
+    const set = (sfx, m, autoH) => {
+        h.style.setProperty('--veil-op-'  + sfx, (m.veil / 100).toFixed(2));
+        h.style.setProperty('--hero-pos-' + sfx, m.posX + '% ' + m.posY + '%');
+        h.style.setProperty('--hero-h-'   + sfx, m.height > 0 ? m.height + 'px' : autoH);
+        h.style.setProperty('--crest-x-'  + sfx, m.crestX + '%');
+        h.style.setProperty('--crest-y-'  + sfx, m.crestY + '%');
+        h.style.setProperty('--crest-sz-' + sfx, m.crestSize + 'px');
+        h.style.setProperty('--slo-x-'    + sfx, m.sloX + '%');
+        h.style.setProperty('--slo-y-'    + sfx, m.sloY + '%');
+        h.style.setProperty('--slo-w-'    + sfx, m.sloW + '%');
+        h.style.setProperty('--slo-fs-'   + sfx, m.sloFS + 'rem');
     };
     // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
     set('d', L.desktop, 'clamp(260px,32vw,400px)');
     set('m', L.mobile,  'clamp(230px,56vw,340px)');
-    applyTerm(L);
+        applyTerm(L);
 }
 
 // ข้อความสโลแกนบนรูป — บรรทัดสุดท้ายใช้สีเน้น (ชมพูเข้ม) ตามแบบที่ครูส่งมา
@@ -1873,6 +2027,9 @@ function readHeroControls() {
     m.posX   = Number(g('hero-posx').value);
     m.posY   = Number(g('hero-posy').value);
     m.height = auto ? 0 : Number(g('hero-height').value);
+    m.crestSize = Number(g('hero-crest-size').value);
+    m.sloW      = Number(g('hero-slo-w').value);
+    m.sloFS     = Number(g('hero-slo-fs').value);
     heroLayout.crest = g('hero-crest-on').checked;
     heroLayout.orn   = g('hero-orn-on').checked;
     heroLayout.frame = g('hero-frame-on').checked;
@@ -1883,6 +2040,7 @@ function readHeroControls() {
     g('hero-height').disabled = auto;
     updateHeroReadouts();
     applyHeroLayout(heroLayout);
+    syncPreview();
     setHeroDirty(true);
 }
 
@@ -1893,6 +2051,9 @@ function updateHeroReadouts() {
     g('hero-posx-val').textContent   = m.posX + '%';
     g('hero-posy-val').textContent   = m.posY + '%';
     g('hero-height-val').textContent = m.height === 0 ? 'อัตโนมัติ' : m.height + 'px';
+    g('hero-crest-size-val').textContent = m.crestSize + 'px';
+    g('hero-slo-w-val').textContent      = m.sloW + '%';
+    g('hero-slo-fs-val').textContent     = m.sloFS.toFixed(2) + 'rem';
 }
 
 // เอาค่าใน heroLayout ขึ้นไปแสดงบนแผงควบคุม (ตอนเปิดหน้า admin / สลับโหมด / กดคืนค่า)
@@ -1917,13 +2078,11 @@ function fillHeroControls() {
     document.querySelectorAll('#hero-term-pick button').forEach(b => {
         b.classList.toggle('active', Number(b.dataset.term) === Number(heroLayout.term));
     });
+    g('hero-crest-size').value = m.crestSize;
+    g('hero-slo-w').value      = m.sloW;
+    g('hero-slo-fs').value     = m.sloFS;
     updateHeroReadouts();
-    document.querySelectorAll('#hero-align-pick button').forEach(b => {
-        b.classList.toggle('active', b.dataset.align === m.align);
-    });
-    document.querySelectorAll('#hero-vpos-pick button').forEach(b => {
-        b.classList.toggle('active', b.dataset.vpos === m.vpos);
-    });
+    syncPreview();
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
         b.classList.toggle('active', b.dataset.mode === heroMode);
     });
@@ -1975,6 +2134,139 @@ function resetHeroLayoutFn() {
     });
 }
 
+// ════════════════════════════════════════
+// พรีวิวแบบลากวางในหน้า admin
+// เวทีจำลองสัดส่วนเดียวกับของจริง ลากโลโก้/สโลแกน/รูปได้เลย
+// ════════════════════════════════════════
+let hpTool = 'move';   // 'move' = ลากชิ้นงาน, 'pan' = เลื่อนรูป
+
+// เอาค่าปัจจุบันของโหมดที่กำลังแก้ ขึ้นไปแสดงบนพรีวิว
+function syncPreview() {
+    const st = document.getElementById('hp-stage');
+    if (!st) return;
+    const m = heroCur();
+    const isMobile = heroMode === 'mobile';
+
+    // สัดส่วนเวที: จอคอมกว้างกว่ามือถือ ให้พรีวิวใกล้ของจริง
+    st.style.aspectRatio = isMobile ? '4 / 3' : '16 / 6';
+    st.style.setProperty('--hp-pos',   m.posX + '% ' + m.posY + '%');
+    st.style.setProperty('--hp-veil',  (m.veil / 100).toFixed(2));
+    st.style.setProperty('--hp-crest-x', m.crestX + '%');
+    st.style.setProperty('--hp-crest-y', m.crestY + '%');
+    st.style.setProperty('--hp-slo-x', m.sloX + '%');
+    st.style.setProperty('--hp-slo-y', m.sloY + '%');
+    st.style.setProperty('--hp-slo-w', m.sloW + '%');
+
+    // ขนาดโลโก้/ตัวหนังสือย่อตามอัตราส่วนความกว้างพรีวิวต่อความกว้างจริง
+    const realW = isMobile ? 390 : 1150;
+    const k = Math.max(0.2, st.clientWidth / realW);
+    st.style.setProperty('--hp-crest-sz', Math.round(m.crestSize * k) + 'px');
+    st.style.setProperty('--hp-slo-fs', (m.sloFS * k).toFixed(2) + 'rem');
+
+    // รูปกับโลโก้ ใช้ไฟล์เดียวกับหน้าแรก
+    const bg = document.getElementById('hp-bg');
+    const live = document.getElementById(isMobile ? 'hero-mobile' : 'hero-desktop');
+    if (bg && live && bg.src !== live.src) bg.src = live.src;
+    const ci = document.getElementById('hp-crest-img');
+    const lc = document.getElementById('hero-crest');
+    if (ci && lc && ci.src !== lc.src) ci.src = lc.src;
+
+    // ข้อความสโลแกน + สวิตช์ซ่อน/แสดง ให้ตรงกับของจริง
+    const slo = document.getElementById('hp-slo');
+    if (slo) {
+        const lines = String(heroLayout.sloganText || '').split('\n')
+                        .map(x => x.trim()).filter(x => x !== '');
+        if (lines.length) {
+            const last = lines.pop();
+            slo.innerHTML = lines.map(x => esc(x) + '<br>').join('') +
+                            '<span class="accent">' + esc(last) + '</span>';
+        } else slo.innerHTML = '';
+        slo.style.display = heroLayout.slogan ? '' : 'none';
+    }
+    const cr = document.getElementById('hp-crest');
+    if (cr) cr.style.display = heroLayout.crest ? '' : 'none';
+    st.querySelector('.hp-frame').style.display = heroLayout.frame ? '' : 'none';
+}
+
+function initPreviewEditor() {
+    const st = document.getElementById('hp-stage');
+    if (!st) return;
+    const coord = document.getElementById('hp-coord');
+    const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+    // สลับเครื่องมือ ลากชิ้นงาน / เลื่อนรูป
+    document.querySelectorAll('#hp-tools button').forEach(b => {
+        b.addEventListener('click', () => {
+            hpTool = b.dataset.tool;
+            document.querySelectorAll('#hp-tools button')
+                    .forEach(x => x.classList.toggle('active', x === b));
+            st.classList.toggle('pan-mode', hpTool === 'pan');
+        });
+    });
+
+    let drag = null;   // { target, startX, startY, baseX, baseY }
+
+    st.addEventListener('pointerdown', (e) => {
+        const m = heroCur();
+        const item = (hpTool === 'move') ? e.target.closest('.hp-item') : null;
+        if (hpTool === 'move' && !item) return;
+        const r = st.getBoundingClientRect();
+        if (item) {
+            drag = { kind:item.dataset.target, el:item,
+                     baseX: item.dataset.target === 'crest' ? m.crestX : m.sloX,
+                     baseY: item.dataset.target === 'crest' ? m.crestY : m.sloY };
+            item.classList.add('dragging');
+        } else {
+            // เลื่อนรูป: ลากขวา = เห็นส่วนซ้ายของรูปมากขึ้น จึงต้องกลับทิศ
+            drag = { kind:'pan', baseX:m.posX, baseY:m.posY };
+        }
+        drag.startX = e.clientX; drag.startY = e.clientY; drag.w = r.width; drag.h = r.height;
+        st.classList.add('showing-coord');
+        st.setPointerCapture(e.pointerId);
+        e.preventDefault();
+    });
+
+    st.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        const m = heroCur();
+        const dx = (e.clientX - drag.startX) / drag.w * 100;
+        const dy = (e.clientY - drag.startY) / drag.h * 100;
+        if (drag.kind === 'crest') {
+            m.crestX = Math.round(clamp(drag.baseX + dx, 0, 100));
+            m.crestY = Math.round(clamp(drag.baseY + dy, 0, 100));
+            coord.textContent = 'โลโก้ ' + m.crestX + '% , ' + m.crestY + '%';
+        } else if (drag.kind === 'slo') {
+            m.sloX = Math.round(clamp(drag.baseX + dx, 0, 100));
+            m.sloY = Math.round(clamp(drag.baseY + dy, 0, 100));
+            coord.textContent = 'สโลแกน ' + m.sloX + '% , ' + m.sloY + '%';
+        } else {
+            m.posX = Math.round(clamp(drag.baseX - dx, 0, 100));
+            m.posY = Math.round(clamp(drag.baseY - dy, 0, 100));
+            coord.textContent = 'รูป ' + m.posX + '% , ' + m.posY + '%';
+            const px = document.getElementById('hero-posx'), py = document.getElementById('hero-posy');
+            if (px) px.value = m.posX;
+            if (py) py.value = m.posY;
+            updateHeroReadouts();
+        }
+        applyHeroLayout(heroLayout);
+        syncPreview();
+        setHeroDirty(true);
+    });
+
+    const stop = (e) => {
+        if (!drag) return;
+        if (drag.el) drag.el.classList.remove('dragging');
+        st.classList.remove('showing-coord');
+        try { st.releasePointerCapture(e.pointerId); } catch (err) { /* ปล่อยไปแล้ว */ }
+        drag = null;
+    };
+    st.addEventListener('pointerup', stop);
+    st.addEventListener('pointercancel', stop);
+
+    // ขนาดพรีวิวเปลี่ยน (หมุนจอ/ย่อหน้าต่าง) ต้องคำนวณสเกลใหม่
+    window.addEventListener('resize', () => { if (document.getElementById('hp-stage')) syncPreview(); });
+}
+
 function initHeroControls() {
     ['hero-veil','hero-posx','hero-posy','hero-height'].forEach(id => {
         const el = document.getElementById(id);
@@ -2004,24 +2296,11 @@ function initHeroControls() {
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
         b.addEventListener('click', () => { heroMode = b.dataset.mode; fillHeroControls(); });
     });
-    document.querySelectorAll('#hero-align-pick button').forEach(b => {
-        b.addEventListener('click', () => {
-            heroCur().align = b.dataset.align;
-            document.querySelectorAll('#hero-align-pick button')
-                    .forEach(x => x.classList.toggle('active', x === b));
-            applyHeroLayout(heroLayout);
-            setHeroDirty(true);
-        });
+    ['hero-crest-size','hero-slo-w','hero-slo-fs'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', readHeroControls);
     });
-    document.querySelectorAll('#hero-vpos-pick button').forEach(b => {
-        b.addEventListener('click', () => {
-            heroCur().vpos = b.dataset.vpos;
-            document.querySelectorAll('#hero-vpos-pick button')
-                    .forEach(x => x.classList.toggle('active', x === b));
-            applyHeroLayout(heroLayout);
-            setHeroDirty(true);
-        });
-    });
+    initPreviewEditor();
     const sv = document.getElementById('hero-save-btn');
     if (sv) sv.addEventListener('click', saveHeroLayoutFn);
     const rs = document.getElementById('hero-reset-btn');
