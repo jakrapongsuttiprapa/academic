@@ -151,7 +151,8 @@
            ตำแหน่งโลโก้กับสโลแกนเป็น "พิกัดอิสระ" (% ของเวทีรูป) ไม่ใช่ชิดซ้าย/กลาง/ขวาแล้ว
            ครูลากวางเองได้จากพรีวิวในหน้า admin */
         .hero {
-            position:relative; border-radius:34px; margin-bottom:22px;
+            position:relative; border-radius:34px; margin:0 auto 22px;
+            width:var(--hero-w-d, 100%);
             background:var(--card); border:1px solid var(--line); padding:10px;
             box-shadow:0 20px 48px -28px rgba(90,20,45,0.3), 0 2px 0 rgba(255,255,255,0.7) inset;
         }
@@ -268,7 +269,7 @@
         .term-note { font-size:0.78rem; color:var(--muted); margin-top:10px; line-height:1.6; }
 
         @media (max-width:1024px) {
-            .hero { padding:8px; border-radius:30px; }
+            .hero { padding:8px; border-radius:30px; width:var(--hero-w-m, 100%); }
             .hero-stage {
                 --hero-h:   var(--hero-h-m,   clamp(230px,56vw,340px));
                 --veil-op:  var(--veil-op-m,  1);
@@ -1175,6 +1176,14 @@
                     <div class="flex flex-col gap-4">
                         <div>
                             <div class="ctl-row">
+                                <label class="field-label" for="hero-w">ความกว้างการ์ด Hero</label>
+                                <span class="ctl-val" id="hero-w-val">100%</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-w" min="50" max="100" step="1" value="100">
+                            <p class="text-xs" style="color:var(--muted);">เทียบกับความกว้างเนื้อหาของหน้า · การ์ดจะอยู่กึ่งกลางเสมอ</p>
+                        </div>
+                        <div>
+                            <div class="ctl-row">
                                 <label class="field-label" for="hero-crest-size">ขนาดโลโก้</label>
                                 <span class="ctl-val" id="hero-crest-size-val">54px</span>
                             </div>
@@ -2020,10 +2029,10 @@ function applyBranding(d, freshen) {
 const HERO_MODE_DEFAULT = {
     desktop: { veil:100, posX:50, posY:32, height:0,
                crestX:8,  crestY:14, crestSize:54, sloX:26, sloY:56, sloW:42, sloFS:1.7,
-               sloFW:700, sloOp:82, sloPad:16, sloRad:20 },
+               sloFW:700, sloOp:82, sloPad:16, sloRad:20, heroW:100 },
     mobile:  { veil:100, posX:50, posY:32, height:0,
                crestX:13, crestY:15, crestSize:44, sloX:38, sloY:58, sloW:62, sloFS:1.18,
-               sloFW:700, sloOp:82, sloPad:13, sloRad:16 }
+               sloFW:700, sloOp:82, sloPad:13, sloRad:16, heroW:100 }
 };
 // แปลงค่ารุ่นเก่า (ชิดซ้าย/กลาง/ขวา) ให้เป็นพิกัด % โดยประมาณ ค่าที่ครูเคยตั้งไว้จะได้ไม่หาย
 const ALIGN_TO_X = { left:24, center:50, right:76 };
@@ -2075,6 +2084,7 @@ function parseHeroLayout(raw) {
         dst.sloOp  = num(src.sloOp, 0, 100, dflt.sloOp);
         dst.sloPad = num(src.sloPad, 2, 40, dflt.sloPad);
         dst.sloRad = num(src.sloRad, 0, 44, dflt.sloRad);
+        dst.heroW  = num(src.heroW, 50, 100, dflt.heroW);
     };
 
     // รูปแบบเก่า (รุ่นก่อนแยกโหมด) เป็น object แบนๆ — ย้ายค่าเดิมไปเป็นค่าของจอคอม
@@ -2128,6 +2138,7 @@ function applyHeroLayout(L) {
         h.style.setProperty('--slo-op-'   + sfx, (m.sloOp / 100).toFixed(2));
         h.style.setProperty('--slo-pad-'  + sfx, m.sloPad + 'px');
         h.style.setProperty('--slo-rad-'  + sfx, m.sloRad + 'px');
+        h.style.setProperty('--hero-w-'   + sfx, m.heroW + '%');
     };
     // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
     const c = L.cards, rs = document.documentElement.style;
@@ -2208,6 +2219,7 @@ function readHeroControls() {
     m.posX   = Number(g('hero-posx').value);
     m.posY   = Number(g('hero-posy').value);
     m.height = auto ? 0 : Number(g('hero-height').value);
+    m.heroW     = Number(g('hero-w').value);
     m.crestSize = Number(g('hero-crest-size').value);
     m.sloW      = Number(g('hero-slo-w').value);
     m.sloFS     = Number(g('hero-slo-fs').value);
@@ -2243,6 +2255,7 @@ function updateHeroReadouts() {
     g('hero-posx-val').textContent   = m.posX + '%';
     g('hero-posy-val').textContent   = m.posY + '%';
     g('hero-height-val').textContent = m.height === 0 ? 'อัตโนมัติ' : m.height + 'px';
+    g('hero-w-val').textContent = m.heroW + '%';
     g('hero-crest-size-val').textContent = m.crestSize + 'px';
     g('hero-slo-w-val').textContent      = m.sloW + '%';
     g('hero-slo-fs-val').textContent     = m.sloFS.toFixed(2) + 'rem';
@@ -2309,6 +2322,7 @@ function fillHeroControls() {
     document.querySelectorAll('#hero-term-pick button').forEach(b => {
         b.classList.toggle('active', Number(b.dataset.term) === Number(heroLayout.term));
     });
+    g('hero-w').value          = m.heroW;
     g('hero-crest-size').value = m.crestSize;
     g('hero-slo-w').value      = m.sloW;
     g('hero-slo-fs').value     = m.sloFS;
@@ -2539,7 +2553,7 @@ function initHeroControls() {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
-    ['hero-crest-size','hero-slo-w','hero-slo-fs','hero-slo-fw',
+    ['hero-w','hero-crest-size','hero-slo-w','hero-slo-fs','hero-slo-fw',
      'hero-slo-op','hero-slo-pad','hero-slo-rad'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
