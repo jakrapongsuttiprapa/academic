@@ -109,18 +109,43 @@
         }
         .btn-staff:hover  { transform:translateY(-2px); box-shadow:0 8px 18px -6px rgba(207,154,28,0.8), inset 0 1px 0 rgba(255,255,255,0.75); }
         .btn-staff:active { transform:translateY(1px); }
+        /* นาฬิกาหัวเว็บ: เหรียญทองนูน + วันที่ไทย + ตัวเลขแบบหลักคงที่
+           จุดคั่นกะพริบเบาๆ ให้รู้ว่าเดินอยู่จริง */
         .nav-clock {
-            font-family:ui-monospace,monospace; font-size:0.8rem; font-weight:600;
-            color:var(--mar-700); background:var(--rose-100);
+            align-items:center; gap:10px;
+            padding:5px 16px 5px 5px; border-radius:100px;
+            background:linear-gradient(170deg,#fff,var(--rose-100));
             border:1px solid var(--line);
-            padding:7px 16px; border-radius:100px;
-            align-items:center; gap:8px;
+            box-shadow:0 6px 16px -12px rgba(90,20,45,0.55), inset 0 1px 0 rgba(255,255,255,0.9);
             /* ซ่อน/แสดงเองด้วย CSS ไม่ใช้ hidden md:flex ของ Tailwind
                เพราะ .nav-clock กับ .hidden specificity เท่ากัน แล้วไฟล์นี้โหลดทีหลัง จะชนะจนโชว์บนมือถือ */
             display:none;
         }
         @media (min-width:768px) { .nav-clock { display:inline-flex; } }
-        .nav-clock i { font-size:0.76rem; color:var(--gold-600); }
+        .nav-clock .nc-orb {
+            width:32px; height:32px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.82rem; color:var(--mar-900); background:var(--gold-orb);
+            box-shadow:0 3px 8px -2px rgba(201,144,15,0.7), inset 0 -2px 4px rgba(168,117,18,0.3),
+                       inset 0 2px 3px rgba(255,255,255,0.85);
+        }
+        .nav-clock .nc-txt { display:flex; flex-direction:column; line-height:1.1; }
+        .nav-clock .nc-date {
+            font-family:'Kanit',sans-serif; font-size:0.62rem; font-weight:500;
+            color:var(--muted); letter-spacing:0.01em;
+        }
+        .nav-clock .nc-time {
+            font-family:ui-monospace,monospace; font-size:0.94rem; font-weight:700;
+            color:var(--mar-800); font-variant-numeric:tabular-nums;
+        }
+        /* ให้แต่ละหลักกว้างเท่ากัน เลขเปลี่ยนแล้วป้ายจะได้ไม่ขยับ */
+        .nav-clock .nc-time b { font-weight:700; }
+        .nav-clock .nc-sep { color:var(--gold-600); animation:ncBlink 1s step-end infinite; }
+        @keyframes ncBlink { 50% { opacity:0.25; } }
+        .nav-clock .nc-sec {
+            font-size:0.7rem; font-weight:600; color:var(--mar-500);
+            margin-left:3px; vertical-align:2px;   /* ยกขึ้นนิด ไม่ให้อ่านติดกับนาทีเป็นเลขเดียว */
+        }
 
         /* ───────────── HERO — การ์ดสว่าง: รูปด้านบน + แถบข้อความด้านล่าง ─────────────
            ตำแหน่งโลโก้กับสโลแกนเป็น "พิกัดอิสระ" (% ของเวทีรูป) ไม่ใช่ชิดซ้าย/กลาง/ขวาแล้ว
@@ -141,6 +166,10 @@
             --slo-y:     var(--slo-y-d,     56%);
             --slo-w:     var(--slo-w-d,     42%);
             --slo-fs:    var(--slo-fs-d,    1.7rem);
+            --slo-fw:    var(--slo-fw-d,    700);
+            --slo-op:    var(--slo-op-d,    0.82);
+            --slo-pad:   var(--slo-pad-d,   16px);
+            --slo-rad:   var(--slo-rad-d,   20px);
             position:relative; overflow:hidden; isolation:isolate;
             border-radius:26px; min-height:var(--hero-h); display:block;
             background:var(--paper-2);
@@ -189,12 +218,13 @@
             position:absolute; z-index:3;
             left:var(--slo-x); top:var(--slo-y); transform:translate(-50%,-50%);
             width:var(--slo-w); max-width:none; text-align:center;
-            background:rgba(255,255,255,0.82);
+            background:rgba(255,255,255,var(--slo-op));
             backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
-            border:1px solid rgba(255,255,255,0.9); border-radius:20px;
-            padding:16px 18px;
-            box-shadow:0 14px 34px -20px rgba(90,20,45,0.45);
-            font-family:'Kanit',sans-serif; font-weight:700;
+            border:1px solid rgba(255,255,255,calc(var(--slo-op) * 1.1));
+            border-radius:var(--slo-rad);
+            padding:var(--slo-pad) calc(var(--slo-pad) * 1.15);
+            box-shadow:0 14px 34px -20px rgba(90,20,45,calc(var(--slo-op) * 0.55));
+            font-family:'Kanit',sans-serif; font-weight:var(--slo-fw);
             font-size:var(--slo-fs); line-height:1.3; color:var(--mar-800);
         }
         .hero-slogan .accent { color:var(--rose-500); display:block; }
@@ -250,8 +280,11 @@
                 --slo-y:    var(--slo-y-m,    58%);
                 --slo-w:    var(--slo-w-m,    62%);
                 --slo-fs:   var(--slo-fs-m,   1.18rem);
+                --slo-fw:   var(--slo-fw-m,   700);
+                --slo-op:   var(--slo-op-m,   0.82);
+                --slo-pad:  var(--slo-pad-m,  13px);
+                --slo-rad:  var(--slo-rad-m,  16px);
             }
-            .hero-slogan { padding:13px 15px; }
             .hero-foot { padding:16px 8px 6px; }
         }
         @media (max-width:430px) {
@@ -262,7 +295,6 @@
             .ornament { margin:10px auto 0; width:min(170px,54%); }
             .hero-sub { font-size:0.8rem; }
             .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
-            .hero-slogan { padding:11px 13px; }
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
@@ -322,9 +354,19 @@
         /* ───────────── ไทล์ (ปุ่มบริการหลัก + การ์ดเมนู) ─────────────
            ทรงสี่เหลี่ยมใหญ่ ไอคอนทองกลมมุมบนซ้าย ลูกศรในวงแหวนมุมบนขวา
            ข้อความชิดล่างซ้าย และลายเส้นละเอียดเป็นลายน้ำ */
+        /* จำนวนการ์ดต่อแถวและความสูง ตั้งได้จากหน้า admin ผ่านตัวแปรพวกนี้ */
+        .card-grid {
+            display:grid; gap:12px;
+            grid-template-columns:repeat(var(--cg-cols-m,2), minmax(0,1fr));
+        }
+        .portal-grid { grid-template-columns:repeat(var(--pg-cols-m,2), minmax(0,1fr)); }
+        @media (min-width:768px) {
+            .card-grid   { grid-template-columns:repeat(var(--cg-cols,4), minmax(0,1fr)); }
+            .portal-grid { grid-template-columns:repeat(var(--pg-cols,2), minmax(0,1fr)); }
+        }
         .tile, .portal {
             position:relative; overflow:hidden; cursor:pointer; isolation:isolate;
-            border-radius:30px; padding:19px; color:#fff; min-height:200px;
+            border-radius:30px; padding:19px; color:#fff; min-height:var(--tile-h-m,172px);
             display:flex; flex-direction:column;
             background-color:var(--t-base, var(--violet));
             background-image:var(--guilloche), var(--t-fill, linear-gradient(152deg,#9A52D8,#5E1C9B));
@@ -390,7 +432,8 @@
         }
 
         @media (min-width:768px) {
-            .portal { min-height:248px; padding:24px; }
+            .tile, .portal { min-height:var(--tile-h,200px); }
+            .portal { min-height:var(--portal-h,248px); padding:24px; }
             .portal h3 { font-size:1.72rem; }
             .portal p  { font-size:0.92rem; margin-top:5px; }
             .portal-ic { width:66px; height:66px; font-size:1.62rem; }
@@ -581,12 +624,12 @@
         }
         .hp-slo {
             left:var(--hp-slo-x,26%); top:var(--hp-slo-y,56%);
-            width:var(--hp-slo-w,42%); border-radius:13px;
-            background:rgba(255,255,255,0.86);
+            width:var(--hp-slo-w,42%); border-radius:var(--hp-slo-rad,13px);
+            background:rgba(255,255,255,var(--hp-slo-op,0.86));
             backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
             border:1px solid rgba(255,255,255,0.9);
-            padding:9px 11px; text-align:center;
-            font-family:'Kanit',sans-serif; font-weight:700; line-height:1.3;
+            padding:var(--hp-slo-pad,9px) calc(var(--hp-slo-pad,9px) * 1.15); text-align:center;
+            font-family:'Kanit',sans-serif; font-weight:var(--hp-slo-fw,700); line-height:1.3;
             font-size:var(--hp-slo-fs,0.9rem); color:var(--mar-800);
             box-shadow:0 8px 20px -14px rgba(90,20,45,0.5);
         }
@@ -674,6 +717,16 @@
             font-size:0.73rem; color:var(--muted); line-height:1.6;
             background:#F7FAF8; border:1px dashed var(--line); border-radius:12px; padding:9px 12px;
         }
+        .ctl-group {
+            display:flex; flex-direction:column; gap:14px;
+            padding:14px; border-radius:16px;
+            background:#F7FAF8; border:1px solid var(--line);
+        }
+        .ctl-group-head {
+            font-family:'Kanit',sans-serif; font-size:0.84rem; font-weight:600; color:var(--mar-800);
+        }
+        .ctl-fit { font-size:0.73rem; color:var(--muted); margin-top:6px; line-height:1.5; }
+        .ctl-fit.warn { color:#A8560A; font-weight:600; }
         .ctl-dirty {
             display:none; font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600;
             padding:4px 11px; border-radius:100px; background:#FDF0DC; color:#8A5410;
@@ -770,7 +823,7 @@
         @keyframes rise { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
         .skeleton { background:linear-gradient(90deg,#E6EDE9 25%,#F4F8F6 50%,#E6EDE9 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
         @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        .card-skeleton { min-height:200px; border-radius:30px; background:var(--card); border:1px solid var(--line); padding:18px; }
+        .card-skeleton { min-height:var(--tile-h-m,172px); border-radius:30px; background:var(--card); border:1px solid var(--line); padding:18px; }
         .modal-overlay { background:rgba(90,20,45,0.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
 
         /* ───────────── จอเล็ก ───────────── */
@@ -789,7 +842,7 @@
             .hero-sub { font-size:0.8rem; }
             .medallion { width:40px; height:40px; top:14px; left:14px; }
             .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
-            .tile, .portal { min-height:172px; padding:16px; border-radius:25px; }
+            .tile, .portal { padding:16px; border-radius:25px; }
             .tile-icon, .portal-ic { width:46px; height:46px; font-size:1.14rem; }
             .tile-go, .portal-chev { width:31px; height:31px; font-size:0.72rem; }
             .menu-title, .portal h3 { font-size:1.08rem; }
@@ -823,7 +876,13 @@
             </div>
         </div>
         <div class="flex items-center gap-3 flex-shrink-0">
-            <div class="nav-clock"><i class="fa-regular fa-clock"></i><span id="clock-span">00:00:00</span></div>
+            <div class="nav-clock">
+                <span class="nc-orb"><i class="fa-regular fa-clock"></i></span>
+                <span class="nc-txt">
+                    <span class="nc-date" id="clock-date">—</span>
+                    <span class="nc-time" id="clock-span">--<span class="nc-sep">:</span>--</span>
+                </span>
+            </div>
             <button onclick="navigate('login-admin')" class="btn-staff">
                 <i class="fa-solid fa-user"></i> ครูวิชาการ
             </button>
@@ -885,7 +944,7 @@
         <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
 
         <div class="sec-label"><span>บริการหลัก</span><i></i></div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="card-grid portal-grid">
             <div onclick="navigate('students')" class="portal portal-a">
                 <i class="fa-solid fa-user-group portal-art" aria-hidden="true"></i>
                 <div class="tile-head">
@@ -912,7 +971,7 @@
 
         <div id="menu-section" class="hidden">
             <div class="sec-label"><span>รายการประกาศ</span><i></i></div>
-            <div id="all-cards-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+            <div id="all-cards-container" class="card-grid"></div>
         </div>
 
         <button onclick="showQRModal()" class="qr-btn mt-5">
@@ -1138,6 +1197,36 @@
 
                         <div>
                             <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-fw">ความหนาตัวอักษรสโลแกน</label>
+                                <span class="ctl-val" id="hero-slo-fw-val">หนา</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-slo-fw" min="200" max="900" step="100" value="700">
+                        </div>
+                        <div>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-op">ความทึบของแผ่นสโลแกน</label>
+                                <span class="ctl-val" id="hero-slo-op-val">82%</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-slo-op" min="0" max="100" step="2" value="82">
+                            <p class="text-xs" style="color:var(--muted);">0% = ไม่มีแผ่น เหลือแต่ตัวหนังสือลอยบนรูป</p>
+                        </div>
+                        <div>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-pad">ความหนาขอบในแผ่น</label>
+                                <span class="ctl-val" id="hero-slo-pad-val">16px</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-slo-pad" min="2" max="40" step="1" value="16">
+                        </div>
+                        <div>
+                            <div class="ctl-row">
+                                <label class="field-label" for="hero-slo-rad">ความมนมุมแผ่น</label>
+                                <span class="ctl-val" id="hero-slo-rad-val">20px</span>
+                            </div>
+                            <input type="range" class="ctl-range" id="hero-slo-rad" min="0" max="44" step="1" value="20">
+                        </div>
+
+                        <div>
+                            <div class="ctl-row">
                                 <label class="field-label" for="hero-veil">ความเข้มของม่านบังรูป</label>
                                 <span class="ctl-val" id="hero-veil-val">100%</span>
                             </div>
@@ -1174,6 +1263,53 @@
                         </div>
 
                         <p class="ctl-note">รายการด้านล่างนี้ใช้ร่วมกันทั้งสองโหมด</p>
+
+                        <div class="ctl-group">
+                            <p class="ctl-group-head"><i class="fa-solid fa-table-cells-large mr-1"></i>ขนาดการ์ด</p>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-cols">การ์ดประกาศต่อแถว (จอคอม)</label>
+                                    <span class="ctl-val" id="cd-cols-val">4 ใบ</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-cols" min="1" max="6" step="1" value="4">
+                                <p class="ctl-fit" id="cd-fit"></p>
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-colsm">การ์ดประกาศต่อแถว (มือถือ)</label>
+                                    <span class="ctl-val" id="cd-colsm-val">2 ใบ</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-colsm" min="1" max="3" step="1" value="2">
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-h">ความสูงการ์ดประกาศ (จอคอม)</label>
+                                    <span class="ctl-val" id="cd-h-val">200px</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-h" min="130" max="360" step="2" value="200">
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-hm">ความสูงการ์ดประกาศ (มือถือ)</label>
+                                    <span class="ctl-val" id="cd-hm-val">172px</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-hm" min="110" max="300" step="2" value="172">
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-pcols">ปุ่มบริการหลักต่อแถว (จอคอม)</label>
+                                    <span class="ctl-val" id="cd-pcols-val">2 ใบ</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-pcols" min="1" max="4" step="1" value="2">
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="cd-ph">ความสูงปุ่มบริการหลัก (จอคอม)</label>
+                                    <span class="ctl-val" id="cd-ph-val">248px</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="cd-ph" min="130" max="400" step="2" value="248">
+                            </div>
+                        </div>
 
                         <div class="toggle-row">
                             <div class="flex items-center gap-2">
@@ -1683,10 +1819,25 @@ function navigate(viewId) {
     if (viewId === 'roster')      { cancelEditStudent(); loadRoster(); }
 }
 
-setInterval(() => {
-    const el = document.getElementById('clock-span');
-    if (el) el.textContent = new Date().toLocaleTimeString('th-TH');
-}, 1000);
+// นาฬิกาหัวเว็บ — เขียนชั่วโมง/นาทีเป็นก้อนหนา วินาทีตัวเล็ก คั่นด้วยจุดกะพริบ
+const TH_DAY   = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const TH_MONTH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+                  'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function tickClock() {
+    const t  = document.getElementById('clock-span');
+    const dd = document.getElementById('clock-date');
+    if (!t) return;
+    const n  = new Date();
+    const p2 = (v) => String(v).padStart(2, '0');
+    t.innerHTML = '<b>' + p2(n.getHours()) + '</b><span class="nc-sep">:</span>' +
+                  '<b>' + p2(n.getMinutes()) + '</b>' +
+                  '<span class="nc-sec">' + p2(n.getSeconds()) + '</span>';
+    // ปี พ.ศ. = ค.ศ. + 543
+    if (dd) dd.textContent = 'วัน' + TH_DAY[n.getDay()] + ' ' + n.getDate() + ' ' +
+                             TH_MONTH[n.getMonth()] + ' ' + (n.getFullYear() + 543);
+}
+tickClock();
+setInterval(tickClock, 1000);
 
 // ════════════════════════════════════════
 // Dashboard
@@ -1868,9 +2019,11 @@ function applyBranding(d, freshen) {
 // ════════════════════════════════════════
 const HERO_MODE_DEFAULT = {
     desktop: { veil:100, posX:50, posY:32, height:0,
-               crestX:8,  crestY:14, crestSize:54, sloX:26, sloY:56, sloW:42, sloFS:1.7 },
+               crestX:8,  crestY:14, crestSize:54, sloX:26, sloY:56, sloW:42, sloFS:1.7,
+               sloFW:700, sloOp:82, sloPad:16, sloRad:20 },
     mobile:  { veil:100, posX:50, posY:32, height:0,
-               crestX:13, crestY:15, crestSize:44, sloX:38, sloY:58, sloW:62, sloFS:1.18 }
+               crestX:13, crestY:15, crestSize:44, sloX:38, sloY:58, sloW:62, sloFS:1.18,
+               sloFW:700, sloOp:82, sloPad:13, sloRad:16 }
 };
 // แปลงค่ารุ่นเก่า (ชิดซ้าย/กลาง/ขวา) ให้เป็นพิกัด % โดยประมาณ ค่าที่ครูเคยตั้งไว้จะได้ไม่หาย
 const ALIGN_TO_X = { left:24, center:50, right:76 };
@@ -1881,6 +2034,7 @@ function heroDefaults() {
         desktop: Object.assign({}, HERO_MODE_DEFAULT.desktop),
         mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
         crest:true, orn:true, frame:true, slogan:true, sloganText:SLOGAN_DEFAULT,
+        cards:{ cols:4, colsM:2, h:200, hM:172, pCols:2, pH:248 },
         term:2, year:'2569', termNote:'เทอม 2 = พ.ย.–มี.ค.'
     };
 }
@@ -1916,7 +2070,11 @@ function parseHeroLayout(raw) {
         dst.sloY = (src.sloY === undefined && VPOS_TO_Y[src.vpos] !== undefined)
                      ? VPOS_TO_Y[src.vpos] : num(src.sloY, -10, 110, dflt.sloY);
         dst.sloW  = num(src.sloW, 15, 96, dflt.sloW);
-        dst.sloFS = num(src.sloFS, 0.7, 3.4, dflt.sloFS);
+        dst.sloFS  = num(src.sloFS, 0.7, 3.4, dflt.sloFS);
+        dst.sloFW  = num(src.sloFW, 200, 900, dflt.sloFW);
+        dst.sloOp  = num(src.sloOp, 0, 100, dflt.sloOp);
+        dst.sloPad = num(src.sloPad, 2, 40, dflt.sloPad);
+        dst.sloRad = num(src.sloRad, 0, 44, dflt.sloRad);
     };
 
     // รูปแบบเก่า (รุ่นก่อนแยกโหมด) เป็น object แบนๆ — ย้ายค่าเดิมไปเป็นค่าของจอคอม
@@ -1928,6 +2086,16 @@ function parseHeroLayout(raw) {
     if (typeof o.crest === 'boolean') L.crest = o.crest;
     if (typeof o.orn   === 'boolean') L.orn   = o.orn;
     if (typeof o.frame === 'boolean') L.frame = o.frame;
+    // ขนาด/จำนวนการ์ดต่อแถว
+    if (o.cards && typeof o.cards === 'object') {
+        const c = o.cards, d = L.cards;
+        d.cols  = num(c.cols,  1, 6,   d.cols);
+        d.colsM = num(c.colsM, 1, 3,   d.colsM);
+        d.h     = num(c.h,     130, 360, d.h);
+        d.hM    = num(c.hM,    110, 300, d.hM);
+        d.pCols = num(c.pCols, 1, 4,   d.pCols);
+        d.pH    = num(c.pH,    130, 400, d.pH);
+    }
     if (typeof o.slogan === 'boolean') L.slogan = o.slogan;
     if (typeof o.sloganText === 'string') L.sloganText = o.sloganText.slice(0, 180);
     if (Number(o.term) === 1 || Number(o.term) === 2) L.term = Number(o.term);
@@ -1956,8 +2124,21 @@ function applyHeroLayout(L) {
         h.style.setProperty('--slo-y-'    + sfx, m.sloY + '%');
         h.style.setProperty('--slo-w-'    + sfx, m.sloW + '%');
         h.style.setProperty('--slo-fs-'   + sfx, m.sloFS + 'rem');
+        h.style.setProperty('--slo-fw-'   + sfx, m.sloFW);
+        h.style.setProperty('--slo-op-'   + sfx, (m.sloOp / 100).toFixed(2));
+        h.style.setProperty('--slo-pad-'  + sfx, m.sloPad + 'px');
+        h.style.setProperty('--slo-rad-'  + sfx, m.sloRad + 'px');
     };
     // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
+    const c = L.cards, rs = document.documentElement.style;
+    rs.setProperty('--cg-cols',   c.cols);
+    rs.setProperty('--cg-cols-m', c.colsM);
+    rs.setProperty('--pg-cols',   c.pCols);
+    rs.setProperty('--pg-cols-m', Math.min(c.colsM, 2));
+    rs.setProperty('--tile-h',    c.h  + 'px');
+    rs.setProperty('--tile-h-m',  c.hM + 'px');
+    rs.setProperty('--portal-h',  c.pH + 'px');
+
     set('d', L.desktop, 'clamp(260px,32vw,400px)');
     set('m', L.mobile,  'clamp(230px,56vw,340px)');
         applyTerm(L);
@@ -2030,9 +2211,20 @@ function readHeroControls() {
     m.crestSize = Number(g('hero-crest-size').value);
     m.sloW      = Number(g('hero-slo-w').value);
     m.sloFS     = Number(g('hero-slo-fs').value);
+    m.sloFW     = Number(g('hero-slo-fw').value);
+    m.sloOp     = Number(g('hero-slo-op').value);
+    m.sloPad    = Number(g('hero-slo-pad').value);
+    m.sloRad    = Number(g('hero-slo-rad').value);
     heroLayout.crest = g('hero-crest-on').checked;
     heroLayout.orn   = g('hero-orn-on').checked;
     heroLayout.frame = g('hero-frame-on').checked;
+    const cd = heroLayout.cards;
+    cd.cols  = Number(g('cd-cols').value);
+    cd.colsM = Number(g('cd-colsm').value);
+    cd.h     = Number(g('cd-h').value);
+    cd.hM    = Number(g('cd-hm').value);
+    cd.pCols = Number(g('cd-pcols').value);
+    cd.pH    = Number(g('cd-ph').value);
     heroLayout.slogan     = g('hero-slogan-on').checked;
     heroLayout.sloganText = g('hero-slogan-text').value;
     heroLayout.year     = g('hero-year').value.trim() || '2569';
@@ -2054,6 +2246,38 @@ function updateHeroReadouts() {
     g('hero-crest-size-val').textContent = m.crestSize + 'px';
     g('hero-slo-w-val').textContent      = m.sloW + '%';
     g('hero-slo-fs-val').textContent     = m.sloFS.toFixed(2) + 'rem';
+    const FW_NAME = { 200:'บางมาก', 300:'บาง', 400:'ปกติ', 500:'ปานกลาง',
+                      600:'กึ่งหนา', 700:'หนา', 800:'หนามาก', 900:'หนาสุด' };
+    g('hero-slo-fw-val').textContent  = FW_NAME[m.sloFW] || m.sloFW;
+    g('hero-slo-op-val').textContent  = m.sloOp + '%';
+    g('hero-slo-pad-val').textContent = m.sloPad + 'px';
+    g('hero-slo-rad-val').textContent = m.sloRad + 'px';
+
+    const cd = heroLayout.cards;
+    g('cd-cols-val').textContent  = cd.cols  + ' ใบ';
+    g('cd-colsm-val').textContent = cd.colsM + ' ใบ';
+    g('cd-h-val').textContent     = cd.h  + 'px';
+    g('cd-hm-val').textContent    = cd.hM + 'px';
+    g('cd-pcols-val').textContent = cd.pCols + ' ใบ';
+    g('cd-ph-val').textContent    = cd.pH + 'px';
+
+    // บอกตรงๆ ว่าจำนวนที่เลือกทำให้แถวสุดท้ายเหลือกี่ใบ จะได้ไม่ต้องเดาเอง
+    const fit = g('cd-fit');
+    if (fit) {
+        const n = document.querySelectorAll('#all-cards-container .tile').length;
+        if (!n) { fit.textContent = ''; fit.classList.remove('warn'); }
+        else {
+            const left = n % cd.cols;
+            const rows = Math.ceil(n / cd.cols);
+            if (left === 0) {
+                fit.textContent = 'ตอนนี้มี ' + n + ' การ์ด → เต็มพอดี ' + rows + ' แถว';
+                fit.classList.remove('warn');
+            } else {
+                fit.textContent = 'ตอนนี้มี ' + n + ' การ์ด → ' + rows + ' แถว แถวสุดท้ายเหลือ ' + left + ' ใบ';
+                fit.classList.add('warn');
+            }
+        }
+    }
 }
 
 // เอาค่าใน heroLayout ขึ้นไปแสดงบนแผงควบคุม (ตอนเปิดหน้า admin / สลับโหมด / กดคืนค่า)
@@ -2071,6 +2295,13 @@ function fillHeroControls() {
     g('hero-crest-on').checked = heroLayout.crest;
     g('hero-orn-on').checked   = heroLayout.orn;
     g('hero-frame-on').checked = heroLayout.frame;
+    const cdf = heroLayout.cards;
+    g('cd-cols').value  = cdf.cols;
+    g('cd-colsm').value = cdf.colsM;
+    g('cd-h').value     = cdf.h;
+    g('cd-hm').value    = cdf.hM;
+    g('cd-pcols').value = cdf.pCols;
+    g('cd-ph').value    = cdf.pH;
     g('hero-slogan-on').checked   = heroLayout.slogan;
     g('hero-slogan-text').value   = heroLayout.sloganText || '';
     g('hero-year').value      = heroLayout.year || '';
@@ -2081,6 +2312,10 @@ function fillHeroControls() {
     g('hero-crest-size').value = m.crestSize;
     g('hero-slo-w').value      = m.sloW;
     g('hero-slo-fs').value     = m.sloFS;
+    g('hero-slo-fw').value     = m.sloFW;
+    g('hero-slo-op').value     = m.sloOp;
+    g('hero-slo-pad').value    = m.sloPad;
+    g('hero-slo-rad').value    = m.sloRad;
     updateHeroReadouts();
     syncPreview();
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
@@ -2156,12 +2391,16 @@ function syncPreview() {
     st.style.setProperty('--hp-slo-x', m.sloX + '%');
     st.style.setProperty('--hp-slo-y', m.sloY + '%');
     st.style.setProperty('--hp-slo-w', m.sloW + '%');
+    st.style.setProperty('--hp-slo-fw', m.sloFW);
+    st.style.setProperty('--hp-slo-op', (m.sloOp / 100).toFixed(2));
+    st.style.setProperty('--hp-slo-rad', Math.round(m.sloRad * 0.7) + 'px');
 
     // ขนาดโลโก้/ตัวหนังสือย่อตามอัตราส่วนความกว้างพรีวิวต่อความกว้างจริง
     const realW = isMobile ? 390 : 1150;
     const k = Math.max(0.2, st.clientWidth / realW);
     st.style.setProperty('--hp-crest-sz', Math.round(m.crestSize * k) + 'px');
     st.style.setProperty('--hp-slo-fs', (m.sloFS * k).toFixed(2) + 'rem');
+    st.style.setProperty('--hp-slo-pad', Math.max(3, Math.round(m.sloPad * k)) + 'px');
 
     // รูปกับโลโก้ ใช้ไฟล์เดียวกับหน้าแรก
     const bg = document.getElementById('hp-bg');
@@ -2296,7 +2535,12 @@ function initHeroControls() {
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
         b.addEventListener('click', () => { heroMode = b.dataset.mode; fillHeroControls(); });
     });
-    ['hero-crest-size','hero-slo-w','hero-slo-fs'].forEach(id => {
+    ['cd-cols','cd-colsm','cd-h','cd-hm','cd-pcols','cd-ph'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', readHeroControls);
+    });
+    ['hero-crest-size','hero-slo-w','hero-slo-fs','hero-slo-fw',
+     'hero-slo-op','hero-slo-pad','hero-slo-rad'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
