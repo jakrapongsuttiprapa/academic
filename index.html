@@ -51,6 +51,17 @@
 
         * { box-sizing:border-box; }
 
+        /* ภาพพื้นหลังทั้งหน้า — ปรับความชัดและความเบลอได้จากหน้า admin
+           ขยาย 6% กันขอบโปร่งโผล่ตอนเบลอ */
+        .page-bg {
+            position:fixed; inset:0; z-index:-1; pointer-events:none;
+            background-image:var(--bg-img, none);
+            background-size:cover; background-position:center; background-repeat:no-repeat;
+            opacity:var(--bg-op, 0);
+            filter:blur(var(--bg-blur, 0px));
+            transform:scale(1.06);
+        }
+
         body {
             font-family:'Sarabun',sans-serif;
             color:var(--ink);
@@ -833,16 +844,9 @@
             .hero-img-wrap img.hero-img-mobile  { display:block; }
         }
         @media (max-width:430px) {
-            /* บีบโซนพิธีการบนจอเล็ก ไม่ให้กินทั้งหน้าจนไม่เห็นเมนู */
-            .hero-frame { inset:7px; border-radius:17px; }
-            .hero-frame::before { top:11px; right:11px; width:26px; height:11px;
-                background-size:11px 11px, 11px 11px; }
-            .hero-slogan { font-size:1.1rem; padding:11px 14px; max-width:min(76%,230px); }
-            .hero-title { font-size:clamp(1.4rem,6.6vw,1.9rem); }
-            .ornament { margin:10px auto 0; width:min(170px,54%); }
-            .hero-sub { font-size:0.8rem; }
-            .medallion { width:40px; height:40px; top:14px; left:14px; }
-            .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
+            /* บล็อกนี้คุมเฉพาะการ์ด/สถิติ — ห้ามใส่กฎของโลโก้กับสโลแกนที่นี่
+               เพราะจะทับค่าที่ครูตั้งจากหน้า admin (เคยเป็นบั๊กมาแล้ว: ตั้งขนาดโลโก้
+               กับลากตำแหน่งบนมือถือแล้วไม่มีผล เพราะโดน width:40px ตรงนี้ทับ) */
             .tile, .portal { padding:16px; border-radius:25px; }
             .tile-icon, .portal-ic { width:46px; height:46px; font-size:1.14rem; }
             .tile-go, .portal-chev { width:31px; height:31px; font-size:0.72rem; }
@@ -865,6 +869,7 @@
 </head>
 
 <body class="min-h-screen flex flex-col">
+<div class="page-bg" id="page-bg" aria-hidden="true"></div>
 
 <!-- ═══════════ NAVBAR ═══════════ -->
 <nav class="navbar sticky top-0 z-50 px-4 py-3">
@@ -1104,15 +1109,15 @@
                     <div class="tag" style="background:#FBEEDD;color:#8A5410;"><i class="fa-solid fa-images"></i> รูปภาพหน้าเว็บ</div>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <label class="field-label">โลโก้โรงเรียน (ใช้เป็น favicon ด้วย) — แนะนำ PNG พื้นโปร่งใส</label>
+                            <label class="field-label">โลโก้โรงเรียน (ใช้เป็น favicon ด้วย) · แนะนำ PNG พื้นโปร่งใส 512 × 512 px</label>
                             <div class="uploader" id="up-logo"></div>
                         </div>
                         <div>
-                            <label class="field-label">รูป Hero — จอคอมพิวเตอร์ (แนวนอน)</label>
+                            <label class="field-label">รูป Hero — จอคอมพิวเตอร์ · แนะนำ 2200 × 800 px (อัตราส่วน 2.75:1)</label>
                             <div class="uploader" id="up-hero"></div>
                         </div>
                         <div>
-                            <label class="field-label">รูป Hero — มือถือ (แนวตั้ง/จัตุรัส) — ไม่ใส่ก็ได้ จะใช้รูปจอคอมแทน</label>
+                            <label class="field-label">รูป Hero — มือถือ/แท็บเล็ต · แนะนำ 1600 × 1070 px (3:2) — ไม่ใส่ก็ได้ จะใช้รูปจอคอมแทน</label>
                             <div class="uploader" id="up-hero-m"></div>
                         </div>
                     </div>
@@ -1272,6 +1277,30 @@
                         </div>
 
                         <p class="ctl-note">รายการด้านล่างนี้ใช้ร่วมกันทั้งสองโหมด</p>
+
+                        <div class="ctl-group">
+                            <p class="ctl-group-head"><i class="fa-solid fa-panorama mr-1"></i>ภาพพื้นหลังทั้งหน้า</p>
+                            <div>
+                                <label class="field-label">รูปพื้นหลัง · แนะนำ 2000 × 1200 px ขึ้นไป — ไม่ใส่ก็ได้</label>
+                                <div class="uploader" id="up-bg"></div>
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="bg-op">ความชัดของภาพ</label>
+                                    <span class="ctl-val" id="bg-op-val">22%</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="bg-op" min="0" max="100" step="1" value="22">
+                                <p class="text-xs" style="color:var(--muted);">ยิ่งน้อยยิ่งจาง · แนะนำไม่เกิน 35% ไม่งั้นตัวหนังสือจะอ่านยาก</p>
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="bg-blur">ความเบลอ</label>
+                                    <span class="ctl-val" id="bg-blur-val">0px</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="bg-blur" min="0" max="24" step="1" value="0">
+                            </div>
+                            <p class="ctl-fit">ปรับแล้วเห็นผลที่พื้นหลังหน้านี้ทันที · กด <b>บันทึก</b> ด้านล่างเพื่อให้ทุกคนเห็น</p>
+                        </div>
 
                         <div class="ctl-group">
                             <p class="ctl-group-head"><i class="fa-solid fa-table-cells-large mr-1"></i>ขนาดการ์ด</p>
@@ -2044,6 +2073,7 @@ function heroDefaults() {
         mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
         crest:true, orn:true, frame:true, slogan:true, sloganText:SLOGAN_DEFAULT,
         cards:{ cols:4, colsM:2, h:200, hM:172, pCols:2, pH:248 },
+        bg:{ img:'', op:22, blur:0 },
         term:2, year:'2569', termNote:'เทอม 2 = พ.ย.–มี.ค.'
     };
 }
@@ -2097,6 +2127,11 @@ function parseHeroLayout(raw) {
     if (typeof o.orn   === 'boolean') L.orn   = o.orn;
     if (typeof o.frame === 'boolean') L.frame = o.frame;
     // ขนาด/จำนวนการ์ดต่อแถว
+    if (o.bg && typeof o.bg === 'object') {
+        if (typeof o.bg.img === 'string') L.bg.img = o.bg.img.slice(0, 600);
+        L.bg.op   = num(o.bg.op,   0, 100, L.bg.op);
+        L.bg.blur = num(o.bg.blur, 0, 24,  L.bg.blur);
+    }
     if (o.cards && typeof o.cards === 'object') {
         const c = o.cards, d = L.cards;
         d.cols  = num(c.cols,  1, 6,   d.cols);
@@ -2141,6 +2176,11 @@ function applyHeroLayout(L) {
         h.style.setProperty('--hero-w-'   + sfx, m.heroW + '%');
     };
     // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
+    const bg = L.bg, bs = document.documentElement.style;
+    bs.setProperty('--bg-img',  bg.img ? 'url("' + bg.img.replace(/"/g, '%22') + '")' : 'none');
+    bs.setProperty('--bg-op',   bg.img ? (bg.op / 100).toFixed(2) : '0');
+    bs.setProperty('--bg-blur', bg.blur + 'px');
+
     const c = L.cards, rs = document.documentElement.style;
     rs.setProperty('--cg-cols',   c.cols);
     rs.setProperty('--cg-cols-m', c.colsM);
@@ -2230,6 +2270,8 @@ function readHeroControls() {
     heroLayout.crest = g('hero-crest-on').checked;
     heroLayout.orn   = g('hero-orn-on').checked;
     heroLayout.frame = g('hero-frame-on').checked;
+    heroLayout.bg.op   = Number(g('bg-op').value);
+    heroLayout.bg.blur = Number(g('bg-blur').value);
     const cd = heroLayout.cards;
     cd.cols  = Number(g('cd-cols').value);
     cd.colsM = Number(g('cd-colsm').value);
@@ -2266,6 +2308,8 @@ function updateHeroReadouts() {
     g('hero-slo-pad-val').textContent = m.sloPad + 'px';
     g('hero-slo-rad-val').textContent = m.sloRad + 'px';
 
+    g('bg-op-val').textContent   = heroLayout.bg.op + '%';
+    g('bg-blur-val').textContent = heroLayout.bg.blur + 'px';
     const cd = heroLayout.cards;
     g('cd-cols-val').textContent  = cd.cols  + ' ใบ';
     g('cd-colsm-val').textContent = cd.colsM + ' ใบ';
@@ -2308,6 +2352,9 @@ function fillHeroControls() {
     g('hero-crest-on').checked = heroLayout.crest;
     g('hero-orn-on').checked   = heroLayout.orn;
     g('hero-frame-on').checked = heroLayout.frame;
+    g('bg-op').value   = heroLayout.bg.op;
+    g('bg-blur').value = heroLayout.bg.blur;
+    if (uploaders['up-bg']) uploaders['up-bg'].setUrl(heroLayout.bg.img);
     const cdf = heroLayout.cards;
     g('cd-cols').value  = cdf.cols;
     g('cd-colsm').value = cdf.colsM;
@@ -2549,7 +2596,7 @@ function initHeroControls() {
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
         b.addEventListener('click', () => { heroMode = b.dataset.mode; fillHeroControls(); });
     });
-    ['cd-cols','cd-colsm','cd-h','cd-hm','cd-pcols','cd-ph'].forEach(id => {
+    ['bg-op','bg-blur','cd-cols','cd-colsm','cd-h','cd-hm','cd-pcols','cd-ph'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
@@ -3207,12 +3254,21 @@ function initUploaders() {
     // สามตัวนี้บันทึกเองทันทีที่อัปโหลดเสร็จ ไม่มีปุ่มบันทึกของตัวเอง
     createUploader({ id:'up-logo', maxDim:512, keepPng:true, logoFit:true, autoSave:true,
         hint:'ยังไม่ได้เลือกโลโก้', onChange:(url) => saveImageSetting('logo_img', url) });
-    createUploader({ id:'up-hero', maxDim:1600, autoSave:true,
+    createUploader({ id:'up-hero', maxDim:2200, autoSave:true,
         hint:'ยังไม่ได้เลือกรูป', onChange:(url) => saveImageSetting('hero_img', url) });
-    createUploader({ id:'up-hero-m', maxDim:1200, autoSave:true,
+    createUploader({ id:'up-hero-m', maxDim:1600, autoSave:true,
         hint:'ยังไม่ได้เลือกรูป — ถ้าไม่ใส่ จะใช้รูปจอคอมแทน',
         onChange:(url) => saveImageSetting('hero_img_mobile', url) });
     // สองตัวนี้ไม่บันทึกทันที เพราะต้องไปพร้อมข้อความ/ชื่อเมนูในฟอร์มเดียวกัน
+    // เก็บ url ไว้ในก้อน hero_layout จึงไม่ต้องเพิ่มคีย์ใหม่ใน Code.gs
+    createUploader({ id:'up-bg', maxDim:2000,
+        hint:'ยังไม่ได้เลือกรูปพื้นหลัง',
+        saveHint:'กดปุ่ม "บันทึก" ในแผงปรับแต่งรูป Hero เพื่อยืนยัน',
+        onChange:(url) => {
+            heroLayout.bg.img = url || '';
+            applyHeroLayout(heroLayout);
+            setHeroDirty(true);
+        } });
     createUploader({ id:'up-ann',  maxDim:1200, hint:'ยังไม่ได้เลือกรูป',
         saveHint:'กดปุ่ม "อัปเดตประกาศ" ด้านล่างเพื่อบันทึก' });
     createUploader({ id:'up-card', maxDim:600,  hint:'ไม่ใส่ก็ได้ — จะใช้ไอคอนแทน',
