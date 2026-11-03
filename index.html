@@ -20,19 +20,33 @@
            จังหวะหน้า: โซนพิธีการ (มรกตเข้ม) → โซนใช้งาน (กระดาษอุ่น)
            ══════════════════════════════════════════════ */
         :root {
-            --em-950:#04201A; --em-900:#063226; --em-800:#09412F; --em-700:#0B5240;
-            --em-tint:#EAF2EE;
-            --gold-100:#FBF0C8; --gold-200:#F3E3A8; --gold-400:#D9B64B;
-            --gold-600:#A97D1C; --gold-700:#8A6512;
-            --paper:#F5F8F6; --paper-2:#EBF0ED;
-            --ink:#14201B; --muted:#6A7A72; --line:#DFE7E2;
+            /* โทนสว่าง: พื้นชมพูขาว ตัวหนังสือแดงเลือดหมู ไอคอนทองกลม ไทล์สีอัญมณี */
+            --mar-900:#5E0C20; --mar-800:#7A1028; --mar-700:#9A1735; --mar-500:#C92350;
+            --rose-500:#D81B60; --rose-100:#FCE7EE;
+            --gold-100:#FFF3CF; --gold-200:#FFE39A; --gold-400:#F2C14A;
+            --gold-600:#CF9A1C; --gold-700:#A87512;
 
-            --rose:#D91566; --violet:#6B35F5; --sky:#0072CE;
-            --amber:#C2610A; --jade:#00806A; --crimson:#D91E3C;
+            --paper:#FFF9FA; --paper-2:#FBEFF2; --card:#FFFFFF;
+            --ink:#2A1B22; --muted:#6E5560; --line:#F2E2E7;
+
+            /* สีไทล์ — ไล่เฉดอัญมณี เข้มพอให้ตัวหนังสือขาวอ่านชัด */
+            --violet:#7B2FBF; --crimson:#A81432; --sky:#2B3C9E; --jade:#0E6E75;
+            --amber:#A85204; --rose:#C92350;
+
+            /* เก็บชุดเขียวไว้ใช้กับไอคอน/ป้ายบางจุดที่ยังต้องการสีเข้ม */
+            --em-950:#2A1B22; --em-900:#4A2330; --em-800:#7A1028; --em-700:#9A1735;
+            --em-tint:#FCE7EE;
 
             /* ทองต้องไล่หลายจุด ตาถึงจะอ่านว่าเป็นโลหะ ไม่ใช่สีเหลืองแบน */
             --gilt: linear-gradient(176deg,var(--gold-700) 0%,var(--gold-200) 20%,var(--gold-400) 42%,
                                     var(--gold-100) 58%,var(--gold-400) 74%,var(--gold-600) 100%);
+            /* ทองทรงกลมแบบเหรียญนูน ใช้กับแผ่นไอคอนในไทล์ */
+            --gold-orb: radial-gradient(circle at 32% 26%, #FFF8DF 0%, #FFE39A 34%, #F2C14A 62%, #C9900F 100%);
+            /* ลายเส้นละเอียดแบบลายกิโยเช่ ใช้เป็นลายน้ำหลังไทล์ */
+            --guilloche:
+                repeating-radial-gradient(circle at 78% 64%, rgba(255,255,255,0.15) 0 1px, transparent 1px 8px),
+                repeating-radial-gradient(circle at 16% 106%, rgba(255,255,255,0.11) 0 1px, transparent 1px 10px),
+                repeating-radial-gradient(circle at 104% 10%, rgba(255,255,255,0.09) 0 1px, transparent 1px 12px);
         }
 
         * { box-sizing:border-box; }
@@ -43,17 +57,16 @@
             min-height:100vh;
             overflow-x:hidden;
             background:var(--paper);
-            /* แสงฟุ้งนุ่มๆ สามจุด แทนเนื้อกระดาษ noise สีครีมแบบเดิมที่ทำให้ดูเป็นเอกสารเก่า
-               ตรึงไว้กับจอ (fixed) เพื่อไม่ให้เห็นรอยต่อตอนเลื่อนหน้า */
+            /* ไล่สีชมพูขาวนุ่มๆ ตรึงกับจอ ไม่ให้เห็นรอยต่อตอนเลื่อน */
             background-image:
-                radial-gradient(1100px 540px at 10% -10%, rgba(11,82,64,0.11), transparent 62%),
-                radial-gradient(900px 500px at 94% 4%,  rgba(217,182,75,0.15), transparent 60%),
-                radial-gradient(1000px 620px at 50% 110%, rgba(11,82,64,0.075), transparent 64%);
+                radial-gradient(1200px 620px at 50% -12%, rgba(216,27,96,0.09), transparent 64%),
+                radial-gradient(900px 520px at 6% 24%,  rgba(242,193,74,0.10), transparent 62%),
+                radial-gradient(1000px 640px at 96% 86%, rgba(123,47,191,0.07), transparent 64%);
             background-repeat:no-repeat;
             background-attachment:fixed;
         }
 
-        ::selection { background:var(--gold-200); color:var(--em-950); }
+        ::selection { background:var(--gold-200); color:var(--mar-900); }
         ::-webkit-scrollbar { width:11px; height:11px; }
         ::-webkit-scrollbar-track { background:var(--paper-2); }
         ::-webkit-scrollbar-thumb {
@@ -70,64 +83,61 @@
 
         /* ───────────── NAVBAR ───────────── */
         .navbar {
-            background:linear-gradient(170deg,var(--em-800),var(--em-950));
-            border-bottom:1px solid rgba(217,182,75,0.42);
-            box-shadow:0 1px 0 rgba(251,240,200,0.14) inset, 0 10px 30px -14px rgba(4,32,26,0.85);
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+            border-bottom:1px solid var(--line);
+            box-shadow:0 6px 24px -18px rgba(90,20,45,0.5);
         }
         .crest {
             width:46px; height:46px; border-radius:50%; object-fit:cover; flex-shrink:0;
-            background:var(--em-950); padding:2px;
-            box-shadow:0 0 0 1.5px var(--gold-400), 0 0 0 4px rgba(217,182,75,0.16), 0 3px 10px rgba(0,0,0,0.4);
+            background:#fff; padding:2px;
+            box-shadow:0 0 0 1.5px var(--gold-400), 0 0 0 4px rgba(242,193,74,0.18), 0 3px 10px rgba(90,20,45,0.18);
         }
         .nav-title {
-            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.08rem;
-            color:#fff; line-height:1.18; letter-spacing:-0.012em;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.12rem;
+            color:var(--mar-800); line-height:1.18; letter-spacing:-0.012em;
         }
-        .nav-sub {
-            font-size:0.57rem; letter-spacing:0.3em; margin-top:3px;
-            background:var(--gilt); -webkit-background-clip:text; background-clip:text;
-            -webkit-text-fill-color:transparent; color:transparent;
-        }
+        .nav-sub { font-size:0.66rem; letter-spacing:0.04em; margin-top:2px; color:var(--muted); }
         .btn-staff {
             border:none; cursor:pointer; white-space:nowrap;
             display:inline-flex; align-items:center; gap:8px;
-            padding:10px 17px; border-radius:12px;
+            padding:10px 17px; border-radius:100px;
             font-family:'Kanit',sans-serif; font-weight:600; font-size:0.84rem;
-            color:var(--em-950); background:var(--gilt);
-            box-shadow:0 3px 0 var(--gold-700), 0 6px 16px -6px rgba(217,182,75,0.6),
-                       0 1px 0 rgba(255,255,255,0.5) inset;
+            color:var(--mar-900); background:linear-gradient(168deg,#FFE9AE,var(--gold-400) 58%,#DDA524);
+            box-shadow:0 3px 10px -3px rgba(207,154,28,0.7), inset 0 1px 0 rgba(255,255,255,0.75);
             transition:transform .16s cubic-bezier(.34,1.4,.64,1), box-shadow .16s ease;
         }
-        .btn-staff:hover  { transform:translateY(-2px); box-shadow:0 5px 0 var(--gold-700), 0 12px 24px -8px rgba(217,182,75,0.7), 0 1px 0 rgba(255,255,255,0.5) inset; }
-        .btn-staff:active { transform:translateY(1px); box-shadow:0 2px 0 var(--gold-700); }
+        .btn-staff:hover  { transform:translateY(-2px); box-shadow:0 8px 18px -6px rgba(207,154,28,0.8), inset 0 1px 0 rgba(255,255,255,0.75); }
+        .btn-staff:active { transform:translateY(1px); }
         .nav-clock {
             font-family:ui-monospace,monospace; font-size:0.8rem; font-weight:600;
-            color:var(--gold-200); background:rgba(0,0,0,0.34);
-            border:1px solid rgba(217,182,75,0.46);
+            color:var(--mar-700); background:var(--rose-100);
+            border:1px solid var(--line);
             padding:7px 16px; border-radius:100px;
             align-items:center; gap:8px;
-            box-shadow:inset 0 1px 0 rgba(251,240,200,0.14);
             /* ซ่อน/แสดงเองด้วย CSS ไม่ใช้ hidden md:flex ของ Tailwind
                เพราะ .nav-clock กับ .hidden specificity เท่ากัน แล้วไฟล์นี้โหลดทีหลัง จะชนะจนโชว์บนมือถือ */
             display:none;
         }
         @media (min-width:768px) { .nav-clock { display:inline-flex; } }
-        .nav-clock i { font-size:0.76rem; color:var(--gold-400); }
+        .nav-clock i { font-size:0.76rem; color:var(--gold-600); }
 
-        /* ───────────── HERO — โซนพิธีการ ───────────── */
+        /* ───────────── HERO — การ์ดสว่าง: รูปด้านบน + แถบข้อความด้านล่าง ───────────── */
         .hero {
-            position:relative; overflow:hidden; isolation:isolate;
-            border-radius:26px; margin-bottom:22px;
-            background:var(--em-950);
-            /* ค่าของจอคอมกับมือถือแยกกันคนละตัวแปร แล้วให้ media query เลือกว่าจะใช้ชุดไหน */
-            --hero-h:   var(--hero-h-d,   clamp(330px,44vw,500px));
+            position:relative; border-radius:34px; margin-bottom:22px;
+            background:var(--card); border:1px solid var(--line); padding:10px;
+            box-shadow:0 20px 48px -28px rgba(90,20,45,0.3), 0 2px 0 rgba(255,255,255,0.7) inset;
+        }
+        /* เวทีรูป: ตัวแปรของจอคอมกับมือถือแยกกัน แล้วให้ media query เลือกว่าใช้ชุดไหน */
+        .hero-stage {
+            --hero-h:   var(--hero-h-d,   clamp(260px,32vw,400px));
             --veil-op:  var(--veil-op-d,  1);
             --hero-pos: var(--hero-pos-d, 50% 32%);
-            min-height:var(--hero-h); display:flex;
-            box-shadow:0 26px 60px -28px rgba(4,32,26,0.9), 0 0 0 1px rgba(217,182,75,0.3);
+            position:relative; overflow:hidden; isolation:isolate;
+            border-radius:26px; min-height:var(--hero-h); display:flex;
+            background:var(--paper-2);
         }
         .hero-img-wrap { position:absolute; inset:0; z-index:0; }
-        /* วางรูปซ้อนกันแบบ absolute ทั้งคู่ ถ้ามีรูปไหนโผล่มาเกินจะได้ทับกันพอดี ไม่ดันกล่องเสียทรง */
         .hero-img-wrap img {
             position:absolute; inset:0;
             width:100%; height:100%; object-fit:cover; object-position:var(--hero-pos); display:block;
@@ -135,373 +145,232 @@
         /* ต้องเขียนเจาะจงถึง .hero-img-wrap img ด้วย ไม่งั้น display:block ข้างบน
            (specificity สูงกว่า .hero-img-mobile เฉยๆ) จะชนะ แล้วรูปสองใบโชว์พร้อมกัน */
         .hero-img-wrap img.hero-img-mobile { display:none; }
-        /* ซ่อนองค์ประกอบตามสวิตช์ในหน้า admin — ใช้ชื่อคลาสเฉพาะ ไม่ไปชนกับ .hidden ของ Tailwind */
-        .hero.no-crest .medallion  { display:none; }
-        .hero.no-orn   .ornament   { display:none; }
-        .hero.no-frame .hero-frame { display:none; }
-        /* ม่านไล่สีทับรูป: ปล่อยช่วงกลางรูปให้โปร่งเกือบใส จะได้เห็นรูปที่ครูอัปจริงๆ
-           แล้วเข้มเฉพาะแถบล่างที่ตัวหนังสือวางอยู่ ให้ยังอ่านออกทุกรูป */
+        /* ม่านบางๆ โทนสว่าง ไว้ให้แผ่นข้อความลอยอ่านออก ไม่ได้ทำให้รูปมืดแบบธีมเดิม */
         .hero-veil {
             position:absolute; inset:0; z-index:1; pointer-events:none;
             opacity:var(--veil-op);
-            background:
-                radial-gradient(ellipse 70% 40% at 50% 4%, rgba(217,182,75,0.14), transparent 64%),
-                linear-gradient(180deg,
-                    rgba(4,32,26,0.46) 0%, rgba(4,32,26,0.10) 20%, rgba(4,32,26,0.04) 38%,
-                    rgba(4,32,26,0.40) 60%, rgba(4,32,26,0.82) 82%, rgba(4,32,26,0.95) 100%);
+            background:linear-gradient(100deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.3) 34%,
+                                       rgba(255,255,255,0.04) 56%, transparent 72%);
         }
         .hero-body {
-            position:relative; z-index:3; text-align:center; width:100%;
-            display:flex; flex-direction:column; justify-content:flex-end;
-            padding:30px 24px 32px;
+            position:relative; z-index:3; width:100%;
+            display:flex; flex-direction:column; justify-content:center;
+            padding:22px;
         }
-
-        /* กรอบทองสองเส้น เลียนขอบเอกสาร/เกียรติบัตรไทย ให้โซนนี้เป็น "แผ่นพิธีการ" จริงๆ */
+        /* แผ่นกระจกฝ้าใส่สโลแกน เลียนแบบแผ่นข้อความมุมซ้ายบนในแบบที่ครูส่งมา */
+        .hero-slogan {
+            display:inline-block; max-width:min(72%,340px);
+            background:rgba(255,255,255,0.82);
+            backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
+            border:1px solid rgba(255,255,255,0.9); border-radius:20px;
+            padding:18px 22px;
+            box-shadow:0 14px 34px -20px rgba(90,20,45,0.45);
+            font-family:'Kanit',sans-serif; font-weight:700;
+            font-size:clamp(1.3rem,2.5vw,1.9rem); line-height:1.3; color:var(--mar-800);
+        }
+        .hero-slogan .accent { color:var(--rose-500); display:block; }
+        .hero.no-slogan .hero-slogan { display:none; }
+        .hero.no-crest .medallion  { display:none; }
+        .hero.no-orn   .ornament   { display:none; }
+        .hero.no-frame .hero-frame { display:none; }
         .hero-frame {
-            position:absolute; inset:13px; z-index:2; pointer-events:none; border-radius:17px;
-            border:1px solid rgba(217,182,75,0.5);
-            box-shadow:inset 0 0 0 4px transparent, inset 0 0 0 5px rgba(217,182,75,0.18);
+            position:absolute; inset:9px; z-index:2; pointer-events:none; border-radius:19px;
+            border:1.5px solid rgba(255,255,255,0.78);
+            box-shadow:0 0 0 1px rgba(242,193,74,0.34), inset 0 0 0 1px rgba(255,255,255,0.34);
         }
-        /* ฉากมุมทองหนาสี่มุมของกรอบ ให้ดูเป็นกรอบเกียรติบัตรหนาๆ ไม่ใช่เส้นบางเส้นเดียว */
-        .hero-frame::before, .hero-frame::after {
-            content:''; position:absolute; width:46px; height:46px; pointer-events:none;
-            border:3px solid rgba(217,182,75,0.72);
-        }
+        /* จุดสี่เหลี่ยมชมพูคู่มุมบนซ้าย — รายละเอียดเล็กๆ ที่มีในแบบต้นฉบับ */
         .hero-frame::before {
-            top:-1px; left:-1px; border-right:none; border-bottom:none; border-radius:17px 0 0 0;
-        }
-        .hero-frame::after {
-            bottom:-1px; right:-1px; border-left:none; border-top:none; border-radius:0 0 17px 0;
+            content:''; position:absolute; top:14px; right:14px; width:32px; height:14px;
+            background:
+                linear-gradient(var(--rose-500),var(--rose-500)) left center/14px 14px no-repeat,
+                linear-gradient(rgba(216,27,96,0.5),rgba(216,27,96,0.5)) right center/14px 14px no-repeat;
+            border-radius:3px;
         }
 
-        /* ★ จุดเด่นของหน้า: เหรียญตราโรงเรียนในวงแหวนทอง */
-        .medallion { position:relative; width:82px; height:82px; margin:0 auto 14px; }
-        .medallion::before {
-            content:''; position:absolute; inset:-9px; border-radius:50%;
-            background:conic-gradient(from 0deg, var(--gold-700), var(--gold-100) 14%, var(--gold-400) 30%,
-                       var(--gold-700) 48%, var(--gold-200) 66%, var(--gold-400) 82%, var(--gold-700) 100%);
-            filter:blur(0.4px); opacity:0.95;
-            animation:spin 26s linear infinite;
-        }
-        .medallion::after {
-            content:''; position:absolute; inset:-26px; border-radius:50%; pointer-events:none;
-            background:radial-gradient(circle, rgba(217,182,75,0.34), transparent 68%);
-        }
+        /* เหรียญตราเล็กมุมบน (เปิด/ปิดได้จากหน้า admin) */
+        .medallion { position:relative; width:52px; height:52px; margin:0 0 12px; }
         .medallion img {
             position:relative; z-index:2; width:100%; height:100%; border-radius:50%;
-            object-fit:cover; background:var(--em-950); padding:5px; display:block;
-            box-shadow:0 0 0 2px var(--em-950), 0 8px 26px rgba(0,0,0,0.6);
+            object-fit:cover; background:#fff; padding:3px; display:block;
+            box-shadow:0 0 0 1.5px var(--gold-400), 0 4px 14px rgba(90,20,45,0.25);
         }
-        @keyframes spin { to { transform:rotate(360deg); } }
 
-        .hero-term {
-            display:inline-block; align-self:center; margin:0 0 12px;
-            font-family:'Kanit',sans-serif; font-size:0.78rem; font-weight:500;
-            letter-spacing:0.02em; color:var(--gold-200);
-            padding:6px 18px; border-radius:100px;
-            background:rgba(4,32,26,0.5);
-            border:1px solid rgba(217,182,75,0.42);
-            backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-        }
+        /* แถบข้อความใต้รูป: หัวเรื่องแดงเลือดหมู + ตัวสลับภาคเรียน */
+        .hero-foot { padding:20px 14px 8px; text-align:center; }
         .hero-title {
             font-family:'Kanit',sans-serif; font-weight:700;
-            font-size:clamp(1.95rem,5.6vw,3rem); line-height:1.12;
-            letter-spacing:-0.025em; color:#fff;
-            text-shadow:0 2px 10px rgba(4,32,26,0.85), 0 1px 28px rgba(4,32,26,0.6);
+            font-size:clamp(1.55rem,4.2vw,2.5rem); line-height:1.18;
+            letter-spacing:-0.02em; color:var(--mar-800);
         }
-        /* ไล่สีทองเฉพาะหัวเรื่อง ยกช่วงมืดสุดให้สว่างกว่า --gilt ปกติ
-           เพราะอยู่บนพื้นเข้ม ถ้าใช้ชุดเดียวกันขอบตัวอักษรจะจมหาย */
-        .hero-title .gilt {
-            background:linear-gradient(176deg,#C9A43A 0%,#FBF0C8 24%,#E4C86A 48%,#FBF0C8 72%,#C9A43A 100%);
-            -webkit-background-clip:text; background-clip:text;
-            text-shadow:none; filter:drop-shadow(0 3px 14px rgba(217,182,75,0.3));
-        }
-        .ornament { display:block; margin:12px auto 10px; width:min(220px,66%); height:auto; }
-        .hero-sub {
-            font-size:0.95rem; color:rgba(234,242,238,0.9); line-height:1.6;
-            max-width:40ch; margin:0 auto; text-shadow:0 1px 8px rgba(4,32,26,0.8);
-        }
+        .ornament { display:block; margin:12px auto 0; width:min(200px,56%); height:auto; }
+        .hero-sub { font-size:0.84rem; color:var(--muted); line-height:1.6; margin-top:10px; }
 
-        /* ── จอกว้าง: ย้ายข้อความไปชิดซ้าย เว้นฝั่งขวาไว้ให้เห็นตัวแบบในรูปเต็มๆ ──
-           ม่านจึงเปลี่ยนเป็นไล่จากซ้ายไปขวา แทนไล่จากบนลงล่าง
-           (ต้องวางหลังกฎพื้นฐานของลูกๆ ทั้งหมด ไม่งั้น margin:auto ด้านบนจะทับ) */
-        /* ── มือถือ/แท็บเล็ต: ใช้ตัวแปรชุด -m และคลาส m-* / vm-* ──
-           ใช้ 1024px ให้ตรงกับจุดที่สลับรูป desktop→mobile พอดี */
+        /* ตัวสลับภาคเรียน 1|2 — ปุ่มเลื่อนทองในกรอบขาว */
+        .term-bar {
+            display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
+            justify-content:center; margin-top:16px;
+            background:var(--card); border:1px solid var(--line); border-radius:100px;
+            padding:9px 20px; box-shadow:0 10px 26px -20px rgba(90,20,45,0.45);
+            font-family:'Kanit',sans-serif; font-weight:600; font-size:0.96rem; color:var(--ink);
+        }
+        .term-switch {
+            display:inline-flex; background:var(--paper-2); border-radius:100px; padding:3px;
+            box-shadow:inset 0 1px 3px rgba(90,20,45,0.1);
+        }
+        .term-switch button {
+            border:none; cursor:pointer; min-width:44px; padding:6px 14px; border-radius:100px;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:0.96rem;
+            background:transparent; color:var(--muted);
+            transition:background .18s ease, color .18s ease, box-shadow .18s ease;
+        }
+        .term-switch button.active {
+            color:var(--mar-900);
+            background:linear-gradient(168deg,#FFE9AE,var(--gold-400) 60%,#DFA922);
+            box-shadow:0 3px 9px -3px rgba(207,154,28,0.8), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .term-note { font-size:0.78rem; color:var(--muted); margin-top:10px; line-height:1.6; }
+
         @media (max-width:1024px) {
-            .hero {
-                --hero-h:   var(--hero-h-m,   clamp(300px,74vw,430px));
+            .hero { padding:8px; border-radius:30px; }
+            .hero-stage {
+                --hero-h:   var(--hero-h-m,   clamp(230px,56vw,340px));
                 --veil-op:  var(--veil-op-m,  1);
                 --hero-pos: var(--hero-pos-m, 50% 32%);
             }
             .hero.vm-top    .hero-body { justify-content:flex-start; }
             .hero.vm-center .hero-body { justify-content:center; }
             .hero.vm-bottom .hero-body { justify-content:flex-end; }
-            .hero.m-left   .hero-body { text-align:left;  align-items:flex-start; }
-            .hero.m-right  .hero-body { text-align:right; align-items:flex-end; }
-            .hero.m-center .hero-body { text-align:center; align-items:center; }
-            /* จอแคบไม่มีที่พอให้เหรียญ/ลายเส้นใช้ margin:auto จัดกลาง ต้องสั่งตามด้านที่เลือก */
-            .hero.m-left   .medallion, .hero.m-left  .ornament { margin-left:0; margin-right:auto; }
-            .hero.m-right  .medallion, .hero.m-right .ornament { margin-left:auto; margin-right:0; }
-            .hero.m-left   .hero-sub { margin-left:0; margin-right:auto; }
-            .hero.m-right  .hero-sub { margin-left:auto; margin-right:0; }
+            .hero.m-left   .hero-body { align-items:flex-start; text-align:left; }
+            .hero.m-right  .hero-body { align-items:flex-end;   text-align:right; }
+            .hero.m-center .hero-body { align-items:center;      text-align:center; }
+            .hero-slogan { max-width:min(78%,260px); padding:13px 16px; font-size:1.22rem; }
+            .hero-body { padding:16px; }
+            .hero-foot { padding:16px 8px 6px; }
         }
-
         @media (min-width:1025px) {
             .hero.vd-top    .hero-body { justify-content:flex-start; }
             .hero.vd-center .hero-body { justify-content:center; }
             .hero.vd-bottom .hero-body { justify-content:flex-end; }
-            /* ม่านเข้มเฉพาะฝั่งที่ตัวหนังสืออยู่ อีกฝั่งปล่อยใสให้เห็นรูปเต็มๆ */
-            .hero.d-left .hero-veil {
-                background:
-                    linear-gradient(96deg,
-                        rgba(4,32,26,0.80) 0%, rgba(4,32,26,0.66) 30%, rgba(4,32,26,0.34) 50%,
-                        rgba(4,32,26,0.08) 70%, rgba(4,32,26,0) 84%),
-                    linear-gradient(180deg,
-                        rgba(4,32,26,0.34) 0%, rgba(4,32,26,0) 26%,
-                        rgba(4,32,26,0) 72%, rgba(4,32,26,0.40) 100%);
-            }
+            .hero.d-left   .hero-body { align-items:flex-start; text-align:left; }
+            .hero.d-right  .hero-body { align-items:flex-end;   text-align:right; }
+            .hero.d-center .hero-body { align-items:center;      text-align:center; }
+            /* ชิดขวา: ม่านต้องสลับข้างด้วย ไม่งั้นแผ่นสโลแกนไปอยู่บนส่วนที่ไม่มีม่าน */
             .hero.d-right .hero-veil {
-                background:
-                    linear-gradient(264deg,
-                        rgba(4,32,26,0.80) 0%, rgba(4,32,26,0.66) 30%, rgba(4,32,26,0.34) 50%,
-                        rgba(4,32,26,0.08) 70%, rgba(4,32,26,0) 84%),
-                    linear-gradient(180deg,
-                        rgba(4,32,26,0.34) 0%, rgba(4,32,26,0) 26%,
-                        rgba(4,32,26,0) 72%, rgba(4,32,26,0.40) 100%);
+                background:linear-gradient(260deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.3) 34%,
+                                           rgba(255,255,255,0.04) 56%, transparent 72%);
             }
-            .hero.d-left .hero-body,
-            .hero.d-right .hero-body { width:100%; max-width:min(58%,640px); }
-            .hero.d-left .hero-body {
-                text-align:left; align-items:flex-start; padding:34px 20px 36px 42px;
+            .hero.d-center .hero-veil {
+                background:linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.12) 40%,
+                                           rgba(255,255,255,0.5) 100%);
             }
-            .hero.d-right .hero-body {
-                text-align:right; align-items:flex-end; margin-left:auto;
-                padding:34px 42px 36px 20px;
-            }
-            .hero.d-left  .hero-term { align-self:flex-start; margin:0 0 12px; }
-            .hero.d-right .hero-term { align-self:flex-end;   margin:0 0 12px; }
-            .hero.d-left  .medallion { margin:0 0 16px; }
-            .hero.d-right .medallion { margin:0 0 16px auto; }
-            .hero.d-left  .ornament  { margin:14px 0 12px;      width:min(230px,86%); }
-            .hero.d-right .ornament  { margin:14px 0 12px auto; width:min(230px,86%); }
-            .hero.d-left  .hero-sub,
-            .hero.d-right .hero-sub  { margin:0; }
-            .hero-title { font-size:clamp(2.2rem,3.5vw,3.25rem); }
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
         .sec-label { display:flex; align-items:center; gap:12px; margin:30px 2px 14px; }
-        /* สามเหลี่ยมข้าวหลามตัดซ้อนสามชั้น วาดเป็น SVG ฝังมาเลย จะได้คมทุกความละเอียดจอ */
         .sec-label::before {
-            content:''; width:17px; height:21px; flex-shrink:0;
-            background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 21'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FBF0C8'/%3E%3Cstop offset='.45' stop-color='%23D9B64B'/%3E%3Cstop offset='1' stop-color='%238A6512'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Cpath d='M8.5 0 L13 4 L8.5 8 L4 4 Z'/%3E%3Cpath d='M8.5 6.5 L13.6 10.6 L8.5 14.7 L3.4 10.6 Z' opacity='.86'/%3E%3Cpath d='M8.5 13.2 L12.4 16.6 L8.5 20 L4.6 16.6 Z' opacity='.6'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+            content:''; width:5px; height:20px; flex-shrink:0; border-radius:100px;
+            background:linear-gradient(180deg,var(--gold-400),var(--mar-700));
         }
         .sec-label span {
-            font-family:'Kanit',sans-serif; font-size:1.02rem; font-weight:600;
-            color:var(--em-800); white-space:nowrap; letter-spacing:-0.01em;
+            font-family:'Kanit',sans-serif; font-size:1.06rem; font-weight:700;
+            color:var(--mar-800); white-space:nowrap; letter-spacing:-0.01em;
         }
-        .sec-label i { flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--gold-400),rgba(217,182,75,0.12)); }
+        .sec-label i { flex:1; height:1px; border-radius:2px; background:linear-gradient(90deg,var(--line),transparent); }
 
         /* ───────────── การ์ดสถิติ ───────────── */
         .stat-card {
-            position:relative; overflow:hidden; border-radius:18px; padding:14px 15px;
+            position:relative; overflow:hidden; border-radius:20px; padding:15px;
             display:flex; align-items:center; gap:13px;
-            background:linear-gradient(170deg,#fff,var(--paper-2));
-            border:1px solid rgba(217,182,75,0.55);
-            box-shadow:0 2px 0 rgba(20,32,27,0.04), 0 10px 22px -16px rgba(20,32,27,0.5),
-                       inset 0 0 0 1px rgba(255,255,255,0.7);
+            background:var(--card); border:1px solid var(--line);
+            box-shadow:0 12px 28px -22px rgba(90,20,45,0.45);
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gilt); }
-        /* แถบทองกวาดมุมขวาล่าง แทนลายน้ำเลขไทยเดิม ให้เข้าชุดกับลายมุมหน้าเว็บ */
-        .stat-card::after {
-            content:''; position:absolute; right:-52px; bottom:-62px; width:132px; height:132px; z-index:0;
-            border-radius:50%; pointer-events:none;
-            border:12px solid rgba(217,182,75,0.17);
-        }
-        .stat-card > * { position:relative; z-index:1; }
-        .stat-card:hover { transform:translateY(-3px); box-shadow:0 5px 0 rgba(20,32,27,0.05), 0 18px 30px -18px rgba(20,32,27,0.6); }
+        .stat-card:hover { transform:translateY(-3px); box-shadow:0 18px 34px -22px rgba(90,20,45,0.55); }
         .stat-ic {
-            width:46px; height:46px; border-radius:14px; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center; font-size:1.18rem;
-            color:var(--gold-200); background:linear-gradient(165deg,var(--em-700),var(--em-950));
-            box-shadow:inset 0 0 0 1px rgba(251,240,200,0.34), 0 5px 14px -5px rgba(4,32,26,0.75);
+            width:46px; height:46px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+            color:var(--mar-800); background:var(--gold-orb);
+            box-shadow:0 5px 12px -4px rgba(201,144,15,0.65), inset 0 -2px 5px rgba(168,117,18,0.32),
+                       inset 0 2px 4px rgba(255,255,255,0.8);
         }
         .stat-txt { min-width:0; }
         .stat-k { font-size:0.74rem; color:var(--muted); font-weight:500; }
         .stat-v {
-            font-family:'Kanit',sans-serif; font-weight:700; font-size:2.1rem;
-            line-height:1.08; margin-top:4px; color:var(--em-700);
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:2rem;
+            line-height:1.08; margin-top:2px; color:var(--mar-800);
             font-variant-numeric:tabular-nums;
         }
-        .stat-u { font-size:0.68rem; color:#9AA8A1; }
+        .stat-u { font-size:0.68rem; color:var(--muted); }
 
-        /* ───────────── ประตูหลัก 2 บาน ───────────── */
-        /* ป้ายบริการหลัก = แผ่นเกียรติบัตรขอบทอง ใช้ระบบเดียวกับการ์ดเมนู
-           (ขอบเป็น border จริงจากเทคนิคพื้นหลังสองชั้น + วงแหวนทองมุมขวาล่าง) */
-        .portal {
+        /* ───────────── ไทล์ (ปุ่มบริการหลัก + การ์ดเมนู) ─────────────
+           ทรงสี่เหลี่ยมใหญ่ ไอคอนทองกลมมุมบนซ้าย ลูกศรในวงแหวนมุมบนขวา
+           ข้อความชิดล่างซ้าย และลายเส้นละเอียดเป็นลายน้ำ */
+        .tile, .portal {
             position:relative; overflow:hidden; cursor:pointer; isolation:isolate;
-            border-radius:22px; padding:20px; text-align:left; color:#fff;
-            min-height:110px; display:flex; flex-direction:row; align-items:center; gap:17px;
-            border:1.5px solid transparent;
-            background-origin:border-box;
-            background-clip:padding-box, border-box;
-            background-image:var(--portal-fill, linear-gradient(162deg,#1E7A5E,#0B5240 48%,#063226)), var(--portal-rim, var(--gilt));
-            transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
-        }
-        /* เส้นทองคั่นระหว่างไอคอนกับข้อความ เหมือนเส้นแบ่งในเอกสารพิธีการ */
-        .portal-body {
-            flex:1; min-width:0; padding-left:17px;
-            border-left:1px solid rgba(251,240,200,0.32);
-        }
-        .portal-b .portal-body { border-left-color:rgba(4,32,26,0.24); }
-        .portal-chev {
-            width:36px; height:36px; border-radius:50%; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center; font-size:0.82rem;
-            color:var(--gold-100);
-            background:rgba(4,32,26,0.26); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.48);
-        }
-        .portal-b .portal-chev {
-            color:var(--em-950);
-            background:rgba(4,32,26,0.1); box-shadow:inset 0 0 0 1px rgba(4,32,26,0.34);
-        }
-        .portal::before {
-            content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
-            background:
-                radial-gradient(122% 76% at 14% -16%, rgba(255,255,255,0.28), rgba(255,255,255,0.06) 46%, transparent 72%),
-                linear-gradient(180deg, transparent 58%, rgba(0,0,0,0.16) 100%);
-        }
-        .portal::after {
-            content:''; position:absolute; right:-86px; bottom:-104px; width:196px; height:196px;
-            z-index:1; border-radius:50%; pointer-events:none;
-            border:17px solid rgba(251,240,200,0.14);
-        }
-        .portal-b::after { border-color:rgba(4,32,26,0.1); }
-        .portal > * { position:relative; z-index:2; }
-        .portal:hover  { transform:translateY(-5px); }
-        .portal:active { transform:translateY(1px) scale(.99); }
-        .portal-a { box-shadow:0 6px 0 #042B21, 0 16px 28px -14px rgba(4,32,26,0.9); }
-        .portal-a:hover { box-shadow:0 10px 0 #042B21, 0 24px 38px -16px rgba(4,32,26,0.95); }
-        /* แผ่นทอง: ตัวหนังสือเขียวเข้ม อ่านชัดและดูเป็นป้ายทองจริง
-           ขอบใช้เขียวมรกตแทนทอง ไม่งั้นขอบทองบนพื้นทองจะมองไม่เห็น */
-        .portal-b {
-            --portal-fill:var(--gilt);
-            --portal-rim:linear-gradient(170deg,var(--em-700),var(--em-950));
-            color:var(--em-950);
-            box-shadow:0 6px 0 var(--gold-700), 0 16px 28px -14px rgba(138,101,18,0.9);
-        }
-        .portal-b:hover { box-shadow:0 10px 0 var(--gold-700), 0 24px 38px -16px rgba(138,101,18,0.95); }
-        .portal-b .portal-ic {
-            background:linear-gradient(165deg,var(--em-700),var(--em-950)); color:var(--gold-200);
-            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.42), 0 6px 16px rgba(0,0,0,0.3);
-        }
-        /* แผ่นไอคอนกระจกเขียวเข้มขอบทอง ไอคอนสีทอง — ชุดเดียวกับการ์ดเมนูและการ์ดสถิติ */
-        .portal-ic {
-            width:58px; height:58px; border-radius:17px; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center; font-size:1.44rem;
-            color:var(--gold-100);
-            background:linear-gradient(165deg, rgba(4,32,26,0.5), rgba(4,32,26,0.24));
-            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.5), inset 0 1px 0 rgba(255,255,255,0.24),
-                       0 6px 16px rgba(0,0,0,0.32);
-            text-shadow:0 1px 3px rgba(0,0,0,0.35);
-        }
-        .portal h3 {
-            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.34rem; line-height:1.2;
-            text-shadow:0 1px 3px rgba(0,0,0,0.26);
-        }
-        .portal-b h3 { text-shadow:none; }
-        .portal p  {
-            font-size:0.8rem; color:rgba(255,255,255,0.9); margin-top:4px; line-height:1.45;
-            text-shadow:0 1px 3px rgba(0,0,0,0.26);
-            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-        }
-        /* ต้องอยู่หลัง .portal p — specificity เท่ากัน (คลาสเดียว + type เดียว) ตัวที่อยู่หลังชนะ
-           ถ้าไปประกาศไว้ก่อน ตัวหนังสือบนแผ่นทองจะกลายเป็นสีขาวอ่านไม่ออก */
-        .portal-b p { color:var(--em-950); font-weight:500; text-shadow:none; }
-
-        /* ───────────── การ์ดเมนู (ผิวเคลือบ + ขอบทอง) ───────────── */
-        /* การ์ดเมนู = แผ่นลงยาขอบทอง (เหรียญตรา) ไม่ใช่แถบสีแบนๆ
-           ขอบทองเป็น border จริงด้วยเทคนิคสองพื้นหลัง (padding-box + border-box)
-           แต่ละสีจึงเหลือหน้าที่แค่กำหนด --tile-fill กับเงา */
-        .tile {
-            border-radius:22px; position:relative; overflow:hidden; cursor:pointer;
-            color:#fff; isolation:isolate;
-            border:1.5px solid transparent;
-            background-origin:border-box;
-            background-clip:padding-box, border-box;
-            /* ใส่ค่าสำรองไว้ด้วย ถ้า --tile-fill ไม่ถูกกำหนด ทั้ง background-image จะกลายเป็นค่าว่าง
-               แล้วการ์ดจะไม่มีทั้งสีและขอบทอง */
-            background-image:var(--tile-fill, linear-gradient(158deg,#A98CF2,#2C0A7C)), var(--gilt);
+            border-radius:30px; padding:19px; color:#fff; min-height:200px;
+            display:flex; flex-direction:column;
+            background-color:var(--t-base, var(--violet));
+            background-image:var(--guilloche), var(--t-fill, linear-gradient(152deg,#9A52D8,#5E1C9B));
+            box-shadow:0 16px 34px -20px var(--t-shadow, rgba(94,28,155,0.85)),
+                       inset 0 0 0 1px rgba(255,255,255,0.22),
+                       inset 0 1px 0 rgba(255,255,255,0.34);
             transition:transform .2s cubic-bezier(.34,1.45,.64,1), box-shadow .2s ease;
         }
-        /* ชั้นแสง: ไฮไลต์มุมบนซ้าย + ลำแสงกวาดเฉียง ให้ผิวดูเป็นงานเคลือบมีความลึก */
-        .tile::before {
-            content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+        .tile::before, .portal::before {
+            content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
             background:
-                radial-gradient(124% 78% at 13% -18%, rgba(255,255,255,0.30), rgba(255,255,255,0.06) 48%, transparent 74%),
-                linear-gradient(180deg, transparent 58%, rgba(0,0,0,0.18) 100%);
+                radial-gradient(120% 70% at 12% -14%, rgba(255,255,255,0.26), transparent 62%),
+                /* แสงนวลลอยมุมขวาล่าง เลียนแบบไทล์ต้นแบบที่มีวงสว่างซ้อนอยู่ใต้ลายเส้น */
+                radial-gradient(64% 52% at 84% 88%, rgba(255,255,255,0.20), transparent 68%),
+                linear-gradient(180deg, transparent 56%, rgba(0,0,0,0.18) 100%);
         }
-        /* วงแหวนทองจางมุมขวาล่าง ภาษาเดียวกับการ์ดสถิติ ให้ทั้งหน้าเป็นชุดเดียวกัน
-           ดันออกนอกการ์ดเกือบหมด เหลือแค่ส่วนโค้ง ไม่ให้ไปชนวงลูกศร */
-        .tile::after {
-            content:''; position:absolute; right:-78px; bottom:-92px; width:172px; height:172px;
-            z-index:1; border-radius:50%; pointer-events:none;
-            border:15px solid rgba(251,240,200,0.13);
-        }
-        .tile > * { position:relative; z-index:2; }
-        .tile:hover  { transform:translateY(-5px); }
-        .tile:active { transform:translateY(1px) scale(.992); }
+        .tile > *, .portal > * { position:relative; z-index:1; }
+        .tile:hover, .portal:hover   { transform:translateY(-5px); box-shadow:0 26px 44px -22px var(--t-shadow, rgba(94,28,155,0.9)), inset 0 1px 0 rgba(255,255,255,0.3); }
+        .tile:active, .portal:active { transform:translateY(1px) scale(.992); }
 
-        .t-rose   { --tile-fill:linear-gradient(158deg,#F279AC 0%,#E8458A 20%,var(--rose) 56%,#79062F 100%); box-shadow:0 6px 0 #7A0837,0 14px 22px -9px rgba(168,11,75,.55),0 24px 46px -24px rgba(168,11,75,.85); }
-        .t-violet { --tile-fill:linear-gradient(158deg,#A98CF2 0%,#7F4DEE 20%,var(--violet) 56%,#2C0A7C 100%); box-shadow:0 6px 0 #2C0B7A,0 14px 22px -9px rgba(64,19,175,.55),0 24px 46px -24px rgba(64,19,175,.85); }
-        .t-sky    { --tile-fill:linear-gradient(158deg,#6CC6F0 0%,#1E93DD 20%,var(--sky) 56%,#043A6B 100%); box-shadow:0 6px 0 #00356B,0 14px 22px -9px rgba(0,78,154,.55),0 24px 46px -24px rgba(0,78,154,.85); }
-        .t-amber  { --tile-fill:linear-gradient(158deg,#F0B45F 0%,#E58A1E 20%,var(--amber) 56%,#5E2D02 100%); box-shadow:0 6px 0 #633003,0 14px 22px -9px rgba(143,70,6,.55),0 24px 46px -24px rgba(143,70,6,.85); }
-        .t-jade   { --tile-fill:linear-gradient(158deg,#5FDCBD 0%,#1BBB95 20%,var(--jade) 56%,#00443A 100%); box-shadow:0 6px 0 #003B32,0 14px 22px -9px rgba(0,89,74,.55),0 24px 46px -24px rgba(0,89,74,.85); }
-        .t-crimson{ --tile-fill:linear-gradient(158deg,#F2838F 0%,#E84156 20%,var(--crimson) 56%,#6E0718 100%); box-shadow:0 6px 0 #6E0918,0 14px 22px -9px rgba(158,14,36,.55),0 24px 46px -24px rgba(158,14,36,.85); }
-        .t-rose:hover   { box-shadow:0 10px 0 #7A0837,0 22px 32px -12px rgba(168,11,75,.6),0 34px 56px -26px rgba(168,11,75,.9); }
-        .t-violet:hover { box-shadow:0 10px 0 #2C0B7A,0 22px 32px -12px rgba(64,19,175,.6),0 34px 56px -26px rgba(64,19,175,.9); }
-        .t-sky:hover    { box-shadow:0 10px 0 #00356B,0 22px 32px -12px rgba(0,78,154,.6),0 34px 56px -26px rgba(0,78,154,.9); }
-        .t-amber:hover  { box-shadow:0 10px 0 #633003,0 22px 32px -12px rgba(143,70,6,.6),0 34px 56px -26px rgba(143,70,6,.9); }
-        .t-jade:hover   { box-shadow:0 10px 0 #003B32,0 22px 32px -12px rgba(0,89,74,.6),0 34px 56px -26px rgba(0,89,74,.9); }
-        .t-crimson:hover{ box-shadow:0 10px 0 #6E0918,0 22px 32px -12px rgba(158,14,36,.6),0 34px 56px -26px rgba(158,14,36,.9); }
-
-        /* แผ่นไอคอนเป็นกระจกสีเขียวเข้มขอบทอง ไอคอนสีทอง — ชุดเดียวกับการ์ดสถิติและปุ่ม QR
-           ของเดิมเป็นแผ่นขาวจาง ทำให้แต่ละสีดูคนละชุดกัน */
-        .tile-icon {
-            border-radius:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-            color:var(--gold-100);
-            background:linear-gradient(165deg, rgba(4,32,26,0.52), rgba(4,32,26,0.26));
-            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.52), inset 0 1px 0 rgba(255,255,255,0.26),
-                       0 5px 13px rgba(0,0,0,0.32);
-            text-shadow:0 1px 3px rgba(0,0,0,0.35);
+        .tile-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+        /* เหรียญทองนูน ไอคอนเป็นสีของไทล์เอง */
+        .tile-icon, .portal-ic {
+            width:54px; height:54px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+            color:var(--t-base, var(--violet)); background:var(--gold-orb);
+            box-shadow:0 7px 16px -5px rgba(90,50,0,0.55), inset 0 -3px 7px rgba(168,117,18,0.34),
+                       inset 0 3px 5px rgba(255,255,255,0.85);
         }
         .tile-cover {
-            border-radius:15px; flex-shrink:0; object-fit:cover;
-            box-shadow:inset 0 0 0 1.5px rgba(251,240,200,0.55), 0 5px 13px rgba(0,0,0,0.34);
+            width:54px; height:54px; border-radius:50%; flex-shrink:0; object-fit:cover;
+            background:#fff; padding:3px;
+            box-shadow:0 7px 16px -5px rgba(90,50,0,0.5), 0 0 0 1.5px rgba(255,243,207,0.8);
         }
-        .menu-row { display:flex; align-items:center; gap:14px; padding:16px 15px; }
-        .menu-title {
-            font-family:'Kanit',sans-serif; font-weight:600; font-size:1.1rem; line-height:1.25;
-            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-            text-shadow:0 1px 3px rgba(0,0,0,0.3);
+        .tile-go, .portal-chev {
+            width:36px; height:36px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:0.8rem;
+            color:rgba(255,255,255,0.95); background:rgba(255,255,255,0.1);
+            border:1.5px solid rgba(255,255,255,0.45);
         }
-        .menu-desc {
-            font-size:0.79rem; color:rgba(255,255,255,0.92); margin-top:2px; line-height:1.45;
-            text-shadow:0 1px 3px rgba(0,0,0,0.3);
-            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+        .tile-body, .portal-body { margin-top:auto; padding-top:16px; min-width:0; }
+        .menu-title, .portal h3 {
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.26rem; line-height:1.22;
+            text-shadow:0 1px 4px rgba(0,0,0,0.26);
+        }
+        .menu-desc, .portal p {
+            font-size:0.82rem; color:rgba(255,255,255,0.92); margin-top:3px; line-height:1.4;
+            text-shadow:0 1px 3px rgba(0,0,0,0.24);
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
         }
         .lock-pill {
-            display:flex; align-items:center; justify-content:center; flex-shrink:0;
-            width:30px; height:30px; border-radius:50%; font-size:0.68rem; color:var(--gold-100);
-            background:rgba(4,32,26,0.3); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.5);
+            display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+            width:30px; height:30px; border-radius:50%; font-size:0.68rem; color:#fff;
+            background:rgba(0,0,0,0.22); border:1.5px solid rgba(255,255,255,0.4);
         }
-        /* ลูกศรอยู่ในวงกลมขอบทอง ให้เหมือนปุ่มบริการหลัก */
-        .menu-chev {
-            width:32px; height:32px; border-radius:50%; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center;
-            font-size:0.76rem; color:var(--gold-100);
-            background:rgba(4,32,26,0.22); box-shadow:inset 0 0 0 1px rgba(251,240,200,0.45);
-        }
+
+        /* ชุดสีไทล์ */
+        .t-violet,  .portal-b { --t-base:var(--violet);  --t-fill:linear-gradient(152deg,#A46BE0,#7B2FBF 46%,#4E1788); --t-shadow:rgba(78,23,136,0.85); }
+        .t-crimson, .portal-a { --t-base:var(--crimson); --t-fill:linear-gradient(152deg,#D0415C,#A81432 46%,#6E0A20); --t-shadow:rgba(110,10,32,0.85); }
+        .t-sky    { --t-base:var(--sky);     --t-fill:linear-gradient(152deg,#5A6BD8,#2B3C9E 46%,#1A2468); --t-shadow:rgba(26,36,104,0.85); }
+        .t-jade   { --t-base:var(--jade);    --t-fill:linear-gradient(152deg,#35A9A6,#0E6E75 46%,#064449); --t-shadow:rgba(6,68,73,0.85); }
+        .t-amber  { --t-base:var(--amber);   --t-fill:linear-gradient(152deg,#DE8C28,#A85204 46%,#6B3103); --t-shadow:rgba(122,58,4,0.85); }
+        .t-rose   { --t-base:var(--rose);    --t-fill:linear-gradient(152deg,#E8558A,#C92350 46%,#840F31); --t-shadow:rgba(132,15,49,0.85); }
 
         /* ───────────── ปุ่ม QR ───────────── */
         .qr-btn {
@@ -512,16 +381,16 @@
             border:1.5px solid transparent;
             background-origin:border-box; background-clip:padding-box,border-box;
             background-image:linear-gradient(170deg,#fff,var(--paper-2)),var(--gilt);
-            box-shadow:0 3px 0 rgba(217,182,75,0.25), 0 12px 24px -16px rgba(20,32,27,0.6);
+            box-shadow:0 3px 0 rgba(242,193,74,0.25), 0 12px 24px -16px rgba(20,32,27,0.6);
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
-        .qr-btn:hover  { transform:translateY(-3px); box-shadow:0 6px 0 rgba(217,182,75,0.3), 0 20px 30px -18px rgba(20,32,27,0.7); }
+        .qr-btn:hover  { transform:translateY(-3px); box-shadow:0 6px 0 rgba(242,193,74,0.3), 0 20px 30px -18px rgba(20,32,27,0.7); }
         .qr-btn:active { transform:translateY(1px); }
         .qr-icon {
             width:34px; height:34px; border-radius:11px; flex-shrink:0;
             display:flex; align-items:center; justify-content:center; font-size:0.86rem;
             color:var(--gold-100); background:linear-gradient(165deg,var(--em-700),var(--em-950));
-            box-shadow:0 3px 10px rgba(4,32,26,0.4), inset 0 0 0 1px rgba(217,182,75,0.35);
+            box-shadow:0 3px 10px rgba(90,20,45,0.4), inset 0 0 0 1px rgba(242,193,74,0.35);
         }
 
         /* ───────────── พื้นผิวทั่วไป ───────────── */
@@ -532,7 +401,7 @@
         .login-card {
             background:linear-gradient(170deg,#fff,var(--paper-2));
             border:1px solid var(--line); border-radius:24px;
-            box-shadow:0 24px 60px -30px rgba(4,32,26,0.75), 0 0 0 1px rgba(217,182,75,0.18);
+            box-shadow:0 24px 60px -30px rgba(90,20,45,0.75), 0 0 0 1px rgba(242,193,74,0.18);
         }
         .page-head { font-family:'Kanit',sans-serif; font-weight:700; font-size:1.6rem; color:var(--em-800); letter-spacing:-0.02em; }
         .page-note { font-size:0.88rem; color:var(--muted); margin-top:3px; }
@@ -564,8 +433,8 @@
         }
         .btn-solid:hover  { transform:translateY(-2px); }
         .btn-solid:active { transform:translateY(1px); }
-        .btn-green  { background:linear-gradient(168deg,var(--em-700),var(--em-900)); box-shadow:0 4px 0 #04281E, 0 12px 22px -14px rgba(4,32,26,0.9); }
-        .btn-green:hover  { box-shadow:0 7px 0 #04281E, 0 20px 30px -16px rgba(4,32,26,0.95); }
+        .btn-green  { background:linear-gradient(168deg,var(--mar-700),var(--mar-900)); box-shadow:0 4px 0 #4E0A18, 0 12px 22px -14px rgba(90,20,45,0.9); }
+        .btn-green:hover  { box-shadow:0 7px 0 #4E0A18, 0 20px 30px -16px rgba(90,20,45,0.95); }
         .btn-amberS { background:linear-gradient(168deg,#D9780F,var(--amber)); box-shadow:0 4px 0 #8F4606, 0 12px 22px -14px rgba(143,70,6,0.9); }
         .btn-amberS:hover { box-shadow:0 7px 0 #8F4606, 0 20px 30px -16px rgba(143,70,6,0.95); }
 
@@ -604,7 +473,7 @@
         }
         .up-url:focus { border-color:var(--em-700); box-shadow:0 0 0 3px rgba(11,82,64,0.1); }
         .up-url::placeholder { color:#B4BEB8; }
-        .up-use { background:linear-gradient(168deg,var(--em-700),var(--em-900)); color:#fff; white-space:nowrap; }
+        .up-use { background:linear-gradient(168deg,var(--mar-700),var(--mar-900)); color:#fff; white-space:nowrap; }
         .up-use:hover { filter:brightness(1.12); }
         .up-warn { font-size:0.74rem; color:#A86A12; margin-top:7px; line-height:1.5; display:none; }
         .up-warn.on { display:block; }
@@ -628,9 +497,9 @@
             background:#fff; border-radius:50%; transition:.22s cubic-bezier(.34,1.4,.64,1);
             box-shadow:0 1px 4px rgba(0,0,0,.25);
         }
-        .toggle-switch input:checked + .toggle-slider { background:linear-gradient(168deg,var(--em-700),var(--em-900)); }
+        .toggle-switch input:checked + .toggle-slider { background:linear-gradient(168deg,var(--mar-700),var(--mar-900)); }
         .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
-        .toggle-status { font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600; padding:4px 11px; border-radius:100px; background:#EAF0EC; color:#9AA8A1; }
+        .toggle-status { font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600; padding:4px 11px; border-radius:100px; background:#F3E7EB; color:#6A5460; }
         .toggle-status.is-on { background:var(--em-tint); color:var(--em-800); }
 
         /* ───────────── แผงปรับแต่งรูป Hero ───────────── */
@@ -648,8 +517,8 @@
         }
         .ctl-range::-webkit-slider-thumb {
             -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%;
-            background:linear-gradient(168deg,var(--em-700),var(--em-900));
-            border:2px solid var(--gold-200); box-shadow:0 2px 7px rgba(4,32,26,0.35); cursor:pointer;
+            background:linear-gradient(168deg,var(--mar-700),var(--mar-900));
+            border:2px solid var(--gold-200); box-shadow:0 2px 7px rgba(90,20,45,0.35); cursor:pointer;
         }
         .ctl-range::-moz-range-thumb {
             width:20px; height:20px; border-radius:50%;
@@ -668,7 +537,7 @@
         }
         .mode-pick button.active {
             background:#fff; color:var(--em-800);
-            box-shadow:0 2px 8px -2px rgba(4,32,26,0.25), inset 0 0 0 1px rgba(217,182,75,0.4);
+            box-shadow:0 2px 8px -2px rgba(90,20,45,0.25), inset 0 0 0 1px rgba(242,193,74,0.4);
         }
         .mode-note {
             font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:500;
@@ -682,7 +551,7 @@
             background:#fff; color:var(--muted); border:1px solid var(--line); transition:all .16s ease;
         }
         .align-pick button.active {
-            background:linear-gradient(168deg,var(--em-700),var(--em-900));
+            background:linear-gradient(168deg,var(--mar-700),var(--mar-900));
             color:#fff; border-color:transparent; box-shadow:0 4px 12px -4px rgba(11,82,64,0.5);
         }
         .align-pick button i { display:block; margin-bottom:3px; font-size:0.9rem; }
@@ -692,7 +561,7 @@
         }
         .ctl-dirty {
             display:none; font-family:'Kanit',sans-serif; font-size:0.72rem; font-weight:600;
-            padding:4px 11px; border-radius:100px; background:#FDF0DC; color:#B5741A;
+            padding:4px 11px; border-radius:100px; background:#FDF0DC; color:#8A5410;
         }
         .ctl-dirty.on { display:inline-block; }
 
@@ -712,7 +581,7 @@
         }
         .mini-btn:hover:not(:disabled) { transform:scale(1.12); }
         .mini-btn:disabled { opacity:.32; cursor:not-allowed; }
-        .mb-move { background:#EAF0EC; color:#7A8A83; }
+        .mb-move { background:#F3E7EB; color:#6E5560; }
         .mb-edit { background:var(--em-tint); color:var(--em-800); }
         .mb-del  { background:#FDE8E8; color:#C0392B; }
 
@@ -726,7 +595,7 @@
             position:absolute; right:13px; top:50%; transform:translateY(-50%);
             width:26px; height:26px; border-radius:50%; border:none; cursor:pointer;
             display:flex; align-items:center; justify-content:center;
-            background:#EAF0EC; color:#9AA8A1; font-size:0.74rem; transition:all .15s ease;
+            background:#F3E7EB; color:#7A6670; font-size:0.74rem; transition:all .15s ease;
         }
         .search-clear-btn:hover { background:#FDE8E8; color:#C0392B; }
         .filter-chip {
@@ -735,8 +604,8 @@
             background:#fff; color:var(--muted); border:1px solid var(--line); transition:all .16s ease;
         }
         .filter-chip.active {
-            background:linear-gradient(168deg,var(--em-700),var(--em-900)); color:#fff; border-color:transparent;
-            box-shadow:0 4px 12px -6px rgba(4,32,26,.8);
+            background:linear-gradient(168deg,var(--mar-700),var(--mar-900)); color:#fff; border-color:transparent;
+            box-shadow:0 4px 12px -6px rgba(90,20,45,.8);
         }
         .filter-chip:hover:not(.active) { border-color:var(--gold-400); color:var(--em-800); transform:translateY(-1px); }
         .chip-count {
@@ -744,7 +613,7 @@
             border-radius:100px; font-size:0.68rem; font-weight:700;
             background:var(--em-tint); color:var(--em-800);
         }
-        .filter-chip.active .chip-count { background:rgba(251,240,200,0.24); color:var(--gold-100); }
+        .filter-chip.active .chip-count { background:rgba(255,243,207,0.24); color:var(--gold-100); }
         .student-row {
             display:flex; align-items:center; gap:14px; padding:13px 16px;
             background:#fff; border:1px solid var(--line); border-radius:14px; transition:all .16s ease;
@@ -754,18 +623,18 @@
         /* แถบสีประจำชั้นที่ขอบซ้าย กวาดตาหาชั้นได้เร็วขึ้นในรายชื่อ 400 กว่าคน */
         .student-row::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:transparent; }
         .rw-m4::before { background:linear-gradient(180deg,#5FA8D8,#1C5E8C); }
-        .rw-m5::before { background:linear-gradient(180deg,#E8B35C,#B5741A); }
+        .rw-m5::before { background:linear-gradient(180deg,#E8B35C,#8A5410); }
         .rw-m6::before { background:linear-gradient(180deg,#3FD9B4,var(--em-700)); }
         .avatar {
             width:40px; height:40px; border-radius:12px; flex-shrink:0;
             display:flex; align-items:center; justify-content:center;
             font-family:'Kanit',sans-serif; font-weight:600; font-size:0.88rem;
         }
-        .av-m4{background:#E6F0F7;color:#1C5E8C} .av-m5{background:#FBF1E0;color:#B5741A}
-        .av-m6{background:var(--em-tint);color:var(--em-700)} .av-default{background:#EAF0EC;color:#7A8A83}
+        .av-m4{background:#E6F0F7;color:#1C5E8C} .av-m5{background:#FBEEDD;color:#8A5410}
+        .av-m6{background:var(--em-tint);color:var(--em-700)} .av-default{background:#F3E7EB;color:#6E5560}
         .class-badge { font-family:'Kanit',sans-serif; font-size:0.7rem; font-weight:600; padding:4px 11px; border-radius:100px; }
-        .badge-m4{background:#E6F0F7;color:#1C5E8C} .badge-m5{background:#FBF1E0;color:#B5741A}
-        .badge-m6{background:var(--em-tint);color:var(--em-700)} .badge-def{background:#EAF0EC;color:#7A8A83}
+        .badge-m4{background:#E6F0F7;color:#1C5E8C} .badge-m5{background:#FBEEDD;color:#8A5410}
+        .badge-m6{background:var(--em-tint);color:var(--em-700)} .badge-def{background:#F3E7EB;color:#6E5560}
 
         /* ───────────── ส่วนท้าย ───────────── */
         .footer-mark {
@@ -777,7 +646,7 @@
             width:30px; height:30px; border-radius:50%; flex-shrink:0;
             display:flex; align-items:center; justify-content:center; font-size:0.72rem;
             color:var(--gold-100); background:linear-gradient(165deg,var(--em-700),var(--em-950));
-            box-shadow:inset 0 0 0 1px rgba(217,182,75,0.4);
+            box-shadow:inset 0 0 0 1px rgba(242,193,74,0.4);
         }
 
         /* ───────────── อื่นๆ ───────────── */
@@ -786,8 +655,8 @@
         @keyframes rise { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
         .skeleton { background:linear-gradient(90deg,#E6EDE9 25%,#F4F8F6 50%,#E6EDE9 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
         @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        .card-skeleton { display:flex; align-items:center; gap:14px; padding:15px; border-radius:22px; background:#fff; border:1px solid var(--line); }
-        .modal-overlay { background:rgba(4,32,26,0.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
+        .card-skeleton { min-height:200px; border-radius:30px; background:var(--card); border:1px solid var(--line); padding:18px; }
+        .modal-overlay { background:rgba(90,20,45,0.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
 
         /* ───────────── จอเล็ก ───────────── */
         @media (max-width:1024px) {
@@ -796,19 +665,25 @@
         }
         @media (max-width:430px) {
             /* บีบโซนพิธีการบนจอเล็ก ไม่ให้กินทั้งหน้าจนไม่เห็นเมนู */
-            .hero-body { padding:26px 18px 24px; }
-            .hero-frame { inset:9px; border-radius:15px; }
-            .hero-title { font-size:clamp(1.8rem,7.4vw,2.3rem); }
-            .ornament { margin:13px auto 10px; width:min(200px,66%); }
-            .hero-sub { font-size:0.88rem; line-height:1.6; }
-            .medallion { width:66px; height:66px; margin-bottom:11px; }
-            .portal { min-height:96px; padding:15px 14px; gap:13px; }
-            .portal-ic { width:50px; height:50px; border-radius:15px; font-size:1.24rem; }
-            .portal-body { padding-left:13px; }
-            .portal h3 { font-size:1.14rem; }
-            .portal p  { font-size:0.75rem; }
-            .stat-card { padding:12px 12px; gap:10px; border-radius:15px; }
-            .stat-ic { width:40px; height:40px; border-radius:12px; font-size:1.02rem; }
+            .hero-body { padding:14px; }
+            .hero-frame { inset:7px; border-radius:17px; }
+            .hero-frame::before { top:11px; right:11px; width:26px; height:11px;
+                background-size:11px 11px, 11px 11px; }
+            .hero-slogan { font-size:1.1rem; padding:11px 14px; max-width:min(76%,230px); }
+            .hero-title { font-size:clamp(1.4rem,6.6vw,1.9rem); }
+            .ornament { margin:10px auto 0; width:min(170px,54%); }
+            .hero-sub { font-size:0.8rem; }
+            .medallion { width:42px; height:42px; margin-bottom:9px; }
+            .term-bar { padding:8px 15px; gap:9px; font-size:0.9rem; }
+            .tile, .portal { min-height:172px; padding:16px; border-radius:25px; }
+            .tile-icon, .portal-ic { width:46px; height:46px; font-size:1.14rem; }
+            .tile-go, .portal-chev { width:31px; height:31px; font-size:0.72rem; }
+            .menu-title, .portal h3 { font-size:1.08rem; }
+            .menu-desc, .portal p { font-size:0.76rem; }
+            .tile-body, .portal-body { padding-top:12px; }
+            .stat-card { padding:12px; gap:10px; border-radius:17px; }
+            .stat-ic { width:40px; height:40px; font-size:1.02rem; }
+            .stat-v { font-size:1.7rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -848,27 +723,32 @@
     <div id="view-dashboard" class="page-view active">
 
         <header class="hero d-left vd-center m-center vm-center">
-            <div class="hero-img-wrap">
-                <img id="hero-desktop" class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="">
-                <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
-            </div>
-            <div class="hero-veil"></div>
-            <div class="hero-frame"></div>
-            <div class="hero-body">
-                <div class="medallion">
-                    <img id="hero-crest" src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="ตราโรงเรียน">
+            <div class="hero-stage">
+                <div class="hero-img-wrap">
+                    <img id="hero-desktop" class="hero-img-desktop" src="https://i.postimg.cc/tCwLkLkr/Chat-GPT-Image-Jun-12-2026-at-11-19-54-AM.png" alt="">
+                    <img id="hero-mobile"  class="hero-img-mobile"  src="https://i.postimg.cc/mDDp3wvw/Chat-GPT-Image-Jun-12-2026-at-10-38-13-AM.png" alt="">
                 </div>
-                <p class="hero-term">ภาคเรียนที่ 2 · ปีการศึกษา 2569</p>
-                <h2 class="hero-title">ยินดีต้อนรับ<br><span class="gilt">นักเรียนมัธยมปลาย</span></h2>
-                <!-- ลายไทยคั่น: กนกสองข้างประกบดอกบัวตูมกลาง -->
+                <div class="hero-veil"></div>
+                <div class="hero-frame"></div>
+                <div class="hero-body">
+                    <div class="medallion">
+                        <img id="hero-crest" src="https://i.postimg.cc/ydtX6mMS/logo.png" alt="ตราโรงเรียน">
+                    </div>
+                    <p class="hero-slogan" id="hero-slogan">ตั้งใจเรียน<br>พัฒนาตน<span class="accent">สู่อนาคตที่ดี</span></p>
+                </div>
+            </div>
+
+            <div class="hero-foot">
+                <h2 class="hero-title">สวัสดีนักเรียนมัธยมปลาย</h2>
+                <!-- ลายไทยคั่น: กนกสองข้างประกบดอกบัวตูมกลาง (ปิดได้จากหน้า admin) -->
                 <svg class="ornament" viewBox="0 0 240 26" fill="none" aria-hidden="true">
                     <defs>
                         <linearGradient id="og" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="240" y2="0">
-                            <stop offset="0" stop-color="#8A6512" stop-opacity="0"/>
-                            <stop offset="0.22" stop-color="#D9B64B"/>
-                            <stop offset="0.5" stop-color="#FBF0C8"/>
-                            <stop offset="0.78" stop-color="#D9B64B"/>
-                            <stop offset="1" stop-color="#8A6512" stop-opacity="0"/>
+                            <stop offset="0" stop-color="#A87512" stop-opacity="0"/>
+                            <stop offset="0.22" stop-color="#F2C14A"/>
+                            <stop offset="0.5" stop-color="#FFF3CF"/>
+                            <stop offset="0.78" stop-color="#F2C14A"/>
+                            <stop offset="1" stop-color="#A87512" stop-opacity="0"/>
                         </linearGradient>
                     </defs>
                     <path d="M4 13h74" stroke="url(#og)" stroke-width="1.4"/>
@@ -877,6 +757,15 @@
                     <path d="M152 13c-7 0-11-4-13-8-2 4-6 8-13 8 7 0 11 4 13 8 2-4 6-8 13-8z" fill="url(#og)"/>
                     <path d="M120 4c3.4 3.6 5.2 6.4 5.2 9s-1.8 5.4-5.2 9c-3.4-3.6-5.2-6.4-5.2-9s1.8-5.4 5.2-9z" fill="url(#og)"/>
                 </svg>
+                <div class="term-bar">
+                    <span>ภาคเรียนที่</span>
+                    <span class="term-switch" id="term-switch">
+                        <button type="button" data-term="1">1</button>
+                        <button type="button" data-term="2">2</button>
+                    </span>
+                    <span>ปีการศึกษา <span id="term-year">2569</span></span>
+                </div>
+                <p class="term-note" id="term-note"></p>
                 <p class="hero-sub">แตะเมนูด้านล่างเพื่อเริ่มใช้งาน</p>
             </div>
         </header>
@@ -884,28 +773,32 @@
         <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
 
         <div class="sec-label"><span>บริการหลัก</span><i></i></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
             <div onclick="navigate('students')" class="portal portal-a">
-                <div class="portal-ic"><i class="fa-solid fa-user-graduate"></i></div>
-                <div class="portal-body">
-                    <h3>นักเรียน</h3>
-                    <p>รายชื่อนักเรียน / ข้อมูลนักเรียน</p>
+                <div class="tile-head">
+                    <div class="portal-ic"><i class="fa-solid fa-user-graduate"></i></div>
+                    <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
-                <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="portal-body">
+                    <h3>สำหรับนักเรียน</h3>
+                    <p>ดูรายชื่อและข้อมูลนักเรียน</p>
+                </div>
             </div>
             <div onclick="navigate('login-admin')" class="portal portal-b">
-                <div class="portal-ic"><i class="fa-solid fa-book"></i></div>
-                <div class="portal-body">
-                    <h3>วิชาการ</h3>
-                    <p>คำสั่ง / เอกสาร / ตารางเรียน / ตารางสอน</p>
+                <div class="tile-head">
+                    <div class="portal-ic"><i class="fa-solid fa-book"></i></div>
+                    <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
-                <div class="portal-chev"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="portal-body">
+                    <h3>สำหรับคุณครู</h3>
+                    <p>คำสั่ง เอกสาร ตารางเรียน ตารางสอน</p>
+                </div>
             </div>
         </div>
 
         <div id="menu-section" class="hidden">
             <div class="sec-label"><span>รายการประกาศ</span><i></i></div>
-            <div id="all-cards-container" class="flex flex-col gap-3"></div>
+            <div id="all-cards-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
         </div>
 
         <button onclick="showQRModal()" class="qr-btn mt-5">
@@ -958,7 +851,7 @@
     <div id="view-login-admin" class="page-view max-w-sm mx-auto mt-10">
         <div class="login-card p-8 text-center">
             <div class="medallion" style="width:76px;height:76px;margin-bottom:22px;">
-                <div style="position:relative;z-index:2;width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(165deg,var(--em-700),var(--em-950));box-shadow:0 0 0 2px var(--em-950),0 8px 22px rgba(4,32,26,.55);">
+                <div style="position:relative;z-index:2;width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(165deg,var(--em-700),var(--em-950));box-shadow:0 0 0 2px var(--em-950),0 8px 22px rgba(90,20,45,.55);">
                     <i class="fa-solid fa-shield-halved text-2xl" style="color:var(--gold-200);"></i>
                 </div>
             </div>
@@ -1034,7 +927,7 @@
 
                 <!-- รูปภาพหน้าเว็บ -->
                 <div class="panel p-6">
-                    <div class="tag" style="background:#FBF1E0;color:#B5741A;"><i class="fa-solid fa-images"></i> รูปภาพหน้าเว็บ</div>
+                    <div class="tag" style="background:#FBEEDD;color:#8A5410;"><i class="fa-solid fa-images"></i> รูปภาพหน้าเว็บ</div>
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="field-label">โลโก้โรงเรียน (ใช้เป็น favicon ด้วย) — แนะนำ PNG พื้นโปร่งใส</label>
@@ -1058,6 +951,26 @@
                         <span id="hero-dirty" class="ctl-dirty"><i class="fa-solid fa-circle-exclamation mr-1"></i>ยังไม่ได้บันทึก</span>
                     </div>
                     <p class="ctl-note mb-3">เลื่อนปรับแล้วเห็นผลที่หน้าแรกทันที กด <b>บันทึก</b> เพื่อให้ทุกคนเห็นแบบเดียวกัน</p>
+
+                    <div class="flex flex-col gap-3 mb-4">
+                        <div>
+                            <label class="field-label">ภาคเรียนเริ่มต้นที่หน้าแรก</label>
+                            <div class="align-pick" id="hero-term-pick">
+                                <button type="button" data-term="1">ภาคเรียนที่ 1</button>
+                                <button type="button" data-term="2">ภาคเรียนที่ 2</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="field-label">ปีการศึกษา</label>
+                                <input type="text" id="hero-year" class="input" inputmode="numeric" maxlength="12" placeholder="2569">
+                            </div>
+                            <div>
+                                <label class="field-label">หมายเหตุใต้ภาคเรียน (เว้นว่างได้)</label>
+                                <input type="text" id="hero-term-note" class="input" maxlength="160" placeholder="เทอม 2 = พ.ย.–มี.ค.">
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- สลับโหมด: ค่าของจอคอมกับมือถือแยกกันคนละชุด -->
                     <div class="mode-pick" id="hero-mode-pick">
@@ -1122,7 +1035,23 @@
                             </label>
                         </div>
 
-                        <p class="ctl-note">สามรายการล่างนี้ใช้ร่วมกันทั้งสองโหมด</p>
+                        <p class="ctl-note">รายการด้านล่างนี้ใช้ร่วมกันทั้งสองโหมด</p>
+
+                        <div class="toggle-row">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-comment-dots text-sm" style="color:var(--muted);"></i>
+                                <span class="text-sm font-semibold" style="color:var(--ink);">แสดงแผ่นสโลแกนบนรูป</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hero-slogan-on" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <label class="field-label">ข้อความสโลแกน — บรรทัดละ 1 วรรค บรรทัดสุดท้ายจะเป็นสีชมพูเข้ม</label>
+                            <textarea id="hero-slogan-text" class="input" rows="3" maxlength="180"
+                                      style="resize:vertical;line-height:1.6;"></textarea>
+                        </div>
 
                         <div class="toggle-row">
                             <div class="flex items-center gap-2">
@@ -1360,7 +1289,7 @@
 <div id="qr-modal" class="modal-overlay fixed inset-0 z-50 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
     <div class="login-card p-8 max-w-sm w-11/12 text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
         <div class="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center"
-             style="background:linear-gradient(165deg,var(--em-700),var(--em-950));box-shadow:inset 0 0 0 1px rgba(217,182,75,.4);">
+             style="background:linear-gradient(165deg,var(--em-700),var(--em-950));box-shadow:inset 0 0 0 1px rgba(242,193,74,.4);">
             <i class="fa-solid fa-qrcode text-xl" style="color:var(--gold-200);"></i>
         </div>
         <h3 class="page-head" style="font-size:1.4rem;">สแกนเพื่อเข้าเว็บ</h3>
@@ -1388,7 +1317,7 @@ async function callAPI(action, payload = {}) {
 
 function handleScriptError(error) {
     Swal.close();
-    Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text:(error && error.message) ? error.message : String(error), confirmButtonColor:'#0F3D2E' });
+    Swal.fire({ icon:'error', title:'เซิร์ฟเวอร์ขัดข้อง!', text:(error && error.message) ? error.message : String(error), confirmButtonColor:'#7A1028' });
 }
 
 // กันข้อความจากผู้ใช้ไปทำลายโครงสร้าง HTML ตอนแทรกด้วย innerHTML
@@ -1510,8 +1439,8 @@ function createUploader(opts) {
             preview.appendChild(im);
             // แยกข้อความให้ชัด: ช่องที่บันทึกเองได้ กับช่องที่ต้องกดปุ่มยืนยันก่อน
             hint.innerHTML = opts.autoSave
-                ? '<span style="color:#0F3D2E;font-weight:600;">✓ บันทึกแล้ว</span> — ใช้งานบนหน้าเว็บทันที'
-                : '<span style="color:#B5741A;font-weight:600;">พร้อมบันทึก</span> — ' + esc(opts.saveHint || 'กดปุ่มบันทึกด้านล่างเพื่อยืนยัน');
+                ? '<span style="color:#7A1028;font-weight:600;">✓ บันทึกแล้ว</span> — ใช้งานบนหน้าเว็บทันที'
+                : '<span style="color:#8A5410;font-weight:600;">พร้อมบันทึก</span> — ' + esc(opts.saveHint || 'กดปุ่มบันทึกด้านล่างเพื่อยืนยัน');
             delBtn.classList.remove('hidden');
             box.classList.add('has-img');
         } else {
@@ -1528,7 +1457,7 @@ function createUploader(opts) {
         if (!v) return;
         if (!/^https?:\/\//i.test(v)) {
             return Swal.fire({ icon:'warning', title:'ลิงก์ไม่ถูกต้อง',
-                text:'ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://', confirmButtonColor:'#0F3D2E' });
+                text:'ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://', confirmButtonColor:'#7A1028' });
         }
         state.url = v;
         urlIn.value = '';
@@ -1568,11 +1497,11 @@ function createUploader(opts) {
             // ไฟล์ขึ้น Drive แล้ว แต่ตั้งค่าแชร์ไม่ได้ — เตือนให้ไปตั้งสิทธิ์ที่โฟลเดอร์เอง
             if (res.warning) {
                 Swal.fire({ icon:'warning', title:'ต้องตั้งสิทธิ์โฟลเดอร์เพิ่ม', text:res.warning,
-                            confirmButtonColor:'#0F3D2E', width:620 });
+                            confirmButtonColor:'#7A1028', width:620 });
             }
         } catch (err) {
             render();
-            Swal.fire({ icon:'error', title:'อัปโหลดไม่สำเร็จ', text:err.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'อัปโหลดไม่สำเร็จ', text:err.message, confirmButtonColor:'#7A1028' });
         } finally {
             setBusy(false);
         }
@@ -1602,7 +1531,7 @@ function navigate(viewId) {
     // หน้าจัดการรายชื่อแก้ข้อมูลจริง ต้องเข้าสู่ระบบก่อนเท่านั้น
     if (viewId === 'roster' && !adminKey) {
         Swal.fire({ icon:'info', title:'กรุณาเข้าสู่ระบบก่อน',
-                    text:'หน้าจัดการรายชื่อสำหรับครูวิชาการเท่านั้น', confirmButtonColor:'#0F3D2E' });
+                    text:'หน้าจัดการรายชื่อสำหรับครูวิชาการเท่านั้น', confirmButtonColor:'#7A1028' });
         viewId = 'login-admin';
     }
     document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
@@ -1629,7 +1558,7 @@ function renderSkeletonStats() {
     c.innerHTML = '';
     for (let i = 0; i < 4; i++) {
         c.innerHTML += '<div class="stat-card">' +
-            '<div class="skeleton" style="width:46px;height:46px;border-radius:14px;flex-shrink:0;"></div>' +
+            '<div class="skeleton" style="width:46px;height:46px;border-radius:50%;flex-shrink:0;"></div>' +
             '<div class="stat-txt" style="flex:1;"><div class="skeleton h-3 w-20 rounded-full mb-2"></div>' +
             '<div class="skeleton h-6 w-14 rounded-lg"></div></div></div>';
     }
@@ -1663,9 +1592,9 @@ function renderSkeletonCards(n) {
     c.innerHTML = '';
     for (let i = 0; i < (n || 2); i++) {
         c.insertAdjacentHTML('beforeend',
-            '<div class="card-skeleton">' +
-                '<div class="skeleton" style="width:46px;height:46px;border-radius:15px;flex-shrink:0;"></div>' +
-                '<div class="flex-1"><div class="skeleton h-3.5 w-1/2 rounded-full mb-2"></div><div class="skeleton h-2.5 w-1/3 rounded-full"></div></div>' +
+            '<div class="card-skeleton flex flex-col">' +
+                '<div class="skeleton" style="width:54px;height:54px;border-radius:50%;"></div>' +
+                '<div class="mt-auto pt-4"><div class="skeleton h-4 w-2/3 rounded-full mb-2"></div><div class="skeleton h-2.5 w-1/2 rounded-full"></div></div>' +
             '</div>');
     }
 }
@@ -1686,18 +1615,21 @@ function loadWebCards() {
             const cls  = btnMap[card.color] || 't-violet';
             const icon = card.icon || 'fa-star';
             const el = document.createElement('div');
-            el.className = 'tile ' + cls + ' menu-row';
+            el.className = 'tile ' + cls;
             el.innerHTML =
-                (card.img
-                    ? '<img class="tile-cover" style="width:50px;height:50px;" src="' + esc(card.img) + '" alt="">'
-                    : '<div class="tile-icon" style="width:50px;height:50px;"><i class="fa-solid ' + esc(icon) + ' text-lg"></i></div>') +
-                '<div class="flex-1 min-w-0">' +
-                    '<h3 class="menu-title">' + esc(card.title) + '</h3>' +
-                    // ตัดบรรทัดเดียวด้วย ellipsis ให้ทุกการ์ดสูงเท่ากัน แต่ใส่ title ไว้ให้เห็นข้อความเต็ม
-                    (card.desc ? '<p class="menu-desc" title="' + esc(card.desc) + '">' + esc(card.desc) + '</p>' : '') +
+                '<div class="tile-head">' +
+                    (card.img
+                        ? '<img class="tile-cover" src="' + esc(card.img) + '" alt="">'
+                        : '<div class="tile-icon"><i class="fa-solid ' + esc(icon) + '"></i></div>') +
+                    '<div class="flex items-center gap-2">' +
+                        (card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : '') +
+                        '<div class="tile-go"><i class="fa-solid fa-chevron-right"></i></div>' +
+                    '</div>' +
                 '</div>' +
-                (card.pwd ? '<span class="lock-pill" title="ต้องใส่รหัสผ่าน"><i class="fa-solid fa-lock"></i></span>' : '') +
-                '<i class="fa-solid fa-chevron-right menu-chev"></i>';
+                '<div class="tile-body">' +
+                    '<h3 class="menu-title">' + esc(card.title) + '</h3>' +
+                    (card.desc ? '<p class="menu-desc">' + esc(card.desc) + '</p>' : '') +
+                '</div>';
             // ผูก event ด้วย addEventListener แทนการฝัง onclick เป็นสตริง
             // กันปัญหาชื่อเมนู/คำอธิบาย/URL ที่มีเครื่องหมาย ' หรือ " ทำให้ปุ่มพัง
             el.addEventListener('click', () => {
@@ -1715,7 +1647,7 @@ function loadWebCards() {
 
 function openCard(card) {
     if (card.url) window.open(card.url, '_blank');
-    else Swal.fire({ title: card.title, text: card.desc || '', icon: 'info', confirmButtonColor:'#0F3D2E' });
+    else Swal.fire({ title: card.title, text: card.desc || '', icon: 'info', confirmButtonColor:'#7A1028' });
 }
 
 function askCardPassword(card) {
@@ -1728,8 +1660,8 @@ function askCardPassword(card) {
         showCancelButton: true,
         confirmButtonText: 'เปิดเมนู',
         cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#0F3D2E',
-        cancelButtonColor: '#9AA8A1'
+        confirmButtonColor: '#7A1028',
+        cancelButtonColor: '#7A6670'
     }).then(result => {
         if (!result.isConfirmed) return;
         if ((result.value || '').trim() === card.pwd) openCard(card);
@@ -1797,19 +1729,16 @@ function applyBranding(d, freshen) {
 // แยกค่าจอคอม (desktop) กับมือถือ (mobile) ออกจากกัน ส่วนสวิตช์เปิด/ปิดองค์ประกอบใช้ร่วมกัน
 // ════════════════════════════════════════
 const HERO_MODE_DEFAULT = {
-    desktop: { align:'left',   vpos:'center', veil:100, posX:50, posY:32, height:0 },
-    mobile:  { align:'center', vpos:'center', veil:100, posX:50, posY:32, height:0 }
+    desktop: { align:'left', vpos:'top', veil:100, posX:50, posY:32, height:0 },
+    mobile:  { align:'left', vpos:'top', veil:100, posX:50, posY:32, height:0 }
 };
-const HERO_DEFAULT = {
-    desktop: Object.assign({}, HERO_MODE_DEFAULT.desktop),
-    mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
-    crest:true, orn:true, frame:true
-};
+const SLOGAN_DEFAULT = 'ตั้งใจเรียน\nพัฒนาตน\nสู่อนาคตที่ดี';
 function heroDefaults() {
     return {
         desktop: Object.assign({}, HERO_MODE_DEFAULT.desktop),
         mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
-        crest:true, orn:true, frame:true
+        crest:true, orn:true, frame:true, slogan:true, sloganText:SLOGAN_DEFAULT,
+        term:2, year:'2569', termNote:'เทอม 2 = พ.ย.–มี.ค.'
     };
 }
 let heroLayout = heroDefaults();
@@ -1848,6 +1777,11 @@ function parseHeroLayout(raw) {
     if (typeof o.crest === 'boolean') L.crest = o.crest;
     if (typeof o.orn   === 'boolean') L.orn   = o.orn;
     if (typeof o.frame === 'boolean') L.frame = o.frame;
+    if (typeof o.slogan === 'boolean') L.slogan = o.slogan;
+    if (typeof o.sloganText === 'string') L.sloganText = o.sloganText.slice(0, 180);
+    if (Number(o.term) === 1 || Number(o.term) === 2) L.term = Number(o.term);
+    if (typeof o.year === 'string' && o.year.trim())     L.year = o.year.trim().slice(0, 12);
+    if (typeof o.termNote === 'string')                  L.termNote = o.termNote.slice(0, 160);
     return L;
 }
 
@@ -1858,7 +1792,9 @@ function applyHeroLayout(L) {
                        'm-left','m-center','m-right','vm-top','vm-center','vm-bottom');
     h.classList.add('d-' + L.desktop.align, 'vd-' + L.desktop.vpos,
                     'm-' + L.mobile.align,  'vm-' + L.mobile.vpos);
-    h.classList.toggle('no-crest', !L.crest);
+    h.classList.toggle('no-crest',  !L.crest);
+    h.classList.toggle('no-slogan', !L.slogan);
+    renderSlogan(L);
     h.classList.toggle('no-orn',   !L.orn);
     h.classList.toggle('no-frame', !L.frame);
 
@@ -1868,8 +1804,60 @@ function applyHeroLayout(L) {
         h.style.setProperty('--hero-h-'   + suffix, m.height > 0 ? m.height + 'px' : autoH);
     };
     // ค่า auto ต้องใส่เป็นสูตรเดิม ไม่ใช่ลบตัวแปรทิ้ง เพราะ media query อ้างถึงตัวแปรนี้ตรงๆ
-    set('d', L.desktop, 'clamp(330px,44vw,500px)');
-    set('m', L.mobile,  'clamp(300px,74vw,430px)');
+    set('d', L.desktop, 'clamp(260px,32vw,400px)');
+    set('m', L.mobile,  'clamp(230px,56vw,340px)');
+    applyTerm(L);
+}
+
+// ข้อความสโลแกนบนรูป — บรรทัดสุดท้ายใช้สีเน้น (ชมพูเข้ม) ตามแบบที่ครูส่งมา
+function renderSlogan(L) {
+    const el = document.getElementById('hero-slogan');
+    if (!el) return;
+    const lines = String(L.sloganText || '').split('\n')
+                    .map(x => x.trim()).filter(x => x !== '');
+    if (!lines.length) { el.innerHTML = ''; return; }
+    const last = lines.pop();
+    // ใช้ esc() ทุกบรรทัด เพราะข้อความนี้มาจากช่องกรอกในหน้า admin
+    el.innerHTML = lines.map(x => esc(x) + '<br>').join('') +
+                   '<span class="accent">' + esc(last) + '</span>';
+}
+
+// ── ตัวสลับภาคเรียน ──
+// ค่าเริ่มต้นมาจากหน้า admin ส่วนการกดสลับเก็บไว้ในเครื่องผู้ใช้คนนั้นเท่านั้น
+// (ถ้าให้กดแล้วเปลี่ยนของทุกคน นักเรียนคนเดียวจะเปลี่ยนให้ทั้งโรงเรียนได้)
+function currentTerm(L) {
+    let t = L.term;
+    try {
+        const v = localStorage.getItem('gsb_term');
+        if (v === '1' || v === '2') t = Number(v);
+    } catch (e) { /* โหมดส่วนตัว/ปิดคุกกี้ — ใช้ค่าจาก admin ไปตามเดิม */ }
+    return t;
+}
+
+function applyTerm(L) {
+    const sw = document.getElementById('term-switch');
+    if (sw) {
+        const t = currentTerm(L);
+        sw.querySelectorAll('button').forEach(b => {
+            b.classList.toggle('active', Number(b.dataset.term) === t);
+        });
+    }
+    const y = document.getElementById('term-year');
+    if (y) y.textContent = L.year || '';
+    const n = document.getElementById('term-note');
+    if (n) n.textContent = L.termNote || '';
+}
+
+function initTermSwitch() {
+    const sw = document.getElementById('term-switch');
+    if (!sw) return;
+    sw.querySelectorAll('button').forEach(b => {
+        b.addEventListener('click', () => {
+            try { localStorage.setItem('gsb_term', b.dataset.term); } catch (e) { /* ไม่เก็บก็ยังสลับให้ดูได้ */ }
+            heroLayout.term = Number(b.dataset.term);
+            applyTerm(heroLayout);
+        });
+    });
 }
 
 // ── แผงควบคุมในหน้า admin ──
@@ -1888,6 +1876,10 @@ function readHeroControls() {
     heroLayout.crest = g('hero-crest-on').checked;
     heroLayout.orn   = g('hero-orn-on').checked;
     heroLayout.frame = g('hero-frame-on').checked;
+    heroLayout.slogan     = g('hero-slogan-on').checked;
+    heroLayout.sloganText = g('hero-slogan-text').value;
+    heroLayout.year     = g('hero-year').value.trim() || '2569';
+    heroLayout.termNote = g('hero-term-note').value.trim();
     g('hero-height').disabled = auto;
     updateHeroReadouts();
     applyHeroLayout(heroLayout);
@@ -1918,6 +1910,13 @@ function fillHeroControls() {
     g('hero-crest-on').checked = heroLayout.crest;
     g('hero-orn-on').checked   = heroLayout.orn;
     g('hero-frame-on').checked = heroLayout.frame;
+    g('hero-slogan-on').checked   = heroLayout.slogan;
+    g('hero-slogan-text').value   = heroLayout.sloganText || '';
+    g('hero-year').value      = heroLayout.year || '';
+    g('hero-term-note').value = heroLayout.termNote || '';
+    document.querySelectorAll('#hero-term-pick button').forEach(b => {
+        b.classList.toggle('active', Number(b.dataset.term) === Number(heroLayout.term));
+    });
     updateHeroReadouts();
     document.querySelectorAll('#hero-align-pick button').forEach(b => {
         b.classList.toggle('active', b.dataset.align === m.align);
@@ -1945,7 +1944,7 @@ function setHeroDirty(on) {
 
 function saveHeroLayoutFn() {
     if (!adminKey) {
-        Swal.fire({ icon:'warning', title:'กรุณาเข้าสู่ระบบใหม่', confirmButtonColor:'#0F3D2E' });
+        Swal.fire({ icon:'warning', title:'กรุณาเข้าสู่ระบบใหม่', confirmButtonColor:'#7A1028' });
         return;
     }
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
@@ -1955,9 +1954,9 @@ function saveHeroLayoutFn() {
             setHeroDirty(false);
             Swal.fire({ icon:'success', title:'บันทึกแล้ว',
                         text:'บันทึกทั้งค่าจอคอมและมือถือ หน้าแรกจะแสดงแบบนี้กับทุกคน',
-                        confirmButtonColor:'#0F3D2E' });
+                        confirmButtonColor:'#7A1028' });
         } else {
-            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
         }
     }).catch(handleScriptError);
 }
@@ -1967,7 +1966,7 @@ function resetHeroLayoutFn() {
         icon:'question', title:'คืนค่าเริ่มต้น?',
         text:'เฉพาะโหมด' + (heroMode === 'desktop' ? 'จอคอมพิวเตอร์' : 'มือถือ') + ' อีกโหมดไม่เปลี่ยน',
         showCancelButton:true, confirmButtonText:'คืนค่า', cancelButtonText:'ยกเลิก',
-        confirmButtonColor:'#0F3D2E', cancelButtonColor:'#9AA8A1'
+        confirmButtonColor:'#7A1028', cancelButtonColor:'#7A6670'
     }).then(result => {
         if (!result.isConfirmed) return;
         heroLayout[heroMode] = Object.assign({}, HERO_MODE_DEFAULT[heroMode]);
@@ -1981,9 +1980,25 @@ function initHeroControls() {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
-    ['hero-height-auto','hero-crest-on','hero-orn-on','hero-frame-on'].forEach(id => {
+    ['hero-height-auto','hero-crest-on','hero-orn-on','hero-frame-on','hero-slogan-on'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', readHeroControls);
+    });
+    ['hero-year','hero-term-note','hero-slogan-text'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', readHeroControls);
+    });
+    // ภาคเรียนเริ่มต้นที่หน้าแรกจะใช้ ต้องล้างค่าที่ผู้ใช้เคยกดสลับไว้ในเครื่องนี้ด้วย
+    // ไม่งั้นแอดมินเปลี่ยนแล้วตัวเองไม่เห็นผล เพราะค่าในเครื่องทับอยู่
+    document.querySelectorAll('#hero-term-pick button').forEach(b => {
+        b.addEventListener('click', () => {
+            heroLayout.term = Number(b.dataset.term);
+            try { localStorage.removeItem('gsb_term'); } catch (e) {}
+            document.querySelectorAll('#hero-term-pick button')
+                    .forEach(x => x.classList.toggle('active', x === b));
+            applyTerm(heroLayout);
+            setHeroDirty(true);
+        });
     });
     // สลับโหมดไม่นับเป็นการแก้ค่า แค่เปลี่ยนว่ากำลังดูชุดไหน
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
@@ -2248,7 +2263,7 @@ function cancelEditStudent() {
 
 function addStudentFn() {
     const data = readStudentForm();
-    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#0F3D2E' });
+    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#7A1028' });
     Swal.fire({ title:'กำลังเพิ่ม...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     callAPI('addStudent', { pwd: adminKey, data }).then(res => {
         const r = JSON.parse(res);
@@ -2258,7 +2273,7 @@ function addStudentFn() {
             document.getElementById('rs-id').focus();
             loadRoster();
         } else {
-            Swal.fire({ icon:'error', title:'เพิ่มไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'เพิ่มไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
         }
     }).catch(handleScriptError);
 }
@@ -2268,7 +2283,7 @@ function saveStudentFn() {
     const orig = roster[editingStudentIndex];
     if (!orig) return;
     const data = readStudentForm();
-    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#0F3D2E' });
+    if (!data.name) return Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อ-นามสกุล', confirmButtonColor:'#7A1028' });
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     // แถวในชีต = index + 2 (แถว 1 คือหัวตาราง) และแนบค่าเดิมไปให้เซิร์ฟเวอร์ตรวจว่าแถวยังเป็นคนเดิม
     callAPI('updateStudent', { pwd: adminKey, row: editingStudentIndex + 2,
@@ -2279,7 +2294,7 @@ function saveStudentFn() {
             cancelEditStudent();
             loadRoster();
         } else {
-            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
         }
     }).catch(handleScriptError);
 }
@@ -2294,7 +2309,7 @@ function deleteStudentFn(i) {
               (id ? '<br><span style="color:#6B7C74;font-size:.9rem;">รหัส ' + esc(id) + '</span>' : '') +
               '<br><span style="color:#C0392B;font-size:.85rem;">ข้อมูลจะถูกลบออกจาก Google Sheets ถาวร</span>',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#7A6670',
         confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก'
     }).then(result => {
         if (!result.isConfirmed) return;
@@ -2307,7 +2322,7 @@ function deleteStudentFn(i) {
                 if (editingStudentIndex === i) cancelEditStudent();
                 loadRoster();
             } else {
-                Swal.fire({ icon:'error', title:'ลบไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+                Swal.fire({ icon:'error', title:'ลบไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
             }
         }).catch(handleScriptError);
     });
@@ -2332,7 +2347,7 @@ function loginAdmin() {
             document.getElementById('admin-pass').value = '';
             navigate('admin-panel');
         } else {
-            Swal.fire({ icon:'error', title:'รหัสผ่านไม่ถูกต้อง', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'รหัสผ่านไม่ถูกต้อง', text:r.message, confirmButtonColor:'#7A1028' });
         }
     }).catch(handleScriptError);
 }
@@ -2382,11 +2397,11 @@ function saveAdminSettingsFn() {
     callAPI('saveAdminSettings', { data }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:'บันทึกสำเร็จ', confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'success', title:'บันทึกสำเร็จ', confirmButtonColor:'#7A1028' });
             document.getElementById('set-admin-pwd').value = '';
             document.getElementById('set-teacher-pwd').value = '';
         } else {
-            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
         }
     }).catch(handleScriptError);
 }
@@ -2397,10 +2412,10 @@ function testDriveFn() {
     callAPI('testDriveFolder').then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:'ใช้งานได้', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'success', title:'ใช้งานได้', text:r.message, confirmButtonColor:'#7A1028' });
         } else {
             Swal.fire({ icon:'error', title:'เชื่อมต่อไม่ได้', text:r.message,
-                        confirmButtonColor:'#0F3D2E', width:620 });
+                        confirmButtonColor:'#7A1028', width:620 });
         }
     }).catch(handleScriptError);
 }
@@ -2410,7 +2425,7 @@ function saveImageSetting(key, url) {
     callAPI('saveImageSetting', { key, url }).then(res => {
         const r = JSON.parse(res);
         if (r.status !== 'success') {
-            Swal.fire({ icon:'error', title:'บันทึกรูปไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'error', title:'บันทึกรูปไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
             return;
         }
         // อัปเดตหน้าเว็บให้เห็นผลทันทีโดยไม่ต้องรีเฟรช
@@ -2428,16 +2443,16 @@ function saveAnnouncementFn() {
     const img  = uploaders['up-ann'].getUrl();
     const enabled = document.getElementById('ann-enabled-toggle').checked;
     if (uploaders['up-ann'].isBusy()) {
-        return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
+        return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#7A1028' });
     }
     if (enabled && !text && !img) {
-        return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือใส่รูปประกาศ', confirmButtonColor:'#0F3D2E' });
+        return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกข้อความหรือใส่รูปประกาศ', confirmButtonColor:'#7A1028' });
     }
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     callAPI('saveAnnouncementOnly', { text, img, enabled }).then(res => {
         const r = JSON.parse(res);
-        if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ', confirmButtonColor:'#0F3D2E' });
-        else Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        if (r.status === 'success') Swal.fire({ icon:'success', title:'อัปเดตประกาศสำเร็จ', confirmButtonColor:'#7A1028' });
+        else Swal.fire({ icon:'error', title:'บันทึกไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
     }).catch(handleScriptError);
 }
 
@@ -2541,34 +2556,34 @@ function cancelEditCardFn() {
 
 function addWebCardFn() {
     const data = readCardForm();
-    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#0F3D2E' });
-    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
+    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#7A1028' });
+    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#7A1028' });
     Swal.fire({ title:'กำลังสร้างเมนู...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     callAPI('addWebCard', { data }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#7A1028' });
             resetCardForm();
             loadCardManager();
             loadWebCards();
-        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
     }).catch(handleScriptError);
 }
 
 function saveEditCardFn() {
     if (editingIndex < 0) return;
     const data = readCardForm();
-    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#0F3D2E' });
-    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#0F3D2E' });
+    if (!data.title) return Swal.fire({ icon:'warning', title:'แจ้งเตือน', text:'กรุณากรอกชื่อเมนู', confirmButtonColor:'#7A1028' });
+    if (uploaders['up-card'].isBusy()) return Swal.fire({ icon:'info', title:'รอรูปอัปโหลดเสร็จก่อน', confirmButtonColor:'#7A1028' });
     Swal.fire({ title:'กำลังบันทึก...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
     callAPI('updateWebCard', { index: editingIndex, data }).then(res => {
         const r = JSON.parse(res);
         if (r.status === 'success') {
-            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#0F3D2E' });
+            Swal.fire({ icon:'success', title:r.message, confirmButtonColor:'#7A1028' });
             cancelEditCardFn();
             loadCardManager();
             loadWebCards();
-        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#0F3D2E' });
+        } else Swal.fire({ icon:'error', title:'ไม่สำเร็จ', text:r.message, confirmButtonColor:'#7A1028' });
     }).catch(handleScriptError);
 }
 
@@ -2587,7 +2602,7 @@ function deleteCardFn(index) {
     Swal.fire({
         title:'ยืนยันการลบ?', text:'ปุ่มนี้จะหายไปจากหน้าเว็บ',
         icon:'warning', showCancelButton:true,
-        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#7A6670',
         confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก'
     }).then(result => {
         if (!result.isConfirmed) return;
@@ -2608,7 +2623,7 @@ function clearWebCardsFn() {
     Swal.fire({
         title:'ยืนยันการลบ?', text:'ปุ่มเมนูทั้งหมดจะหายไป',
         icon:'warning', showCancelButton:true,
-        confirmButtonColor:'#C0392B', cancelButtonColor:'#9AA8A1',
+        confirmButtonColor:'#C0392B', cancelButtonColor:'#7A6670',
         confirmButtonText:'ลบทั้งหมด', cancelButtonText:'ยกเลิก'
     }).then(result => {
         if (!result.isConfirmed) return;
@@ -2634,7 +2649,7 @@ function showQRModal() {
     if (!qrcodeInstance && typeof QRCode !== 'undefined') {
         qrcodeInstance = new QRCode(document.getElementById('qrcode-container'), {
             text: window.location.href,
-            width:180, height:180, colorDark:'#0F3D2E', colorLight:'#ffffff',
+            width:180, height:180, colorDark:'#7A1028', colorLight:'#ffffff',
             correctLevel: QRCode.CorrectLevel.H
         });
     }
@@ -2670,6 +2685,7 @@ function initUploaders() {
 window.addEventListener('DOMContentLoaded', () => {
     initUploaders();
     initHeroControls();
+    initTermSwitch();
     loadPublicSettings();
     loadDashboardStats();
     loadWebCards();
@@ -2683,7 +2699,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 html: (r.data.text ? '<p style="color:#15211C;font-size:1.02rem;margin-bottom:14px;">' + esc(r.data.text) + '</p>' : '') +
                       (r.data.img ? '<img src="' + esc(r.data.img) + '" style="width:100%;border-radius:14px;">' : ''),
                 confirmButtonText: 'รับทราบ',
-                confirmButtonColor: '#0F3D2E'
+                confirmButtonColor: '#7A1028'
             });
         }
     }).catch(() => { /* ประกาศโหลดไม่ได้ ไม่ควรขวางการใช้งานหน้าเว็บ */ });
