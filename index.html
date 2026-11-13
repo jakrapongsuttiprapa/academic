@@ -51,6 +51,22 @@
 
         * { box-sizing:border-box; }
 
+        /* ───────── พื้นผิวกระจกฝ้า ─────────
+           การ์ดใหญ่ๆ โปร่งแสงให้ภาพพื้นหลังทะลุขึ้นมา แทนที่จะเป็นแผ่นขาวทึบปิดหมด
+           ความโปร่งปรับได้จากหน้า admin (--glass) 1 = ขาวทึบเหมือนเดิม
+           ไม่ใส่กับแถวรายชื่อ เพราะ 400 กว่าแถว = เบลอ 400 ชั้น เครื่องนักเรียนจะหน่วง */
+        .hero, .panel, .stat-card, .term-bar, .login-card, .card-skeleton, .footer-mark {
+            background:rgba(255,255,255, var(--glass, 0.88));
+            backdrop-filter:blur(16px) saturate(1.2);
+            -webkit-backdrop-filter:blur(16px) saturate(1.2);
+        }
+        /* เบราว์เซอร์ที่เบลอพื้นหลังไม่ได้ ต้องทึบไว้ก่อน ไม่งั้นตัวหนังสือจะจมภาพ */
+        @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+            .hero, .panel, .stat-card, .term-bar, .login-card, .card-skeleton, .footer-mark {
+                background:rgba(255,255,255,0.96);
+            }
+        }
+
         /* ภาพพื้นหลังทั้งหน้า — ปรับความชัดและความเบลอได้จากหน้า admin
            ขยาย 6% กันขอบโปร่งโผล่ตอนเบลอ */
         .page-bg {
@@ -164,8 +180,10 @@
         .hero {
             position:relative; border-radius:34px; margin:0 auto 22px;
             width:var(--hero-w-d, 100%);
-            background:var(--card); border:1px solid var(--line); padding:10px;
-            box-shadow:0 20px 48px -28px rgba(90,20,45,0.3), 0 2px 0 rgba(255,255,255,0.7) inset;
+            border:1px solid rgba(255,255,255,0.75); padding:10px;
+            box-shadow:0 24px 60px -30px rgba(90,20,45,0.38),
+                       0 1px 0 rgba(255,255,255,0.9) inset,
+                       0 0 0 1px rgba(242,193,74,0.12);
         }
         .hero-stage {
             --hero-h:    var(--hero-h-d,    clamp(260px,32vw,400px));
@@ -246,19 +264,19 @@
         .hero.no-frame  .hero-frame  { display:none; }
 
         /* แถบข้อความใต้รูป */
-        .hero-foot { padding:20px 14px 8px; text-align:center; }
+        .hero-foot { padding:17px 14px 5px; text-align:center; }
         .hero-title {
             font-family:'Kanit',sans-serif; font-weight:700;
             font-size:clamp(1.55rem,4.2vw,2.5rem); line-height:1.18;
             letter-spacing:-0.02em; color:var(--mar-800);
         }
-        .ornament { display:block; margin:12px auto 0; width:min(200px,56%); height:auto; }
-        .hero-sub { font-size:0.84rem; color:var(--muted); line-height:1.6; margin-top:10px; }
+        .ornament { display:block; margin:10px auto 0; width:min(200px,56%); height:auto; }
+        .hero-sub { font-size:0.84rem; color:var(--muted); line-height:1.6; margin-top:8px; }
 
         .term-bar {
             display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
-            justify-content:center; margin-top:16px;
-            background:var(--card); border:1px solid var(--line); border-radius:100px;
+            justify-content:center; margin-top:14px;
+            border:1px solid rgba(255,255,255,0.8); border-radius:100px;
             padding:9px 20px; box-shadow:0 10px 26px -20px rgba(90,20,45,0.45);
             font-family:'Kanit',sans-serif; font-weight:600; font-size:0.96rem; color:var(--ink);
         }
@@ -277,7 +295,7 @@
             background:linear-gradient(168deg,#FFE9AE,var(--gold-400) 60%,#DFA922);
             box-shadow:0 3px 9px -3px rgba(207,154,28,0.8), inset 0 1px 0 rgba(255,255,255,0.8);
         }
-        .term-note { font-size:0.78rem; color:var(--muted); margin-top:10px; line-height:1.6; }
+        .term-note { font-size:0.78rem; color:var(--muted); margin-top:8px; line-height:1.6; }
 
         @media (max-width:1024px) {
             .hero { padding:8px; border-radius:30px; width:var(--hero-w-m, 100%); }
@@ -297,7 +315,7 @@
                 --slo-pad:  var(--slo-pad-m,  13px);
                 --slo-rad:  var(--slo-rad-m,  16px);
             }
-            .hero-foot { padding:16px 8px 6px; }
+            .hero-foot { padding:14px 8px 4px; }
         }
         @media (max-width:430px) {
             .hero-frame { inset:7px; border-radius:17px; }
@@ -325,7 +343,7 @@
         .stat-card {
             position:relative; overflow:hidden; border-radius:20px; padding:15px;
             display:flex; align-items:center; gap:13px;
-            background:var(--card); border:1px solid var(--line);
+            border:1px solid rgba(255,255,255,0.72);
             box-shadow:0 12px 28px -22px rgba(90,20,45,0.45);
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
@@ -485,12 +503,11 @@
 
         /* ───────────── พื้นผิวทั่วไป ───────────── */
         .panel {
-            background:#fff; border:1px solid var(--line); border-radius:20px;
+            border:1px solid rgba(255,255,255,0.72); border-radius:20px;
             box-shadow:0 2px 0 rgba(20,32,27,0.03), 0 14px 30px -24px rgba(20,32,27,0.55);
         }
         .login-card {
-            background:linear-gradient(170deg,#fff,var(--paper-2));
-            border:1px solid var(--line); border-radius:24px;
+            border:1px solid rgba(255,255,255,0.8); border-radius:24px;
             box-shadow:0 24px 60px -30px rgba(90,20,45,0.75), 0 0 0 1px rgba(242,193,74,0.18);
         }
         .page-head { font-family:'Kanit',sans-serif; font-weight:700; font-size:1.6rem; color:var(--em-800); letter-spacing:-0.02em; }
@@ -819,7 +836,7 @@
         /* ───────────── ส่วนท้าย ───────────── */
         .footer-mark {
             display:inline-flex; align-items:center; gap:11px; padding:11px 22px; border-radius:100px;
-            background:linear-gradient(170deg,#fff,var(--paper-2)); border:1px solid var(--line);
+            border:1px solid rgba(255,255,255,0.8);
             box-shadow:0 10px 24px -20px rgba(20,32,27,.6);
         }
         .footer-seal {
@@ -835,7 +852,7 @@
         @keyframes rise { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
         .skeleton { background:linear-gradient(90deg,#E6EDE9 25%,#F4F8F6 50%,#E6EDE9 75%); background-size:200% 100%; animation:loading 1.4s infinite; border-radius:8px; }
         @keyframes loading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        .card-skeleton { min-height:var(--tile-h-m,172px); border-radius:30px; background:var(--card); border:1px solid var(--line); padding:18px; }
+        .card-skeleton { min-height:var(--tile-h-m,172px); border-radius:30px; border:1px solid rgba(255,255,255,0.72); padding:18px; }
         .modal-overlay { background:rgba(90,20,45,0.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
 
         /* ───────────── จอเล็ก ───────────── */
@@ -1298,6 +1315,14 @@
                                     <span class="ctl-val" id="bg-blur-val">0px</span>
                                 </div>
                                 <input type="range" class="ctl-range" id="bg-blur" min="0" max="24" step="1" value="0">
+                            </div>
+                            <div>
+                                <div class="ctl-row">
+                                    <label class="field-label" for="bg-glass">ความทึบของการ์ด (กระจกฝ้า)</label>
+                                    <span class="ctl-val" id="bg-glass-val">88%</span>
+                                </div>
+                                <input type="range" class="ctl-range" id="bg-glass" min="55" max="100" step="1" value="88">
+                                <p class="text-xs" style="color:var(--muted);">ยิ่งน้อยยิ่งเห็นภาพพื้นหลังทะลุการ์ดขึ้นมา · 100% = ขาวทึบแบบเดิม</p>
                             </div>
                             <p class="ctl-fit">ปรับแล้วเห็นผลที่พื้นหลังหน้านี้ทันที · กด <b>บันทึก</b> ด้านล่างเพื่อให้ทุกคนเห็น</p>
                         </div>
@@ -2073,7 +2098,7 @@ function heroDefaults() {
         mobile:  Object.assign({}, HERO_MODE_DEFAULT.mobile),
         crest:true, orn:true, frame:true, slogan:true, sloganText:SLOGAN_DEFAULT,
         cards:{ cols:4, colsM:2, h:200, hM:172, pCols:2, pH:248 },
-        bg:{ img:'', op:22, blur:0 },
+        bg:{ img:'', op:22, blur:0, glass:88 },
         term:2, year:'2569', termNote:'เทอม 2 = พ.ย.–มี.ค.'
     };
 }
@@ -2130,7 +2155,8 @@ function parseHeroLayout(raw) {
     if (o.bg && typeof o.bg === 'object') {
         if (typeof o.bg.img === 'string') L.bg.img = o.bg.img.slice(0, 600);
         L.bg.op   = num(o.bg.op,   0, 100, L.bg.op);
-        L.bg.blur = num(o.bg.blur, 0, 24,  L.bg.blur);
+        L.bg.blur  = num(o.bg.blur,  0, 24,  L.bg.blur);
+        L.bg.glass = num(o.bg.glass, 55, 100, L.bg.glass);
     }
     if (o.cards && typeof o.cards === 'object') {
         const c = o.cards, d = L.cards;
@@ -2180,6 +2206,7 @@ function applyHeroLayout(L) {
     bs.setProperty('--bg-img',  bg.img ? 'url("' + bg.img.replace(/"/g, '%22') + '")' : 'none');
     bs.setProperty('--bg-op',   bg.img ? (bg.op / 100).toFixed(2) : '0');
     bs.setProperty('--bg-blur', bg.blur + 'px');
+    bs.setProperty('--glass',   (bg.glass / 100).toFixed(2));
 
     const c = L.cards, rs = document.documentElement.style;
     rs.setProperty('--cg-cols',   c.cols);
@@ -2271,7 +2298,8 @@ function readHeroControls() {
     heroLayout.orn   = g('hero-orn-on').checked;
     heroLayout.frame = g('hero-frame-on').checked;
     heroLayout.bg.op   = Number(g('bg-op').value);
-    heroLayout.bg.blur = Number(g('bg-blur').value);
+    heroLayout.bg.blur  = Number(g('bg-blur').value);
+    heroLayout.bg.glass = Number(g('bg-glass').value);
     const cd = heroLayout.cards;
     cd.cols  = Number(g('cd-cols').value);
     cd.colsM = Number(g('cd-colsm').value);
@@ -2309,7 +2337,8 @@ function updateHeroReadouts() {
     g('hero-slo-rad-val').textContent = m.sloRad + 'px';
 
     g('bg-op-val').textContent   = heroLayout.bg.op + '%';
-    g('bg-blur-val').textContent = heroLayout.bg.blur + 'px';
+    g('bg-blur-val').textContent  = heroLayout.bg.blur + 'px';
+    g('bg-glass-val').textContent = heroLayout.bg.glass + '%';
     const cd = heroLayout.cards;
     g('cd-cols-val').textContent  = cd.cols  + ' ใบ';
     g('cd-colsm-val').textContent = cd.colsM + ' ใบ';
@@ -2353,7 +2382,8 @@ function fillHeroControls() {
     g('hero-orn-on').checked   = heroLayout.orn;
     g('hero-frame-on').checked = heroLayout.frame;
     g('bg-op').value   = heroLayout.bg.op;
-    g('bg-blur').value = heroLayout.bg.blur;
+    g('bg-blur').value  = heroLayout.bg.blur;
+    g('bg-glass').value = heroLayout.bg.glass;
     if (uploaders['up-bg']) uploaders['up-bg'].setUrl(heroLayout.bg.img);
     const cdf = heroLayout.cards;
     g('cd-cols').value  = cdf.cols;
@@ -2596,7 +2626,7 @@ function initHeroControls() {
     document.querySelectorAll('#hero-mode-pick button').forEach(b => {
         b.addEventListener('click', () => { heroMode = b.dataset.mode; fillHeroControls(); });
     });
-    ['bg-op','bg-blur','cd-cols','cd-colsm','cd-h','cd-hm','cd-pcols','cd-ph'].forEach(id => {
+    ['bg-op','bg-blur','bg-glass','cd-cols','cd-colsm','cd-h','cd-hm','cd-pcols','cd-ph'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', readHeroControls);
     });
