@@ -181,9 +181,11 @@
             position:relative; border-radius:34px; margin:0 auto 22px;
             width:var(--hero-w-d, 100%);
             border:1px solid rgba(255,255,255,0.75); padding:10px;
-            box-shadow:0 24px 60px -30px rgba(90,20,45,0.38),
-                       0 1px 0 rgba(255,255,255,0.9) inset,
-                       0 0 0 1px rgba(242,193,74,0.12);
+            /* ชั้นบนสุดของหน้า — เงาลึกและกว้างที่สุด */
+            box-shadow:0 44px 90px -44px rgba(90,20,45,0.5),
+                       0 12px 28px -18px rgba(90,20,45,0.22),
+                       0 1px 0 rgba(255,255,255,0.95) inset,
+                       0 0 0 1px rgba(242,193,74,0.16);
         }
         .hero-stage {
             --hero-h:    var(--hero-h-d,    clamp(260px,32vw,400px));
@@ -264,18 +266,32 @@
         .hero.no-frame  .hero-frame  { display:none; }
 
         /* แถบข้อความใต้รูป */
-        .hero-foot { padding:17px 14px 5px; text-align:center; }
+                @keyframes heroRise { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+        @keyframes heroFade { from { opacity:0; } to { opacity:1; } }
+        .hero-stage  { animation:heroRise .62s cubic-bezier(.22,1,.36,1) both; }
+        .hero-slogan { animation:heroFade .5s ease .34s both; }
+        .medallion   { animation:heroFade .5s ease .26s both; }
+        .hero-title  { animation:heroRise .56s cubic-bezier(.22,1,.36,1) .16s both; }
+        .term-bar    { animation:heroRise .56s cubic-bezier(.22,1,.36,1) .28s both; }
+
+        .hero-foot {
+            position:relative; padding:26px 14px 10px; text-align:center;
+            border-radius:0 0 24px 24px;
+            background:radial-gradient(120% 90% at 50% -22%, rgba(216,27,96,0.07), transparent 62%);
+        }
         .hero-title {
             font-family:'Kanit',sans-serif; font-weight:700;
-            font-size:clamp(1.55rem,4.2vw,2.5rem); line-height:1.18;
-            letter-spacing:-0.02em; color:var(--mar-800);
+            /* หัวเรื่องคือจุดเดียวที่ปล่อยให้ใหญ่เต็มที่ — ความอลังการมาจากสเกล ไม่ใช่ลวดลาย */
+            font-size:clamp(2rem,5.4vw,4rem); line-height:1.04;
+            letter-spacing:-0.035em; color:var(--mar-800);
+            text-wrap:balance;
         }
-        .ornament { display:block; margin:10px auto 0; width:min(200px,56%); height:auto; }
+        .ornament { display:block; margin:14px auto 0; width:min(300px,42%); height:auto; opacity:0.85; }
         .hero-sub { font-size:0.84rem; color:var(--muted); line-height:1.6; margin-top:8px; }
 
         .term-bar {
             display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
-            justify-content:center; margin-top:14px;
+            justify-content:center; margin-top:18px;
             border:1px solid rgba(255,255,255,0.8); border-radius:100px;
             padding:9px 20px; box-shadow:0 10px 26px -20px rgba(90,20,45,0.45);
             font-family:'Kanit',sans-serif; font-weight:600; font-size:0.96rem; color:var(--ink);
@@ -328,14 +344,20 @@
         }
 
         /* ───────────── หัวข้อหมวด ───────────── */
-        .sec-label { display:flex; align-items:center; gap:12px; margin:30px 2px 14px; }
+        .sec-label { display:flex; align-items:baseline; gap:13px; margin:44px 2px 16px; }
         .sec-label::before {
-            content:''; width:5px; height:20px; flex-shrink:0; border-radius:100px;
+            content:''; width:5px; height:26px; flex-shrink:0; border-radius:100px;
+            align-self:center;
             background:linear-gradient(180deg,var(--gold-400),var(--mar-700));
         }
         .sec-label span {
-            font-family:'Kanit',sans-serif; font-size:1.06rem; font-weight:700;
-            color:var(--mar-800); white-space:nowrap; letter-spacing:-0.01em;
+            font-family:'Kanit',sans-serif; font-size:1.34rem; font-weight:700;
+            color:var(--mar-800); white-space:nowrap; letter-spacing:-0.022em;
+        }
+        /* จำนวนรายการในหมวด — เป็นข้อมูล ไม่ใช่ของประดับ */
+        .sec-count {
+            font-family:'Kanit',sans-serif; font-size:0.78rem; font-weight:600;
+            color:var(--muted); white-space:nowrap; flex-shrink:0;
         }
         .sec-label i { flex:1; height:1px; border-radius:2px; background:linear-gradient(90deg,var(--line),transparent); }
 
@@ -343,11 +365,12 @@
         .stat-card {
             position:relative; overflow:hidden; border-radius:20px; padding:15px;
             display:flex; align-items:center; gap:13px;
-            border:1px solid rgba(255,255,255,0.72);
-            box-shadow:0 12px 28px -22px rgba(90,20,45,0.45);
+            border:1px solid rgba(255,255,255,0.72); border-radius:18px;
+            /* ชั้นล่างสุด — เงาสั้น กระชับ ไม่แย่งความเด่นจากไทล์ */
+            box-shadow:0 6px 16px -12px rgba(90,20,45,0.4);
             transition:transform .18s cubic-bezier(.34,1.4,.64,1), box-shadow .18s ease;
         }
-        .stat-card:hover { transform:translateY(-3px); box-shadow:0 18px 34px -22px rgba(90,20,45,0.55); }
+        .stat-card:hover { transform:translateY(-3px); box-shadow:0 14px 26px -16px rgba(90,20,45,0.5); }
         .stat-ic {
             width:46px; height:46px; border-radius:50%; flex-shrink:0;
             display:flex; align-items:center; justify-content:center; font-size:1.1rem;
@@ -367,6 +390,22 @@
                        inset 0 -2px 5px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.45);
         }
         .stat-card[class*="sc-"] .stat-v { color:var(--sc); }
+        /* ยอดรวมเป็นแผ่นสีเต็ม — แถวสถิติจะได้มีจุดนำสายตา ไม่ใช่สี่กล่องน้ำหนักเท่ากัน */
+        .stat-card.sc-all {
+            background:linear-gradient(158deg,#A3203F,var(--mar-800) 46%,var(--mar-900));
+            border-color:rgba(255,255,255,0.3);
+            box-shadow:0 14px 30px -16px rgba(94,12,32,0.7);
+        }
+        .stat-card.sc-all .stat-k { color:rgba(255,255,255,0.78); }
+        .stat-card.sc-all .stat-v { color:#fff; }
+        .stat-card.sc-all .stat-u { color:rgba(255,255,255,0.66); }
+        .stat-card.sc-all .stat-ic {
+            color:var(--mar-900); background:var(--gold-orb);
+            box-shadow:0 5px 12px -3px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(168,117,18,0.3),
+                       inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+        .stat-card.sc-all::before { background:linear-gradient(180deg,var(--gold-200),var(--gold-600)); }
+        .stat-card.sc-all:hover { box-shadow:0 20px 38px -18px rgba(94,12,32,0.8); }
         /* ขีดสีบางๆ ขอบซ้าย บอกระดับชั้นได้ด้วยหางตา */
         .stat-card[class*="sc-"]::before {
             content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
@@ -375,7 +414,7 @@
         .stat-txt { min-width:0; }
         .stat-k { font-size:0.74rem; color:var(--muted); font-weight:500; }
         .stat-v {
-            font-family:'Kanit',sans-serif; font-weight:700; font-size:2rem;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:2.5rem;
             line-height:1.08; margin-top:2px; color:var(--mar-800);
             font-variant-numeric:tabular-nums;
         }
@@ -447,7 +486,8 @@
             color:rgba(255,255,255,0.13);
         }
         .menu-title, .portal h3 {
-            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.26rem; line-height:1.22;
+            font-family:'Kanit',sans-serif; font-weight:700; font-size:1.36rem; line-height:1.2;
+            letter-spacing:-0.018em;
             text-shadow:0 1px 4px rgba(0,0,0,0.26);
         }
         .menu-desc, .portal p {
@@ -877,7 +917,8 @@
 
         @media (prefers-reduced-motion: reduce) {
             .medallion::before { animation:none; }
-            .page-view.active, .skeleton, .up-bar i { animation:none !important; }
+            .page-view.active, .skeleton, .up-bar i,
+            .hero-stage, .hero-slogan, .medallion, .hero-title, .term-bar { animation:none !important; }
             .tile, .portal, .stat-card, .qr-btn, .btn-solid, .btn-staff, .btn-ghost, .student-row, .filter-chip { transition:none !important; }
             .tile:hover, .portal:hover, .stat-card:hover, .qr-btn:hover, .btn-solid:hover,
             .btn-staff:hover, .btn-ghost:hover, .student-row:hover, .mini-btn:hover, .filter-chip:hover { transform:none !important; }
@@ -993,7 +1034,7 @@
         </div>
 
         <div id="menu-section" class="hidden">
-            <div class="sec-label"><span>รายการประกาศ</span><i></i></div>
+            <div class="sec-label"><span>รายการประกาศ</span><i></i><b class="sec-count" id="cards-count"></b></div>
             <div id="all-cards-container" class="card-grid"></div>
         </div>
 
@@ -1962,6 +2003,8 @@ function loadWebCards() {
         container.innerHTML = '';
         if (r.status !== 'success' || !r.data.length) { section.classList.add('hidden'); return; }
         section.classList.remove('hidden');
+        const cnt = document.getElementById('cards-count');
+        if (cnt) cnt.textContent = r.data.length + ' รายการ';
 
         r.data.forEach(card => {
             const cls  = btnMap[card.color] || 't-violet';
